@@ -1,0 +1,855 @@
+2025-08-05 11:54:53,995 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 328, in run
+    df2 = df2[all_needed_columns]
+          ~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4108, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 6200, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 6252, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['项目名称'] not in index"
+
+2025-08-05 14:02:31,428 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 328, in run
+    df2 = df2[all_needed_columns]
+          ~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4108, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 6200, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 6252, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['项目名称'] not in index"
+
+2025-08-05 14:55:35,770 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 284, in run
+    mapping_df = read_mapping_table(self.rule_file)  # 假设规则文件在同一位置
+                                    ^^^^^^^^^^^^^^
+AttributeError: 'CompareWorker' object has no attribute 'rule_file'
+
+2025-08-05 14:59:13,867 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 284, in run
+    mapping_df = read_mapping_table(self.rule_file)
+                                  ^^^^^^^^^^^^^^
+AttributeError: 'CompareWorker' object has no attribute 'rule_file'
+
+2025-08-05 15:03:19,684 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '21年资产目录大类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 320, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 277, in convert_asset_category
+    df2[target_col] = df2["21年资产目录大类"].astype(str) + " - " + df2["ERP资产明细类描述"].astype(str)
+                      ~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '21年资产目录大类'
+
+2025-08-05 15:03:42,271 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '21年资产目录大类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 320, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 277, in convert_asset_category
+    df2[target_col] = df2["21年资产目录大类"].astype(str) + " - " + df2["ERP资产明细类描述"].astype(str)
+                      ~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '21年资产目录大类'
+
+2025-08-05 15:06:12,101 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '21年资产目录大类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 309, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 266, in convert_asset_category
+    df2[target_col] = df2["21年资产目录大类"].astype(str) + " - " + df2["ERP资产明细类描述"].astype(str)
+                      ~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '21年资产目录大类'
+
+2025-08-05 15:10:39,379 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'ERP资产明细类别'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 309, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 286, in convert_asset_category
+    df2[asset_category_col2] = df2[erp_code_col].str[:4]
+                               ~~~^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'ERP资产明细类别'
+
+2025-08-05 15:14:13,471 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 309, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 283, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 4924, in apply
+    ).apply()
+      ^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1427, in apply
+    return self.apply_standard()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1514, in apply_standard
+    return obj._constructor_expanddim(list(mapped), index=obj.index)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 851, in __init__
+    arrays, columns, index = nested_data_to_arrays(
+                             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 520, in nested_data_to_arrays
+    arrays, columns = to_arrays(data, columns, dtype=dtype)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 839, in to_arrays
+    arr, columns = _list_of_series_to_arrays(data, columns)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 882, in _list_of_series_to_arrays
+    indexer = indexer_cache[id(index)] = index.get_indexer(columns)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3885, in get_indexer
+    raise InvalidIndexError(self._requires_unique_msg)
+pandas.errors.InvalidIndexError: Reindexing only valid with uniquely valued Index objects
+
+2025-08-05 15:14:29,051 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 309, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 283, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 4924, in apply
+    ).apply()
+      ^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1427, in apply
+    return self.apply_standard()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1514, in apply_standard
+    return obj._constructor_expanddim(list(mapped), index=obj.index)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 851, in __init__
+    arrays, columns, index = nested_data_to_arrays(
+                             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 520, in nested_data_to_arrays
+    arrays, columns = to_arrays(data, columns, dtype=dtype)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 839, in to_arrays
+    arr, columns = _list_of_series_to_arrays(data, columns)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 882, in _list_of_series_to_arrays
+    indexer = indexer_cache[id(index)] = index.get_indexer(columns)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3885, in get_indexer
+    raise InvalidIndexError(self._requires_unique_msg)
+pandas.errors.InvalidIndexError: Reindexing only valid with uniquely valued Index objects
+
+2025-08-05 15:15:17,385 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 309, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 283, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 4924, in apply
+    ).apply()
+      ^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1427, in apply
+    return self.apply_standard()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1514, in apply_standard
+    return obj._constructor_expanddim(list(mapped), index=obj.index)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 851, in __init__
+    arrays, columns, index = nested_data_to_arrays(
+                             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 520, in nested_data_to_arrays
+    arrays, columns = to_arrays(data, columns, dtype=dtype)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 839, in to_arrays
+    arr, columns = _list_of_series_to_arrays(data, columns)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 882, in _list_of_series_to_arrays
+    indexer = indexer_cache[id(index)] = index.get_indexer(columns)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3885, in get_indexer
+    raise InvalidIndexError(self._requires_unique_msg)
+pandas.errors.InvalidIndexError: Reindexing only valid with uniquely valued Index objects
+
+2025-08-05 15:22:49,887 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'ERP资产明细类别'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 326, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 303, in convert_asset_category
+    df2[asset_category_col2] = df2[erp_code_col].str[:4]
+                               ~~~^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'ERP资产明细类别'
+
+2025-08-05 15:23:51,608 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'ERP资产明细类别'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 326, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 300, in convert_asset_category
+    df2[asset_category_col2] = df2[erp_code_col].str[:4]
+                               ~~~^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'ERP资产明细类别'
+
+2025-08-05 15:42:00,495 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'ERP资产明细类别'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 315, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 292, in convert_asset_category
+    df2[asset_category_col2] = df2[erp_code_col].astype(str).str[:4]
+                               ~~~^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'ERP资产明细类别'
+
+2025-08-05 16:27:00,961 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1195, in export_report
+    self._export_diff_data_with_highlight_to_sheet(writer, '列不一致数据', self.worker.diff_full_rows)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ExcelComparer' object has no attribute '_export_diff_data_with_highlight_to_sheet'
+
+2025-08-05 16:29:33,637 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1185, in export_report
+    self._export_modified_files(writer)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ExcelComparer' object has no attribute '_export_modified_files'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1183, in export_report
+    with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 1353, in __exit__
+    self.close()
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 1357, in close
+    self._save()
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/excel/_openpyxl.py", line 110, in _save
+    self.book.save(self._handles.handle)
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/workbook/workbook.py", line 386, in save
+    save_workbook(self, filename)
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/writer/excel.py", line 294, in save_workbook
+    writer.save()
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/writer/excel.py", line 275, in save
+    self.write_data()
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/writer/excel.py", line 89, in write_data
+    archive.writestr(ARC_WORKBOOK, writer.write())
+                                   ^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/workbook/_writer.py", line 150, in write
+    self.write_views()
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/workbook/_writer.py", line 137, in write_views
+    active = get_active_sheet(self.wb)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/workbook/_writer.py", line 35, in get_active_sheet
+    raise IndexError("At least one sheet must be visible")
+IndexError: At least one sheet must be visible
+
+2025-08-05 16:44:01,657 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1208, in export_report
+    self._export_diff_data_with_highlight_to_sheet(writer, '列不一致数据',
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ExcelComparer' object has no attribute '_export_diff_data_with_highlight_to_sheet'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1211, in export_report
+    self.log(f"导出列不一致数据时出错: {str(e)}")
+    ^^^^
+  File "_pydevd_bundle/pydevd_pep_669_tracing_cython.pyx", line 490, in _pydevd_bundle.pydevd_pep_669_tracing_cython.py_line_callback
+  File "_pydevd_bundle/pydevd_pep_669_tracing_cython.pyx", line 486, in _pydevd_bundle.pydevd_pep_669_tracing_cython.py_line_callback
+  File "/Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pydev/pydevd.py", line 1196, in do_wait_suspend
+    self._do_wait_suspend(thread, frame, event, arg, suspend_type, from_this_thread)
+  File "/Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pydev/pydevd.py", line 1211, in _do_wait_suspend
+    time.sleep(0.01)
+KeyboardInterrupt
+
+2025-08-05 17:18:39,087 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 343, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 319, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 10374, in apply
+    return op.apply().__finalize__(self, method="apply")
+           ^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 916, in apply
+    return self.apply_standard()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1063, in apply_standard
+    results, res_index = self.apply_series_generator()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1081, in apply_series_generator
+    results[i] = self.func(v, *self.args, **self.kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 272, in convert_category
+    matches = mapping_df[mapping_df[source_col] == value]
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 76, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 40, in __eq__
+    return self._cmp_method(other, operator.eq)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 6114, in _cmp_method
+    raise ValueError("Can only compare identically-labeled Series objects")
+ValueError: Can only compare identically-labeled Series objects
+
+2025-08-05 18:06:53,478 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1194, in export_report
+    if pk_col_idx is not None:
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1272, in _modify_original_file
+    if hasattr(ex, "log"):
+                    ^^^^^^^
+  File "_pydevd_bundle/pydevd_pep_669_tracing_cython.pyx", line 490, in _pydevd_bundle.pydevd_pep_669_tracing_cython.py_line_callback
+  File "_pydevd_bundle/pydevd_pep_669_tracing_cython.pyx", line 486, in _pydevd_bundle.pydevd_pep_669_tracing_cython.py_line_callback
+  File "/Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pydev/pydevd.py", line 1196, in do_wait_suspend
+    self._do_wait_suspend(thread, frame, event, arg, suspend_type, from_this_thread)
+  File "/Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pydev/pydevd.py", line 1211, in _do_wait_suspend
+    time.sleep(0.01)
+KeyboardInterrupt
+
+2025-08-05 18:18:36,236 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1110, in export_report
+    self._modify_original_file(file2_copy_path, self.sheet_combo2.currentText(), is_first_file=False)
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 1196, in _modify_original_file
+    pk_col_idx = col_name_to_index.get(pk)
+            ^^^^^^^^^
+  File "_pydevd_bundle/pydevd_pep_669_tracing_cython.pyx", line 490, in _pydevd_bundle.pydevd_pep_669_tracing_cython.py_line_callback
+  File "_pydevd_bundle/pydevd_pep_669_tracing_cython.pyx", line 486, in _pydevd_bundle.pydevd_pep_669_tracing_cython.py_line_callback
+  File "/Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pydev/pydevd.py", line 1196, in do_wait_suspend
+    self._do_wait_suspend(thread, frame, event, arg, suspend_type, from_this_thread)
+  File "/Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pydev/pydevd.py", line 1211, in _do_wait_suspend
+    time.sleep(0.01)
+KeyboardInterrupt
+
+2025-08-06 15:09:05,568 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 94, in read_excel_fast
+    wb = load_workbook(filename=file_path, read_only=True, data_only=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/reader/excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/reader/excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/reader/excel.py", line 93, in _validate_archive
+    raise InvalidFileException(msg)
+openpyxl.utils.exceptions.InvalidFileException: openpyxl does not support the old .xls file format, please use xlrd to read this file, or convert it to the more recent .xlsx file format.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 458, in run
+    df2 = future2.result()
+          ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 106, in read_excel_fast
+    raise Exception(f"读取Excel文件时发生错误: {str(e)}")
+Exception: 读取Excel文件时发生错误: openpyxl does not support the old .xls file format, please use xlrd to read this file, or convert it to the more recent .xlsx file format.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 460, in run
+    raise Exception(f"读取文件时发生错误: {str(e)}")
+Exception: 读取文件时发生错误: 读取Excel文件时发生错误: openpyxl does not support the old .xls file format, please use xlrd to read this file, or convert it to the more recent .xlsx file format.
+
+2025-08-06 15:11:09,700 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 112, in read_excel_fast
+    wb = load_workbook(filename=file_path, read_only=True, data_only=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/reader/excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/reader/excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/openpyxl/reader/excel.py", line 93, in _validate_archive
+    raise InvalidFileException(msg)
+openpyxl.utils.exceptions.InvalidFileException: openpyxl does not support the old .xls file format, please use xlrd to read this file, or convert it to the more recent .xlsx file format.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 476, in run
+    df2 = future2.result()
+          ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 124, in read_excel_fast
+    raise Exception(f"读取Excel文件时发生错误: {str(e)}")
+Exception: 读取Excel文件时发生错误: openpyxl does not support the old .xls file format, please use xlrd to read this file, or convert it to the more recent .xlsx file format.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 478, in run
+    raise Exception(f"读取文件时发生错误: {str(e)}")
+Exception: 读取文件时发生错误: 读取Excel文件时发生错误: openpyxl does not support the old .xls file format, please use xlrd to read this file, or convert it to the more recent .xlsx file format.
+
+2025-08-06 15:12:02,940 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '资产分类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '资产分类'
+
+2025-08-06 15:14:53,482 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '资产分类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '资产分类'
+
+2025-08-06 15:15:36,623 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '资产分类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '资产分类'
+
+2025-08-06 15:16:13,818 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '资产分类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '资产分类'
+
+2025-08-06 15:17:23,481 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '资产分类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '资产分类'
+
+2025-08-06 15:17:44,688 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '资产分类'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: '资产分类'
+
+2025-08-06 16:04:10,243 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 191, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 234, in pandas._libs.index.IndexEngine._get_loc_duplicates
+  File "index.pyx", line 242, in pandas._libs.index.IndexEngine._maybe_get_bool_indexer
+  File "index.pyx", line 134, in pandas._libs.index._unpack_bool_indexer
+KeyError: 'SAP资产类别描述'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 4924, in apply
+    ).apply()
+      ^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1427, in apply
+    return self.apply_standard()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1507, in apply_standard
+    mapped = obj._map_values(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/base.py", line 921, in _map_values
+    return algorithms.map_array(arr, mapper, na_action=na_action, convert=convert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/algorithms.py", line 1743, in map_array
+    return lib.map_infer(values, mapper, convert=convert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "lib.pyx", line 2972, in pandas._libs.lib.map_infer
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 429, in convert_category
+    if mapped_value in df2[asset_category_col2].values:
+                       ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'SAP资产类别描述'
+
+2025-08-06 16:06:45,045 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 191, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 234, in pandas._libs.index.IndexEngine._get_loc_duplicates
+  File "index.pyx", line 242, in pandas._libs.index.IndexEngine._maybe_get_bool_indexer
+  File "index.pyx", line 134, in pandas._libs.index._unpack_bool_indexer
+KeyError: 'SAP资产类别描述'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 4924, in apply
+    ).apply()
+      ^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1427, in apply
+    return self.apply_standard()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1507, in apply_standard
+    mapped = obj._map_values(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/base.py", line 921, in _map_values
+    return algorithms.map_array(arr, mapper, na_action=na_action, convert=convert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/algorithms.py", line 1743, in map_array
+    return lib.map_infer(values, mapper, convert=convert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "lib.pyx", line 2972, in pandas._libs.lib.map_infer
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 429, in convert_category
+    if mapped_value in df2[asset_category_col2].values:
+                       ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'SAP资产类别描述'
+
+2025-08-06 16:07:14,651 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 191, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 234, in pandas._libs.index.IndexEngine._get_loc_duplicates
+  File "index.pyx", line 242, in pandas._libs.index.IndexEngine._maybe_get_bool_indexer
+  File "index.pyx", line 134, in pandas._libs.index._unpack_bool_indexer
+KeyError: 'SAP资产类别描述'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 4924, in apply
+    ).apply()
+      ^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1427, in apply
+    return self.apply_standard()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1507, in apply_standard
+    mapped = obj._map_values(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/base.py", line 921, in _map_values
+    return algorithms.map_array(arr, mapper, na_action=na_action, convert=convert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/algorithms.py", line 1743, in map_array
+    return lib.map_infer(values, mapper, convert=convert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "lib.pyx", line 2972, in pandas._libs.lib.map_infer
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 429, in convert_category
+    if mapped_value in df2[asset_category_col2].values:
+                       ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'SAP资产类别描述'
+
+2025-08-06 16:08:32,321 - ERROR - Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 191, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 234, in pandas._libs.index.IndexEngine._get_loc_duplicates
+  File "index.pyx", line 242, in pandas._libs.index.IndexEngine._maybe_get_bool_indexer
+  File "index.pyx", line 134, in pandas._libs.index._unpack_bool_indexer
+KeyError: 'SAP资产类别描述'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 486, in run
+    df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 462, in convert_asset_category
+    df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 4924, in apply
+    ).apply()
+      ^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1427, in apply
+    return self.apply_standard()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1507, in apply_standard
+    mapped = obj._map_values(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/base.py", line 921, in _map_values
+    return algorithms.map_array(arr, mapper, na_action=na_action, convert=convert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/algorithms.py", line 1743, in map_array
+    return lib.map_infer(values, mapper, convert=convert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "lib.pyx", line 2972, in pandas._libs.lib.map_infer
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test.py", line 429, in convert_category
+    if mapped_value in df2[asset_category_col2].values:
+                       ~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'SAP资产类别描述'
+

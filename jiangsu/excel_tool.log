@@ -1,0 +1,1538 @@
+2025-08-06 10:00:30,241 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:00:30,363 - ExcelMergerSplitter - INFO - 启动主事件循环
+2025-08-06 10:00:42,489 - ExcelMergerSplitter - INFO - 应用程序退出
+2025-08-06 10:01:18,353 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:01:18,450 - ExcelMergerSplitter - INFO - 启动主事件循环
+2025-08-06 10:01:24,620 - ExcelMergerSplitter - INFO - 应用程序退出
+2025-08-06 10:12:49,028 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:13:02,873 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:15:22,005 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:15:22,006 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:15:22,012 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:15:22,012 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 10:15:22,012 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:15:22,012 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:15:25,181 - ExcelMergerSplitter - DEBUG - 使用openpyxl读取Excel文件
+2025-08-06 10:15:25,182 - ExcelMergerSplitter - INFO - 文件读取完成，共 22005 行数据
+2025-08-06 10:15:25,182 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22005 行数据
+2025-08-06 10:15:25,182 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 10:15:25,775 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 10:15:25,775 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 10:15:25,778 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 10:15:26,404 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 10:15:26,404 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 10:15:26,411 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 10:15:26,988 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 10:15:26,991 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 10:15:26,991 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 10:15:27,579 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 10:15:27,579 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 10:15:27,581 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 10:15:28,175 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 10:15:28,176 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 10:15:28,178 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 10:15:28,772 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 10:15:28,772 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 10:15:28,778 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 10:15:29,377 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 10:15:29,377 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 10:15:29,383 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 10:15:29,996 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 10:15:29,996 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 10:15:29,998 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 10:15:30,576 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 10:15:30,577 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 10:15:30,582 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 10:15:31,172 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 10:15:31,172 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 10:15:31,174 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 10:15:31,783 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 10:15:31,783 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 10:15:31,785 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 10:15:32,396 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 10:15:32,396 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 10:15:32,398 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 10:15:32,981 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 10:15:32,981 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 10:15:32,987 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 10:15:33,586 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 10:15:33,586 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 10:15:33,589 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 10:15:34,178 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 10:15:34,178 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 10:15:34,184 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 10:15:34,781 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 10:15:34,781 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 10:15:34,783 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 10:15:35,396 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 10:15:35,396 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 10:15:35,399 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 10:15:35,984 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 10:15:35,985 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 10:15:35,990 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 10:15:36,606 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 10:15:36,606 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 10:15:36,608 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 10:15:37,190 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 10:15:37,190 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 10:15:37,192 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 10:15:37,808 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 10:15:37,808 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 10:15:37,814 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 10:15:38,412 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 10:15:38,412 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 10:15:38,418 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 10:15:38,427 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 10:15:38,429 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 10:15:38,432 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 10:15:38,433 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 10:15:38,433 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 10:15:38,433 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 10:22:52,852 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:23:04,208 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:23:14,138 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:23:14,139 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:23:14,149 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:23:14,149 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 10000 行
+2025-08-06 10:23:14,149 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:23:14,149 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:23:17,322 - ExcelMergerSplitter - DEBUG - 使用openpyxl读取Excel文件
+2025-08-06 10:23:17,322 - ExcelMergerSplitter - INFO - 文件读取完成，共 22005 行数据
+2025-08-06 10:23:17,323 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22005 行数据
+2025-08-06 10:23:17,323 - ExcelMergerSplitter - INFO - 将拆分为 3 个文件
+2025-08-06 10:23:23,975 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 10:23:23,975 - ExcelMergerSplitter - DEBUG - 进度更新: 33.33333333333333%
+2025-08-06 10:23:23,979 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/3 个分片
+2025-08-06 10:23:30,755 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 10:23:30,756 - ExcelMergerSplitter - DEBUG - 进度更新: 66.66666666666666%
+2025-08-06 10:23:30,758 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/3 个分片
+2025-08-06 10:23:31,866 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 10:23:31,866 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 10:23:31,868 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/3 个分片
+2025-08-06 10:23:31,872 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 10:23:31,872 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 10:23:31,872 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 10:29:12,179 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:29:31,956 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:29:34,137 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:29:34,137 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:29:34,145 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:29:34,145 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 10:29:34,145 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:29:34,145 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:29:37,211 - ExcelMergerSplitter - DEBUG - 使用openpyxl读取Excel文件
+2025-08-06 10:29:37,211 - ExcelMergerSplitter - INFO - 文件读取完成，共 22005 行数据
+2025-08-06 10:29:37,211 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22005 行数据
+2025-08-06 10:29:37,211 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 10:29:37,813 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 10:29:37,813 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 10:29:37,816 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 10:29:38,404 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 10:29:38,404 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 10:29:38,407 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 10:29:39,018 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 10:29:39,019 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 10:29:39,021 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 10:29:39,621 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 10:29:39,622 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 10:29:39,624 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 10:29:40,208 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 10:29:40,208 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 10:29:40,210 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 10:29:40,796 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 10:29:40,796 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 10:29:40,799 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 10:29:41,405 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 10:29:41,406 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 10:29:41,412 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 10:29:42,000 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 10:29:42,000 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 10:29:42,007 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 10:29:42,606 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 10:29:42,607 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 10:29:42,613 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 10:29:43,195 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 10:29:43,195 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 10:29:43,201 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 10:29:43,810 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 10:29:43,810 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 10:29:43,816 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 10:29:44,395 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 10:29:44,395 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 10:29:44,395 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 10:29:44,994 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 10:29:45,000 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 10:29:45,001 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 10:29:45,573 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 10:29:45,573 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 10:29:45,575 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 10:29:46,160 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 10:29:46,160 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 10:29:46,163 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 10:29:46,763 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 10:29:46,763 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 10:29:46,769 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 10:29:47,373 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 10:29:47,373 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 10:29:47,380 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 10:29:47,966 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 10:29:47,967 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 10:29:47,973 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 10:29:48,550 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 10:29:48,550 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 10:29:48,552 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 10:29:49,157 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 10:29:49,157 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 10:29:49,164 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 10:29:49,763 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 10:29:49,763 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 10:29:49,770 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 10:29:50,361 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 10:29:50,361 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 10:29:50,367 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 10:29:50,376 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 10:29:50,381 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 10:29:50,387 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 10:29:50,387 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 10:29:50,387 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 10:29:50,387 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 10:32:18,399 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:32:28,664 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:32:45,318 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:32:45,319 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:32:45,325 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:32:45,325 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 10000 行
+2025-08-06 10:32:52,267 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:32:54,825 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:34:16,195 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:34:32,294 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:34:37,501 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:34:37,502 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:34:37,505 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:34:37,505 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 10000 行
+2025-08-06 10:34:37,509 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:34:37,509 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:34:52,845 - ExcelMergerSplitter - DEBUG - 使用openpyxl直接读取Excel文件
+2025-08-06 10:34:52,845 - ExcelMergerSplitter - INFO - 文件读取完成，共 22006 行数据
+2025-08-06 10:34:52,847 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22006 行数据
+2025-08-06 10:34:52,847 - ExcelMergerSplitter - INFO - 将拆分为 3 个文件
+2025-08-06 10:35:00,144 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 10:35:00,145 - ExcelMergerSplitter - DEBUG - 进度更新: 33.33333333333333%
+2025-08-06 10:35:00,150 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/3 个分片
+2025-08-06 10:35:00,252 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分失败: Index(...) must be called with a collection of some kind, 57 was passed
+2025-08-06 10:35:00,253 - ExcelMergerSplitter - ERROR - 拆分过程出错: Index(...) must be called with a collection of some kind, 57 was passed
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/test1.py", line 796, in split_file_proc
+    chunk.columns = header
+    ^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/generic.py", line 6313, in __setattr__
+    return object.__setattr__(self, name, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "properties.pyx", line 69, in pandas._libs.properties.AxisProperty.__set__
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/generic.py", line 813, in _set_axis
+    labels = ensure_index(labels)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 7649, in ensure_index
+    return Index(index_like, copy=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 526, in __new__
+    raise cls._raise_scalar_data_error(data)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 5289, in _raise_scalar_data_error
+    raise TypeError(
+TypeError: Index(...) must be called with a collection of some kind, 57 was passed
+2025-08-06 10:37:12,868 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:37:20,298 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:37:22,067 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:37:22,067 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:37:22,075 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:37:22,075 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 10:37:22,076 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:37:22,076 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:37:37,288 - ExcelMergerSplitter - DEBUG - 使用openpyxl直接读取Excel文件
+2025-08-06 10:37:37,289 - ExcelMergerSplitter - INFO - 文件读取完成，共 22006 行数据
+2025-08-06 10:37:37,290 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22006 行数据
+2025-08-06 10:37:37,290 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 10:37:38,918 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 10:37:38,919 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 10:37:38,922 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 10:37:39,673 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 10:37:39,674 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 10:37:39,680 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 10:37:40,738 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 10:37:40,742 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 10:37:40,743 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 10:37:43,030 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 10:37:43,030 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 10:37:43,036 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 10:37:45,699 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 10:37:45,700 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 10:37:45,702 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 10:37:48,680 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 10:37:48,680 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 10:37:48,686 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 10:37:52,028 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 10:37:52,028 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 10:37:52,034 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 10:37:55,731 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 10:37:55,731 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 10:37:55,737 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 10:37:59,811 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 10:37:59,811 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 10:37:59,813 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 10:38:05,227 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 10:38:05,228 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 10:38:05,230 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 10:38:10,943 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 10:38:10,943 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 10:38:10,945 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 10:38:16,115 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 10:38:16,115 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 10:38:16,121 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 10:38:22,473 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 10:38:22,478 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 10:38:22,478 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 10:38:29,401 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 10:38:29,402 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 10:38:29,408 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 10:38:36,545 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 10:38:36,546 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 10:38:36,552 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 10:38:44,407 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 10:38:44,408 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 10:38:44,415 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 10:38:52,642 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 10:38:52,646 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 10:38:52,647 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 10:39:00,842 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 10:39:00,842 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 10:39:00,845 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 10:39:09,610 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 10:39:09,611 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 10:39:09,617 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 10:39:19,636 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 10:39:19,637 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 10:39:19,644 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 10:39:29,032 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 10:39:29,032 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 10:39:29,038 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 10:39:40,179 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 10:39:40,179 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 10:39:40,186 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 10:39:50,936 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 10:39:50,937 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 10:39:50,939 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 10:39:50,944 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 10:39:50,944 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 10:39:50,944 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 10:42:19,734 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:42:26,175 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:42:31,156 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:42:31,158 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:42:31,167 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:42:31,167 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 10000 行
+2025-08-06 10:42:31,168 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:42:31,168 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:47:09,366 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:47:19,369 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:47:25,105 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:47:25,106 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:47:25,112 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:47:25,112 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 10000 行
+2025-08-06 10:47:25,112 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:47:25,112 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:47:42,430 - ExcelMergerSplitter - DEBUG - 使用openpyxl直接读取Excel文件
+2025-08-06 10:47:42,430 - ExcelMergerSplitter - INFO - 文件读取完成，共 22006 行数据
+2025-08-06 10:47:42,431 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22006 行数据
+2025-08-06 10:47:42,431 - ExcelMergerSplitter - INFO - 将拆分为 3 个文件
+2025-08-06 10:47:49,705 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 10:47:49,706 - ExcelMergerSplitter - DEBUG - 进度更新: 33.33333333333333%
+2025-08-06 10:47:49,710 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/3 个分片
+2025-08-06 10:47:57,571 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 10:47:57,571 - ExcelMergerSplitter - DEBUG - 进度更新: 66.66666666666666%
+2025-08-06 10:47:57,578 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/3 个分片
+2025-08-06 10:48:00,138 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 10:48:00,138 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 10:48:00,138 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/3 个分片
+2025-08-06 10:48:00,139 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 10:48:00,139 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 10:48:00,139 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 10:48:50,550 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:49:31,703 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:49:51,171 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:49:51,172 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:49:51,182 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:49:51,182 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 10:49:51,182 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:49:51,182 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:58:10,760 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 10:58:16,994 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:58:22,914 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 10:58:22,916 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 10:58:22,921 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 10:58:22,921 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 10:58:22,925 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 10:58:22,925 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 10:58:41,049 - ExcelMergerSplitter - DEBUG - 使用pandas读取Excel文件
+2025-08-06 10:58:41,049 - ExcelMergerSplitter - INFO - 文件读取完成，共 22005 行数据
+2025-08-06 10:58:41,050 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22005 行数据
+2025-08-06 10:58:41,050 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 10:58:41,522 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 10:58:41,522 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 10:58:41,525 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 10:58:41,982 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 10:58:41,982 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 10:58:41,989 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 10:58:42,443 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 10:58:42,443 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 10:58:42,445 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 10:58:42,907 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 10:58:42,907 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 10:58:42,909 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 10:58:44,423 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 10:58:44,423 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 10:58:44,429 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 10:58:44,885 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 10:58:44,885 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 10:58:44,887 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 10:58:45,344 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 10:58:45,344 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 10:58:45,346 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 10:58:45,797 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 10:58:45,797 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 10:58:45,800 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 10:58:46,255 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 10:58:46,256 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 10:58:46,258 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 10:58:47,631 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 10:58:47,632 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 10:58:47,638 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 10:58:48,102 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 10:58:48,103 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 10:58:48,109 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 10:58:48,573 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 10:58:48,573 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 10:58:48,580 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 10:58:49,031 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 10:58:49,031 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 10:58:49,032 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 10:58:50,400 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 10:58:50,400 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 10:58:50,406 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 10:58:50,859 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 10:58:50,860 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 10:58:50,862 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 10:58:51,324 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 10:58:51,324 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 10:58:51,327 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 10:58:51,785 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 10:58:51,788 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 10:58:51,788 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 10:58:52,246 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 10:58:52,246 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 10:58:52,248 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 10:58:53,632 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 10:58:53,632 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 10:58:53,639 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 10:58:54,099 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 10:58:54,099 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 10:58:54,101 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 10:58:54,561 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 10:58:54,561 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 10:58:54,568 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 10:58:55,031 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 10:58:55,031 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 10:58:55,037 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 10:58:55,044 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 10:58:55,050 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 10:58:55,050 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 10:58:55,050 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 10:58:55,050 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 10:58:55,050 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 11:00:09,473 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 11:00:22,152 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:00:23,725 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 11:00:23,725 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 11:00:23,733 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 11:00:23,733 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 11:00:23,733 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 11:00:23,733 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:00:46,646 - ExcelMergerSplitter - DEBUG - 使用pandas读取Excel文件
+2025-08-06 11:00:46,646 - ExcelMergerSplitter - INFO - 文件读取完成，共 22005 行数据
+2025-08-06 11:00:46,647 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22005 行数据
+2025-08-06 11:00:46,647 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 11:00:47,272 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 11:00:47,272 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 11:00:47,282 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 11:00:47,897 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 11:00:47,898 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 11:00:47,904 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 11:00:48,511 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 11:00:48,511 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 11:00:48,518 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 11:00:49,127 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 11:00:49,127 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 11:00:49,134 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 11:00:50,802 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 11:00:50,803 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 11:00:50,803 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 11:00:51,422 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 11:00:51,422 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 11:00:51,429 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 11:00:52,038 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 11:00:52,038 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 11:00:52,044 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 11:00:52,658 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 11:00:52,659 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 11:00:52,665 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 11:00:53,273 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 11:00:53,273 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 11:00:53,280 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 11:00:54,891 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 11:00:54,891 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 11:00:54,897 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 11:00:55,524 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 11:00:55,526 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 11:00:55,526 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 11:00:56,166 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 11:00:56,167 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 11:00:56,173 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 11:00:56,786 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 11:00:56,786 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 11:00:56,793 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 11:00:57,408 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 11:00:57,408 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 11:00:57,415 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 11:00:58,976 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 11:00:58,982 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 11:00:58,982 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 11:00:59,596 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 11:00:59,596 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 11:00:59,603 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 11:01:00,232 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 11:01:00,232 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 11:01:00,239 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 11:01:00,855 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 11:01:00,855 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 11:01:00,862 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 11:01:01,489 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 11:01:01,489 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 11:01:01,495 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 11:01:03,047 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 11:01:03,047 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 11:01:03,054 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 11:01:03,672 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 11:01:03,678 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 11:01:03,678 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 11:01:04,290 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 11:01:04,290 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 11:01:04,297 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 11:01:04,304 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 11:01:04,305 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 11:01:04,305 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 11:01:04,305 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 11:01:04,305 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 11:01:04,305 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 11:01:08,321 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 11:01:08,323 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 11:01:08,332 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 11:01:08,332 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 11:01:08,338 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 11:01:08,338 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:06:40,597 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 11:07:01,942 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:07:03,257 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 11:07:03,258 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 11:07:03,263 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 11:07:03,264 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 10000 行
+2025-08-06 11:07:03,264 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 11:07:03,264 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:07:29,975 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分失败: 读取文件失败: list index out of range (sheet: 0)
+2025-08-06 11:07:29,976 - ExcelMergerSplitter - ERROR - 拆分过程出错: 读取文件失败: list index out of range (sheet: 0)
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 651, in split_file_proc
+    df = pd.read_excel(
+         ^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 508, in read_excel
+    data = io.parse(
+           ^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 1616, in parse
+    return self._reader.parse(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 916, in parse
+    raise err
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 903, in parse
+    output[asheetname] = parser.read(nrows=nrows)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1923, in read
+    ) = self._engine.read(  # type: ignore[attr-defined]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/parsers/python_parser.py", line 291, in read
+    conv_data = self._convert_data(data)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/parsers/python_parser.py", line 341, in _convert_data
+    clean_conv = self._clean_mapping(self.converters)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/.venv/lib/python3.12/site-packages/pandas/io/parsers/base_parser.py", line 455, in _clean_mapping
+    col = self.orig_names[col]
+          ~~~~~~~~~~~~~~~^^^^^
+IndexError: list index out of range (sheet: 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 676, in split_file_proc
+    raise Exception(f"读取文件失败: {str(e)}")
+Exception: 读取文件失败: list index out of range (sheet: 0)
+2025-08-06 11:09:06,783 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 11:09:13,583 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:09:14,894 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 11:09:14,894 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 11:09:14,902 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 11:09:14,902 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 11:09:14,903 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 11:09:14,903 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:13:48,552 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 11:16:55,706 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 11:17:13,620 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:17:15,271 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 11:17:15,272 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 11:17:15,280 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 11:17:15,280 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 11:17:15,280 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 11:17:15,280 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:27:28,678 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 11:27:33,870 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:27:35,194 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 11:27:35,196 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 11:27:35,204 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 11:27:35,204 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 11:27:35,205 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 11:27:35,205 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:33:05,043 - ExcelMergerSplitter - DEBUG - 使用openpyxl读取Excel文件
+2025-08-06 11:33:05,044 - ExcelMergerSplitter - INFO - 文件读取完成，共 22005 行数据
+2025-08-06 11:33:05,045 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22005 行数据
+2025-08-06 11:33:05,045 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 11:33:05,750 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 11:33:05,750 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 11:33:05,753 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 11:33:06,427 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 11:33:06,427 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 11:33:06,433 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 11:33:07,858 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 11:33:07,859 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 11:33:07,859 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 11:33:08,498 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 11:33:08,498 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 11:33:08,505 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 11:33:09,151 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 11:33:09,152 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 11:33:09,157 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 11:33:10,527 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 11:33:10,527 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 11:33:10,533 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 11:33:11,174 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 11:33:11,174 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 11:33:11,180 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 11:33:11,802 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 11:33:11,802 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 11:33:11,807 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 11:33:13,129 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 11:33:13,129 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 11:33:13,135 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 11:33:13,764 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 11:33:13,764 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 11:33:13,770 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 11:33:15,117 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 11:33:15,118 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 11:33:15,123 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 11:33:15,761 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 11:33:15,761 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 11:33:15,768 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 11:33:16,398 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 11:33:16,398 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 11:33:16,404 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 11:33:17,750 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 11:33:17,750 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 11:33:17,756 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 11:33:18,392 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 11:33:18,392 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 11:33:18,398 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 11:33:19,723 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 11:33:19,724 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 11:33:19,730 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 11:33:20,367 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 11:33:20,369 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 11:33:20,370 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 11:33:20,994 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 11:33:20,994 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 11:33:20,999 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 11:33:22,330 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 11:33:22,330 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 11:33:22,331 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 11:33:22,964 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 11:33:22,964 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 11:33:22,969 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 11:33:23,595 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 11:33:23,595 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 11:33:23,597 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 11:33:24,941 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 11:33:24,941 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 11:33:24,947 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 11:33:24,959 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 11:33:24,959 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 11:33:24,965 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 11:33:24,965 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 11:33:24,965 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 11:33:24,965 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 11:57:03,880 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 11:57:16,816 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:57:21,981 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 11:57:21,982 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 11:57:21,988 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 11:57:21,988 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 10000 行
+2025-08-06 11:57:21,989 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 11:57:21,989 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 11:57:31,941 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分失败: 读取文件失败: cannot access local variable 'fmt' where it is not associated with a value
+2025-08-06 11:57:31,941 - ExcelMergerSplitter - ERROR - 拆分过程出错: 读取文件失败: cannot access local variable 'fmt' where it is not associated with a value
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 686, in split_file_proc
+    elif '%' in fmt and isinstance(value, (int, float)):
+                ^^^
+UnboundLocalError: cannot access local variable 'fmt' where it is not associated with a value
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 712, in split_file_proc
+    raise Exception(f"读取文件失败: {str(e)}")
+Exception: 读取文件失败: cannot access local variable 'fmt' where it is not associated with a value
+2025-08-06 13:55:54,566 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 13:55:54,567 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 13:55:54,574 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 13:55:54,574 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 10000 行
+2025-08-06 13:55:54,574 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 13:55:54,574 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 13:56:07,708 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分失败: 读取文件失败: cannot access local variable 'fmt' where it is not associated with a value
+2025-08-06 13:56:07,708 - ExcelMergerSplitter - ERROR - 拆分过程出错: 读取文件失败: cannot access local variable 'fmt' where it is not associated with a value
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 686, in split_file_proc
+    elif '%' in fmt and isinstance(value, (int, float)):
+                ^^^
+UnboundLocalError: cannot access local variable 'fmt' where it is not associated with a value
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 712, in split_file_proc
+    raise Exception(f"读取文件失败: {str(e)}")
+Exception: 读取文件失败: cannot access local variable 'fmt' where it is not associated with a value
+2025-08-06 13:56:38,957 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 13:56:44,523 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 13:56:51,073 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 13:56:51,074 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 13:56:51,080 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 13:56:51,080 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 13:56:51,081 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 13:56:51,081 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 13:57:03,347 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分失败: 读取文件失败: argument of type 'NoneType' is not iterable
+2025-08-06 13:57:03,347 - ExcelMergerSplitter - ERROR - 拆分过程出错: 读取文件失败: argument of type 'NoneType' is not iterable
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 686, in split_file_proc
+    elif '%' in fmt and isinstance(value, (int, float)):
+         ^^^^^^^^^^
+TypeError: argument of type 'NoneType' is not iterable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 712, in split_file_proc
+    raise Exception(f"读取文件失败: {str(e)}")
+Exception: 读取文件失败: argument of type 'NoneType' is not iterable
+2025-08-06 13:57:31,208 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 13:57:37,253 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 13:57:38,912 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 13:57:38,913 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 13:57:38,919 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 13:57:38,919 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 13:57:38,920 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 13:57:38,920 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:15:29,822 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 14:15:36,545 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:15:37,944 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 14:15:37,944 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 14:15:37,951 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 14:15:37,951 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 14:15:37,951 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 14:15:37,951 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:15:48,392 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分失败: 读取文件失败: 'ExcelMergerSplitterApp' object has no attribute 'read_table_file'
+2025-08-06 14:15:48,392 - ExcelMergerSplitter - ERROR - 拆分过程出错: 读取文件失败: 'ExcelMergerSplitterApp' object has no attribute 'read_table_file'
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 633, in split_file_proc
+    df = self.read_table_file(split_file)
+         ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ExcelMergerSplitterApp' object has no attribute 'read_table_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/excel_merger_and_split.py", line 635, in split_file_proc
+    raise Exception(f"读取文件失败: {str(e)}")
+Exception: 读取文件失败: 'ExcelMergerSplitterApp' object has no attribute 'read_table_file'
+2025-08-06 14:16:29,985 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 14:16:36,383 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:16:39,084 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 14:16:39,084 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 14:16:39,091 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 14:16:39,091 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 14:16:39,092 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 14:16:39,092 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:16:58,019 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx，格式: .xlsx
+2025-08-06 14:17:32,820 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 22006 行
+2025-08-06 14:17:38,394 - ExcelMergerSplitter - INFO - 文件读取完成，共 22006 行数据
+2025-08-06 14:17:38,395 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22006 行数据
+2025-08-06 14:17:38,395 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 14:17:39,099 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 14:17:39,099 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 14:17:39,102 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 14:17:39,752 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 14:17:39,752 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 14:17:39,759 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 14:17:41,467 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 14:17:41,467 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 14:17:41,475 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 14:17:42,197 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 14:17:42,197 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 14:17:42,197 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 14:17:42,965 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 14:17:42,965 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 14:17:42,971 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 14:17:43,695 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 14:17:43,695 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 14:17:43,701 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 14:17:44,457 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 14:17:44,457 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 14:17:44,464 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 14:17:45,184 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 14:17:45,184 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 14:17:45,191 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 14:17:45,918 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 14:17:45,918 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 14:17:45,924 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 14:17:46,668 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 14:17:46,668 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 14:17:46,675 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 14:17:47,417 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 14:17:47,417 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 14:17:47,423 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 14:17:48,165 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 14:17:48,165 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 14:17:48,172 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 14:17:48,886 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 14:17:48,886 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 14:17:48,893 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 14:17:49,606 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 14:17:49,606 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 14:17:49,608 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 14:17:50,346 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 14:17:50,346 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 14:17:50,352 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 14:17:51,096 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 14:17:51,097 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 14:17:51,104 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 14:17:51,819 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 14:17:51,819 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 14:17:51,826 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 14:17:52,583 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 14:17:52,583 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 14:17:52,584 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 14:17:53,311 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 14:17:53,311 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 14:17:53,318 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 14:17:54,065 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 14:17:54,065 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 14:17:54,072 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 14:17:54,816 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 14:17:54,816 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 14:17:54,823 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 14:17:55,625 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 14:17:55,625 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 14:17:55,632 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 14:17:55,644 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 14:17:55,644 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 14:17:55,650 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 14:17:55,651 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 14:17:55,651 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 14:17:55,651 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 14:19:03,004 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 14:19:03,005 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 14:19:03,014 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 14:19:03,014 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 14:19:03,014 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 14:19:03,015 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:19:12,613 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx，格式: .xlsx
+2025-08-06 14:20:44,353 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 14:20:54,528 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:20:56,007 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 14:20:56,008 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 14:20:56,014 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 14:20:56,015 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 14:20:56,015 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 14:20:56,015 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:21:00,142 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx，格式: .xlsx
+2025-08-06 14:21:50,694 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 14:21:56,255 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:21:57,668 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 14:21:57,669 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 14:21:57,677 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 14:21:57,677 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 14:21:57,677 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 14:21:57,677 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:21:59,357 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx，格式: .xlsx
+2025-08-06 14:24:43,654 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 14:25:03,183 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:25:04,967 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 14:25:04,968 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 14:25:04,975 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 14:25:04,975 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 14:25:04,976 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 14:25:04,976 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:25:06,583 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx，格式: .xlsx
+2025-08-06 14:27:30,542 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 22006 行
+2025-08-06 14:27:30,542 - ExcelMergerSplitter - INFO - 文件读取完成，共 22006 行数据
+2025-08-06 14:27:30,543 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22006 行数据
+2025-08-06 14:27:30,543 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 14:27:31,231 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 14:27:31,231 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 14:27:31,240 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 14:27:31,874 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 14:27:31,874 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 14:27:31,880 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 14:27:33,539 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 14:27:33,540 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 14:27:33,546 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 14:27:34,256 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 14:27:34,256 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 14:27:34,262 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 14:27:34,996 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 14:27:34,996 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 14:27:35,003 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 14:27:35,704 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 14:27:35,705 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 14:27:35,711 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 14:27:36,449 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 14:27:36,449 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 14:27:36,455 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 14:27:37,155 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 14:27:37,156 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 14:27:37,158 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 14:27:37,885 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 14:27:37,885 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 14:27:37,891 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 14:27:38,602 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 14:27:38,602 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 14:27:38,604 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 14:27:39,334 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 14:27:39,334 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 14:27:39,340 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 14:27:40,055 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 14:27:40,055 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 14:27:40,061 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 14:27:40,761 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 14:27:40,762 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 14:27:40,768 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 14:27:41,493 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 14:27:41,493 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 14:27:41,499 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 14:27:42,226 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 14:27:42,226 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 14:27:42,228 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 14:27:42,940 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 14:27:42,940 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 14:27:42,947 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 14:27:43,685 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 14:27:43,685 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 14:27:43,687 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 14:27:44,392 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 14:27:44,393 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 14:27:44,395 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 14:27:45,129 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 14:27:45,134 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 14:27:45,135 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 14:27:45,831 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 14:27:45,832 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 14:27:45,838 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 14:27:46,549 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 14:27:46,553 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 14:27:46,554 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 14:27:47,275 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 14:27:47,275 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 14:27:47,281 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 14:27:47,293 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 14:27:47,296 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 14:27:47,296 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 14:27:47,297 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 14:27:47,297 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 14:27:47,297 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 14:29:56,823 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 14:30:09,058 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:30:10,773 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 14:30:10,773 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 14:30:10,780 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 14:30:10,781 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 14:30:10,781 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 14:30:10,781 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 14:30:15,281 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx，格式: .xlsx
+2025-08-06 14:32:23,644 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 22006 行
+2025-08-06 14:32:23,644 - ExcelMergerSplitter - INFO - 文件读取完成，共 22006 行数据
+2025-08-06 14:32:23,645 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22006 行数据
+2025-08-06 14:32:23,646 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 14:32:24,341 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 14:32:24,342 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 14:32:24,345 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 14:32:25,013 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 14:32:25,013 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 14:32:25,015 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 14:32:26,684 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 14:32:26,685 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 14:32:26,691 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 14:32:27,431 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 14:32:27,431 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 14:32:27,438 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 14:32:28,141 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 14:32:28,142 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 14:32:28,149 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 14:32:28,899 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 14:32:28,899 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 14:32:28,905 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 14:32:29,618 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 14:32:29,618 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 14:32:29,625 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 14:32:30,377 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 14:32:30,377 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 14:32:30,379 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 14:32:31,236 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 14:32:31,236 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 14:32:31,239 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 14:32:32,141 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 14:32:32,141 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 14:32:32,144 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 14:32:33,008 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 14:32:33,009 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 14:32:33,011 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 14:32:33,761 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 14:32:33,761 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 14:32:33,767 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 14:32:34,489 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 14:32:34,489 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 14:32:34,496 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 14:32:35,217 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 14:32:35,217 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 14:32:35,224 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 14:32:35,936 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 14:32:35,942 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 14:32:35,942 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 14:32:36,684 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 14:32:36,685 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 14:32:36,687 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 14:32:37,439 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 14:32:37,439 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 14:32:37,441 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 14:32:38,152 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 14:32:38,153 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 14:32:38,159 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 14:32:38,883 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 14:32:38,883 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 14:32:38,889 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 14:32:39,604 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 14:32:39,605 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 14:32:39,607 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 14:32:40,334 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 14:32:40,335 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 14:32:40,341 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 14:32:41,048 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 14:32:41,048 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 14:32:41,055 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 14:32:41,067 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 14:32:41,069 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 14:32:41,069 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 14:32:41,070 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 14:32:41,070 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 14:32:41,070 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 14:34:29,552 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 14:34:52,587 - ExcelMergerSplitter - INFO - 添加了 23 个文件到合并列表
+2025-08-06 14:34:55,829 - ExcelMergerSplitter - INFO - 启动合并线程
+2025-08-06 14:34:55,832 - ExcelMergerSplitter - DEBUG - 状态更新: 准备合并文件...
+2025-08-06 14:34:55,841 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 14:34:55,841 - ExcelMergerSplitter - INFO - 开始合并 23 个文件到 /Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/合并结果.xlsx
+2025-08-06 14:34:55,841 - ExcelMergerSplitter - DEBUG - 进度更新: 0.0%
+2025-08-06 14:34:55,842 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_1.xlsx (1/23)
+2025-08-06 14:34:55,842 - ExcelMergerSplitter - INFO - 正在处理文件 1/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 14:34:55,842 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx，格式: .xlsx
+2025-08-06 14:34:56,145 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:56,145 - ExcelMergerSplitter - DEBUG - 处理第一个文件，表头列数: 58
+2025-08-06 14:34:56,146 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 14:34:56,150 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_2.xlsx (2/23)
+2025-08-06 14:34:56,150 - ExcelMergerSplitter - INFO - 正在处理文件 2/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 14:34:56,150 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx，格式: .xlsx
+2025-08-06 14:34:56,454 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:56,454 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:56,460 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 14:34:56,461 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_3.xlsx (3/23)
+2025-08-06 14:34:56,461 - ExcelMergerSplitter - INFO - 正在处理文件 3/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 14:34:56,461 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx，格式: .xlsx
+2025-08-06 14:34:56,756 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:56,757 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:56,763 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 14:34:56,763 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_4.xlsx (4/23)
+2025-08-06 14:34:56,763 - ExcelMergerSplitter - INFO - 正在处理文件 4/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 14:34:56,763 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx，格式: .xlsx
+2025-08-06 14:34:57,053 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:57,053 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:57,061 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 14:34:57,061 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_5.xlsx (5/23)
+2025-08-06 14:34:57,061 - ExcelMergerSplitter - INFO - 正在处理文件 5/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 14:34:57,061 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx，格式: .xlsx
+2025-08-06 14:34:57,356 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:57,357 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:57,364 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 14:34:57,364 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_6.xlsx (6/23)
+2025-08-06 14:34:57,364 - ExcelMergerSplitter - INFO - 正在处理文件 6/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 14:34:57,364 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx，格式: .xlsx
+2025-08-06 14:34:57,677 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:57,678 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:57,678 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 14:34:57,686 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_7.xlsx (7/23)
+2025-08-06 14:34:57,686 - ExcelMergerSplitter - INFO - 正在处理文件 7/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 14:34:57,686 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx，格式: .xlsx
+2025-08-06 14:34:57,981 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:57,981 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:57,981 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 14:34:57,989 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_8.xlsx (8/23)
+2025-08-06 14:34:57,989 - ExcelMergerSplitter - INFO - 正在处理文件 8/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 14:34:57,989 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx，格式: .xlsx
+2025-08-06 14:34:58,283 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:58,284 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:58,284 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 14:34:58,292 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_9.xlsx (9/23)
+2025-08-06 14:34:58,292 - ExcelMergerSplitter - INFO - 正在处理文件 9/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 14:34:58,292 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx，格式: .xlsx
+2025-08-06 14:34:58,588 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:58,589 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:58,589 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 14:34:58,597 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_10.xlsx (10/23)
+2025-08-06 14:34:58,597 - ExcelMergerSplitter - INFO - 正在处理文件 10/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 14:34:58,597 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx，格式: .xlsx
+2025-08-06 14:34:58,910 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:58,910 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:58,910 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 14:34:58,918 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_11.xlsx (11/23)
+2025-08-06 14:34:58,918 - ExcelMergerSplitter - INFO - 正在处理文件 11/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 14:34:58,918 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx，格式: .xlsx
+2025-08-06 14:34:59,209 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:59,210 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:59,210 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 14:34:59,218 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_12.xlsx (12/23)
+2025-08-06 14:34:59,218 - ExcelMergerSplitter - INFO - 正在处理文件 12/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 14:34:59,218 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx，格式: .xlsx
+2025-08-06 14:34:59,514 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:59,515 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:59,515 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 14:34:59,518 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_13.xlsx (13/23)
+2025-08-06 14:34:59,518 - ExcelMergerSplitter - INFO - 正在处理文件 13/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 14:34:59,518 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx，格式: .xlsx
+2025-08-06 14:34:59,811 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:34:59,812 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:34:59,812 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 14:34:59,820 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_14.xlsx (14/23)
+2025-08-06 14:34:59,820 - ExcelMergerSplitter - INFO - 正在处理文件 14/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 14:34:59,820 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx，格式: .xlsx
+2025-08-06 14:35:00,125 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:00,125 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:00,126 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 14:35:00,133 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_15.xlsx (15/23)
+2025-08-06 14:35:00,133 - ExcelMergerSplitter - INFO - 正在处理文件 15/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 14:35:00,133 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx，格式: .xlsx
+2025-08-06 14:35:00,427 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:00,427 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:00,427 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 14:35:00,435 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_16.xlsx (16/23)
+2025-08-06 14:35:00,435 - ExcelMergerSplitter - INFO - 正在处理文件 16/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 14:35:00,435 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx，格式: .xlsx
+2025-08-06 14:35:00,730 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:00,731 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:00,731 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 14:35:00,739 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_17.xlsx (17/23)
+2025-08-06 14:35:00,739 - ExcelMergerSplitter - INFO - 正在处理文件 17/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 14:35:00,739 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx，格式: .xlsx
+2025-08-06 14:35:01,048 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:01,048 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:01,048 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 14:35:01,052 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_18.xlsx (18/23)
+2025-08-06 14:35:01,052 - ExcelMergerSplitter - INFO - 正在处理文件 18/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 14:35:01,052 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx，格式: .xlsx
+2025-08-06 14:35:01,354 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:01,355 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:01,355 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 14:35:01,363 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_19.xlsx (19/23)
+2025-08-06 14:35:01,363 - ExcelMergerSplitter - INFO - 正在处理文件 19/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 14:35:01,363 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx，格式: .xlsx
+2025-08-06 14:35:01,651 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:01,652 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:01,652 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 14:35:01,660 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_20.xlsx (20/23)
+2025-08-06 14:35:01,660 - ExcelMergerSplitter - INFO - 正在处理文件 20/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 14:35:01,660 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx，格式: .xlsx
+2025-08-06 14:35:01,963 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:01,963 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:01,964 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 14:35:01,967 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_21.xlsx (21/23)
+2025-08-06 14:35:01,967 - ExcelMergerSplitter - INFO - 正在处理文件 21/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 14:35:01,967 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx，格式: .xlsx
+2025-08-06 14:35:02,263 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:02,264 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:02,264 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 14:35:02,271 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_22.xlsx (22/23)
+2025-08-06 14:35:02,272 - ExcelMergerSplitter - INFO - 正在处理文件 22/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 14:35:02,272 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx，格式: .xlsx
+2025-08-06 14:35:02,565 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 14:35:02,566 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:02,566 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 14:35:02,574 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_23.xlsx (23/23)
+2025-08-06 14:35:02,574 - ExcelMergerSplitter - INFO - 正在处理文件 23/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 14:35:02,574 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx，格式: .xlsx
+2025-08-06 14:35:02,578 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 7 行
+2025-08-06 14:35:02,578 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 14:35:02,578 - ExcelMergerSplitter - INFO - 共收集到 23 个数据片段
+2025-08-06 14:35:02,583 - ExcelMergerSplitter - DEBUG - 状态更新: 正在合并所有数据...
+2025-08-06 14:35:02,583 - ExcelMergerSplitter - INFO - 开始合并所有数据
+2025-08-06 14:35:02,592 - ExcelMergerSplitter - INFO - 设置表头，总列数: 58
+2025-08-06 14:35:02,592 - ExcelMergerSplitter - DEBUG - 状态更新: 正在保存合并结果...
+2025-08-06 14:35:02,593 - ExcelMergerSplitter - INFO - 保存合并结果到: /Users/liuzongchen/PycharmProjects/pythonProject/jiangsu/合并结果.xlsx
+2025-08-06 14:35:17,893 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 14:35:17,901 - ExcelMergerSplitter - DEBUG - 状态更新: 合并完成!
+2025-08-06 14:35:17,901 - ExcelMergerSplitter - INFO - 文件合并成功完成
+2025-08-06 15:29:49,747 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 15:30:00,308 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 15:30:02,384 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 15:30:02,384 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 15:30:02,391 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 15:30:02,391 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 15:30:02,391 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 15:30:02,391 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 15:30:02,392 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx，格式: .xlsx
+2025-08-06 15:30:15,481 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 22006 行
+2025-08-06 15:30:15,488 - ExcelMergerSplitter - INFO - 文件读取完成，共 22005 行数据
+2025-08-06 15:30:15,488 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22005 行数据
+2025-08-06 15:30:15,489 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 15:30:16,039 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 15:30:16,039 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 15:30:16,042 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 15:30:16,591 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 15:30:16,591 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 15:30:16,593 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 15:30:18,002 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 15:30:18,002 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 15:30:18,008 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 15:30:18,599 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 15:30:18,599 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 15:30:18,605 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 15:30:19,201 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 15:30:19,201 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 15:30:19,207 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 15:30:19,817 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 15:30:19,817 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 15:30:19,820 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 15:30:20,430 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 15:30:20,430 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 15:30:20,432 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 15:30:21,041 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 15:30:21,041 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 15:30:21,044 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 15:30:21,652 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 15:30:21,652 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 15:30:21,654 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 15:30:22,267 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 15:30:22,273 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 15:30:22,273 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 15:30:22,881 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 15:30:22,881 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 15:30:22,881 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 15:30:23,485 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 15:30:23,486 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 15:30:23,491 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 15:30:24,113 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 15:30:24,113 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 15:30:24,119 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 15:30:24,709 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 15:30:24,709 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 15:30:24,715 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 15:30:25,319 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 15:30:25,319 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 15:30:25,325 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 15:30:25,933 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 15:30:25,933 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 15:30:25,939 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 15:30:26,574 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 15:30:26,574 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 15:30:26,576 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 15:30:27,173 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 15:30:27,173 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 15:30:27,175 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 15:30:27,799 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 15:30:27,799 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 15:30:27,801 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 15:30:28,396 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 15:30:28,397 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 15:30:28,403 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 15:30:29,019 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 15:30:29,019 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 15:30:29,021 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 15:30:29,620 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 15:30:29,620 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 15:30:29,622 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 15:30:29,634 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 15:30:29,634 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 15:30:29,635 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 15:30:29,635 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 15:30:29,635 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 15:30:29,635 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 15:31:55,340 - ExcelMergerSplitter - INFO - 应用程序启动
+2025-08-06 15:32:09,954 - ExcelMergerSplitter - INFO - 选择了待拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 15:32:11,692 - ExcelMergerSplitter - INFO - 启动拆分线程
+2025-08-06 15:32:11,693 - ExcelMergerSplitter - DEBUG - 状态更新: 准备拆分文件...
+2025-08-06 15:32:11,704 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 15:32:11,704 - ExcelMergerSplitter - INFO - 开始拆分文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx, 每个文件 1000 行
+2025-08-06 15:32:11,704 - ExcelMergerSplitter - DEBUG - 状态更新: 正在读取文件...
+2025-08-06 15:32:11,704 - ExcelMergerSplitter - INFO - 读取文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx
+2025-08-06 15:32:14,729 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）.xlsx，格式: .xlsx
+2025-08-06 15:32:28,126 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 22006 行
+2025-08-06 15:32:28,134 - ExcelMergerSplitter - INFO - 文件读取完成，共 22005 行数据
+2025-08-06 15:32:28,135 - ExcelMergerSplitter - DEBUG - 状态更新: 文件读取完成，共 22005 行数据
+2025-08-06 15:32:28,135 - ExcelMergerSplitter - INFO - 将拆分为 23 个文件
+2025-08-06 15:32:28,776 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 15:32:28,776 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 15:32:28,779 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 1/23 个分片
+2025-08-06 15:32:29,410 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 15:32:29,410 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 15:32:29,416 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 2/23 个分片
+2025-08-06 15:32:30,873 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 15:32:30,873 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 15:32:30,879 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 3/23 个分片
+2025-08-06 15:32:31,600 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 15:32:31,600 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 15:32:31,605 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 4/23 个分片
+2025-08-06 15:32:32,319 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 15:32:32,319 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 15:32:32,325 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 5/23 个分片
+2025-08-06 15:32:33,035 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 15:32:33,036 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 15:32:33,042 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 6/23 个分片
+2025-08-06 15:32:33,768 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 15:32:33,768 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 15:32:33,771 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 7/23 个分片
+2025-08-06 15:32:34,471 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 15:32:34,471 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 15:32:34,477 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 8/23 个分片
+2025-08-06 15:32:35,182 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 15:32:35,182 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 15:32:35,188 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 9/23 个分片
+2025-08-06 15:32:35,915 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 15:32:35,915 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 15:32:35,915 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 10/23 个分片
+2025-08-06 15:32:36,652 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 15:32:36,652 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 15:32:36,658 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 11/23 个分片
+2025-08-06 15:32:37,361 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 15:32:37,361 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 15:32:37,367 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 12/23 个分片
+2025-08-06 15:32:38,091 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 15:32:38,091 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 15:32:38,097 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 13/23 个分片
+2025-08-06 15:32:38,797 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 15:32:38,797 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 15:32:38,800 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 14/23 个分片
+2025-08-06 15:32:39,501 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 15:32:39,501 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 15:32:39,507 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 15/23 个分片
+2025-08-06 15:32:40,243 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 15:32:40,249 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 15:32:40,250 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 16/23 个分片
+2025-08-06 15:32:40,974 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 15:32:40,975 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 15:32:40,981 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 17/23 个分片
+2025-08-06 15:32:41,698 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 15:32:41,698 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 15:32:41,704 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 18/23 个分片
+2025-08-06 15:32:42,425 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 15:32:42,426 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 15:32:42,428 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 19/23 个分片
+2025-08-06 15:32:43,132 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 15:32:43,132 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 15:32:43,139 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 20/23 个分片
+2025-08-06 15:32:43,850 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 15:32:43,850 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 15:32:43,852 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 21/23 个分片
+2025-08-06 15:32:44,575 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 15:32:44,575 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 15:32:44,581 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 22/23 个分片
+2025-08-06 15:32:44,593 - ExcelMergerSplitter - DEBUG - 保存分片文件成功: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 15:32:44,593 - ExcelMergerSplitter - DEBUG - 进度更新: 100.0%
+2025-08-06 15:32:44,594 - ExcelMergerSplitter - DEBUG - 状态更新: 已完成 23/23 个分片
+2025-08-06 15:32:44,594 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 15:32:44,594 - ExcelMergerSplitter - DEBUG - 状态更新: 拆分完成!
+2025-08-06 15:32:44,594 - ExcelMergerSplitter - INFO - 文件拆分成功完成
+2025-08-06 15:33:36,410 - ExcelMergerSplitter - INFO - 添加了 23 个文件到合并列表
+2025-08-06 15:33:59,940 - ExcelMergerSplitter - INFO - 设置合并输出路径: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/合并结果.xlsx
+2025-08-06 15:34:03,345 - ExcelMergerSplitter - INFO - 启动合并线程
+2025-08-06 15:34:03,347 - ExcelMergerSplitter - DEBUG - 状态更新: 准备合并文件...
+2025-08-06 15:34:03,360 - ExcelMergerSplitter - DEBUG - 进度更新: 0%
+2025-08-06 15:34:03,360 - ExcelMergerSplitter - INFO - 开始合并 23 个文件到 /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/合并结果.xlsx
+2025-08-06 15:34:03,360 - ExcelMergerSplitter - DEBUG - 进度更新: 0.0%
+2025-08-06 15:34:03,361 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_1.xlsx (1/23)
+2025-08-06 15:34:03,362 - ExcelMergerSplitter - INFO - 正在处理文件 1/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx
+2025-08-06 15:34:03,362 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_1.xlsx，格式: .xlsx
+2025-08-06 15:34:03,656 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:03,657 - ExcelMergerSplitter - DEBUG - 处理第一个文件，表头列数: 58
+2025-08-06 15:34:03,657 - ExcelMergerSplitter - DEBUG - 进度更新: 4.3478260869565215%
+2025-08-06 15:34:03,661 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_2.xlsx (2/23)
+2025-08-06 15:34:03,661 - ExcelMergerSplitter - INFO - 正在处理文件 2/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx
+2025-08-06 15:34:03,661 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_2.xlsx，格式: .xlsx
+2025-08-06 15:34:04,008 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:04,009 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:04,010 - ExcelMergerSplitter - DEBUG - 进度更新: 8.695652173913043%
+2025-08-06 15:34:04,013 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_3.xlsx (3/23)
+2025-08-06 15:34:04,013 - ExcelMergerSplitter - INFO - 正在处理文件 3/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx
+2025-08-06 15:34:04,013 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_3.xlsx，格式: .xlsx
+2025-08-06 15:34:04,309 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:04,309 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:04,310 - ExcelMergerSplitter - DEBUG - 进度更新: 13.043478260869565%
+2025-08-06 15:34:04,318 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_4.xlsx (4/23)
+2025-08-06 15:34:04,318 - ExcelMergerSplitter - INFO - 正在处理文件 4/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx
+2025-08-06 15:34:04,318 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_4.xlsx，格式: .xlsx
+2025-08-06 15:34:04,607 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:04,607 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:04,607 - ExcelMergerSplitter - DEBUG - 进度更新: 17.391304347826086%
+2025-08-06 15:34:04,616 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_5.xlsx (5/23)
+2025-08-06 15:34:04,616 - ExcelMergerSplitter - INFO - 正在处理文件 5/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx
+2025-08-06 15:34:04,616 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_5.xlsx，格式: .xlsx
+2025-08-06 15:34:04,906 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:04,906 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:04,907 - ExcelMergerSplitter - DEBUG - 进度更新: 21.73913043478261%
+2025-08-06 15:34:04,914 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_6.xlsx (6/23)
+2025-08-06 15:34:04,914 - ExcelMergerSplitter - INFO - 正在处理文件 6/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx
+2025-08-06 15:34:04,915 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_6.xlsx，格式: .xlsx
+2025-08-06 15:34:05,225 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:05,225 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:05,225 - ExcelMergerSplitter - DEBUG - 进度更新: 26.08695652173913%
+2025-08-06 15:34:05,229 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_7.xlsx (7/23)
+2025-08-06 15:34:05,229 - ExcelMergerSplitter - INFO - 正在处理文件 7/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx
+2025-08-06 15:34:05,229 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_7.xlsx，格式: .xlsx
+2025-08-06 15:34:05,528 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:05,528 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:05,528 - ExcelMergerSplitter - DEBUG - 进度更新: 30.434782608695656%
+2025-08-06 15:34:05,536 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_8.xlsx (8/23)
+2025-08-06 15:34:05,536 - ExcelMergerSplitter - INFO - 正在处理文件 8/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx
+2025-08-06 15:34:05,536 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_8.xlsx，格式: .xlsx
+2025-08-06 15:34:05,832 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:05,832 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:05,832 - ExcelMergerSplitter - DEBUG - 进度更新: 34.78260869565217%
+2025-08-06 15:34:05,840 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_9.xlsx (9/23)
+2025-08-06 15:34:05,840 - ExcelMergerSplitter - INFO - 正在处理文件 9/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx
+2025-08-06 15:34:05,840 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_9.xlsx，格式: .xlsx
+2025-08-06 15:34:06,138 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:06,139 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:06,139 - ExcelMergerSplitter - DEBUG - 进度更新: 39.130434782608695%
+2025-08-06 15:34:06,143 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_10.xlsx (10/23)
+2025-08-06 15:34:06,143 - ExcelMergerSplitter - INFO - 正在处理文件 10/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx
+2025-08-06 15:34:06,143 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_10.xlsx，格式: .xlsx
+2025-08-06 15:34:06,456 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:06,457 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:06,457 - ExcelMergerSplitter - DEBUG - 进度更新: 43.47826086956522%
+2025-08-06 15:34:06,467 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_11.xlsx (11/23)
+2025-08-06 15:34:06,467 - ExcelMergerSplitter - INFO - 正在处理文件 11/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx
+2025-08-06 15:34:06,467 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_11.xlsx，格式: .xlsx
+2025-08-06 15:34:06,760 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:06,760 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:06,761 - ExcelMergerSplitter - DEBUG - 进度更新: 47.82608695652174%
+2025-08-06 15:34:06,769 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_12.xlsx (12/23)
+2025-08-06 15:34:06,769 - ExcelMergerSplitter - INFO - 正在处理文件 12/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx
+2025-08-06 15:34:06,769 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_12.xlsx，格式: .xlsx
+2025-08-06 15:34:07,064 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:07,065 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:07,065 - ExcelMergerSplitter - DEBUG - 进度更新: 52.17391304347826%
+2025-08-06 15:34:07,068 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_13.xlsx (13/23)
+2025-08-06 15:34:07,068 - ExcelMergerSplitter - INFO - 正在处理文件 13/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx
+2025-08-06 15:34:07,068 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_13.xlsx，格式: .xlsx
+2025-08-06 15:34:07,360 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:07,361 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:07,361 - ExcelMergerSplitter - DEBUG - 进度更新: 56.52173913043478%
+2025-08-06 15:34:07,365 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_14.xlsx (14/23)
+2025-08-06 15:34:07,365 - ExcelMergerSplitter - INFO - 正在处理文件 14/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx
+2025-08-06 15:34:07,365 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_14.xlsx，格式: .xlsx
+2025-08-06 15:34:07,673 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:07,673 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:07,673 - ExcelMergerSplitter - DEBUG - 进度更新: 60.86956521739131%
+2025-08-06 15:34:07,682 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_15.xlsx (15/23)
+2025-08-06 15:34:07,682 - ExcelMergerSplitter - INFO - 正在处理文件 15/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx
+2025-08-06 15:34:07,682 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_15.xlsx，格式: .xlsx
+2025-08-06 15:34:07,979 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:07,979 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:07,979 - ExcelMergerSplitter - DEBUG - 进度更新: 65.21739130434783%
+2025-08-06 15:34:07,987 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_16.xlsx (16/23)
+2025-08-06 15:34:07,987 - ExcelMergerSplitter - INFO - 正在处理文件 16/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx
+2025-08-06 15:34:07,987 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_16.xlsx，格式: .xlsx
+2025-08-06 15:34:08,285 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:08,285 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:08,286 - ExcelMergerSplitter - DEBUG - 进度更新: 69.56521739130434%
+2025-08-06 15:34:08,294 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_17.xlsx (17/23)
+2025-08-06 15:34:08,294 - ExcelMergerSplitter - INFO - 正在处理文件 17/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx
+2025-08-06 15:34:08,294 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_17.xlsx，格式: .xlsx
+2025-08-06 15:34:08,599 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:08,599 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:08,599 - ExcelMergerSplitter - DEBUG - 进度更新: 73.91304347826086%
+2025-08-06 15:34:08,608 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_18.xlsx (18/23)
+2025-08-06 15:34:08,608 - ExcelMergerSplitter - INFO - 正在处理文件 18/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx
+2025-08-06 15:34:08,608 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_18.xlsx，格式: .xlsx
+2025-08-06 15:34:08,920 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:08,921 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:08,923 - ExcelMergerSplitter - DEBUG - 进度更新: 78.26086956521739%
+2025-08-06 15:34:08,923 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_19.xlsx (19/23)
+2025-08-06 15:34:08,923 - ExcelMergerSplitter - INFO - 正在处理文件 19/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx
+2025-08-06 15:34:08,923 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_19.xlsx，格式: .xlsx
+2025-08-06 15:34:09,216 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:09,217 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:09,223 - ExcelMergerSplitter - DEBUG - 进度更新: 82.6086956521739%
+2025-08-06 15:34:09,224 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_20.xlsx (20/23)
+2025-08-06 15:34:09,224 - ExcelMergerSplitter - INFO - 正在处理文件 20/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx
+2025-08-06 15:34:09,224 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_20.xlsx，格式: .xlsx
+2025-08-06 15:34:09,514 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:09,515 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:09,515 - ExcelMergerSplitter - DEBUG - 进度更新: 86.95652173913044%
+2025-08-06 15:34:09,523 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_21.xlsx (21/23)
+2025-08-06 15:34:09,523 - ExcelMergerSplitter - INFO - 正在处理文件 21/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx
+2025-08-06 15:34:09,523 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_21.xlsx，格式: .xlsx
+2025-08-06 15:34:09,816 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:09,816 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:09,816 - ExcelMergerSplitter - DEBUG - 进度更新: 91.30434782608695%
+2025-08-06 15:34:09,825 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_22.xlsx (22/23)
+2025-08-06 15:34:09,825 - ExcelMergerSplitter - INFO - 正在处理文件 22/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx
+2025-08-06 15:34:09,825 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_22.xlsx，格式: .xlsx
+2025-08-06 15:34:10,132 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 1001 行
+2025-08-06 15:34:10,132 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:10,138 - ExcelMergerSplitter - DEBUG - 进度更新: 95.65217391304348%
+2025-08-06 15:34:10,138 - ExcelMergerSplitter - DEBUG - 状态更新: 正在处理: 固定资产导入模板0727机关(调整折旧后）_part_23.xlsx (23/23)
+2025-08-06 15:34:10,139 - ExcelMergerSplitter - INFO - 正在处理文件 23/23: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx
+2025-08-06 15:34:10,139 - ExcelMergerSplitter - INFO - 开始解析文件: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/固定资产导入模板0727机关(调整折旧后）_part_23.xlsx，格式: .xlsx
+2025-08-06 15:34:10,143 - ExcelMergerSplitter - DEBUG - 成功解析XLSX/ET文件，共 6 行
+2025-08-06 15:34:10,143 - ExcelMergerSplitter - DEBUG - 处理后续文件，列数匹配: 58
+2025-08-06 15:34:10,144 - ExcelMergerSplitter - INFO - 共收集到 23 个数据片段
+2025-08-06 15:34:10,144 - ExcelMergerSplitter - DEBUG - 状态更新: 正在合并所有数据...
+2025-08-06 15:34:10,144 - ExcelMergerSplitter - INFO - 开始合并所有数据
+2025-08-06 15:34:10,151 - ExcelMergerSplitter - INFO - 设置表头，总列数: 58
+2025-08-06 15:34:10,154 - ExcelMergerSplitter - DEBUG - 状态更新: 正在保存合并结果...
+2025-08-06 15:34:10,154 - ExcelMergerSplitter - INFO - 保存合并结果到: /Users/liuzongchen/Documents/文件合并拆分测试/固定资产导入模板0727机关(调整折旧后）_拆分结果/合并结果.xlsx
+2025-08-06 15:34:25,288 - ExcelMergerSplitter - DEBUG - 进度更新: 100%
+2025-08-06 15:34:25,296 - ExcelMergerSplitter - DEBUG - 状态更新: 合并完成!
+2025-08-06 15:34:25,296 - ExcelMergerSplitter - INFO - 文件合并成功完成
+2025-08-06 15:45:06,135 - ExcelMergerSplitter - INFO - 应用程序启动
