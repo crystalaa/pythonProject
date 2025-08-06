@@ -4,6 +4,8 @@ import traceback
 import logging
 import os
 import shutil
+import time
+
 from PyQt5.QtWidgets import QWidget, QPushButton, QFileDialog, QLabel, QVBoxLayout, QHBoxLayout, \
     QPlainTextEdit, QTabWidget, QComboBox, QProgressDialog, QApplication
 from PyQt5.QtCore import Qt
@@ -12,6 +14,12 @@ from openpyxl.styles import PatternFill
 from data_handler import LoadColumnWorker
 from rule_handler import read_rules
 from comparator import CompareWorker
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+import pandas as pd
+import polars as pl           # 超大数据用
+import xlsxwriter             # 高速写
+
 
 
 class ExcelComparer(QWidget):
@@ -313,263 +321,256 @@ class ExcelComparer(QWidget):
             self.summary_area.setPlainText(f"❌ 显示汇总报告时发生错误：{str(e)}\n请查看比对日志了解详细信息。")
             self.export_btn.setEnabled(False)
 
+    # ---------- 导出入口 ----------
     def export_report(self):
-        """复制原始文件并修改副本，添加对比结果和差异详情"""
-        if not hasattr(self, 'worker') or not hasattr(self.worker, 'missing_rows') or not hasattr(self.worker,
-                                                                                                  'diff_full_rows'):
+        if not hasattr(self.worker, 'diff_full_rows'):
             self.log("没有可导出的数据，请先执行比对！")
             return
+        directory = QFileDialog.getExistingDirectory(self, "选择保存路径")
+        if not directory:
+            return
+        tasks = [
+            (self.file1, self.sheet_combo1.currentText(), True, directory),
+            (self.file2, self.sheet_combo2.currentText(), False, directory)
+        ]
+        t0 = time.time()
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            pool.map(lambda t: self._export_final(*t), tasks)
+        self.log(f"✅ 并行导出完成，总耗时 {time.time() - t0:.1f}s")
 
+    # ---------- 最终导出实现 ----------
+    def _export_final(self, src_file, sheet_name, is_first_file, out_dir):
         try:
-            # 获取保存路径
-            directory = QFileDialog.getExistingDirectory(self, "选择保存路径")
-            if not directory:
-                self.log("导出已取消。")
-                return
+            # 1. 复制原文件
+            dst = Path(out_dir) / f"{Path(src_file).stem}_比对结果.xlsx"
+            shutil.copy2(src_file, dst)
 
-            # 复制并修改表一文件
-            file1_name = os.path.splitext(os.path.basename(self.file1))[0]
-            file1_copy_path = f"{directory}/{file1_name}_比对结果.xlsx"
-            import shutil
-            shutil.copy2(self.file1, file1_copy_path)
-            self._modify_original_file(file1_copy_path, self.sheet_combo1.currentText(), is_first_file=True)
+            # 2. 读原表（全部字符串，防类型问题）
+            df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
 
-            # 复制并修改表二文件
-            file2_name = os.path.splitext(os.path.basename(self.file2))[0]
-            file2_copy_path = f"{directory}/{file2_name}_比对结果.xlsx"
-            shutil.copy2(self.file2, file2_copy_path)
-            self._modify_original_file(file2_copy_path, self.sheet_combo2.currentText(), is_first_file=False)
+            # 3. 动态主键字段
+            primary_keys = [f for f, r in self.rules.items() if r.get("is_primary")]
 
-            self.log(f"✅ 已生成比对结果文件：{file1_copy_path} 和 {file2_copy_path}")
-        except Exception as e:
-            self.log(f"❌ 生成比对结果文件时发生错误：{str(e)}")
-
-    def _modify_original_file(self, file_path, sheet_name, is_first_file):
-        """直接修改原始Excel文件 - 性能优化版本"""
-        try:
-            # 加载工作簿
-            wb = load_workbook(file_path)
-            ws = wb[sheet_name]
-
-            # 获取主键
-            primary_keys = [field for field, rule in self.rules.items() if rule["is_primary"]]
-
-            # 获取需要比对的列
-            compare_columns = list(self.rules.keys())
-
-            # 创建红色填充样式
-            red_fill = PatternFill(start_color="FFFF0000", end_color="FFFF0000", fill_type="solid")
-
-            # 预处理数据 - 构建主键到差异数据的映射字典
-            diff_dict = {}
-            missing_in_file2_keys = set()  # 表一有但表二没有的主键
-            missing_in_file1_keys = set()  # 表二有但表一没有的主键
-
-            if hasattr(self.worker, 'diff_full_rows'):
-                for item in self.worker.diff_full_rows:
-                    # 构建主键 - 需要与对比部分使用相同的逻辑
-                    if is_first_file:
-                        # 表一文件使用source数据构建主键
-                        key_parts = [str(item['source'].get(pk, '')) for pk in primary_keys]
-                    else:
-                        # 表二文件使用target数据构建主键（与对比逻辑一致）
-                        key_parts = [str(item['target'].get(pk, '')) for pk in primary_keys]
-
-                    # 处理多主键拼接（与对比部分一致）
-                    key = ' + '.join(key_parts) if len(key_parts) > 1 else (key_parts[0] if key_parts else "")
-                    diff_dict[key] = item
-
-            # 处理缺失数据的主键
-            if hasattr(self.worker, 'missing_rows'):
-                for row in self.worker.missing_rows:
-                    # 表一中存在但表二中缺失的数据，使用表一的主键
-                    key_parts = [str(row.get(pk, '')) for pk in primary_keys]
-                    key = ' + '.join(key_parts) if len(key_parts) > 1 else (key_parts[0] if key_parts else "")
-                    missing_in_file2_keys.add(key)
-
-            # 处理多余数据的主键
-            if hasattr(self.worker, 'extra_in_file2'):
-                for row in self.worker.extra_in_file2:
-                    # 表二中存在但表一中缺失的数据，使用表二的主键
-                    key_parts = [str(row.get(pk, '')) for pk in primary_keys]
-                    key = ' + '.join(key_parts) if len(key_parts) > 1 else (key_parts[0] if key_parts else "")
-                    missing_in_file1_keys.add(key)
-
-            # 创建列名到列索引的映射（一次性处理）
-            col_name_to_index = {}
-            for col_idx in range(1, ws.max_column + 1):
-                col_name = ws.cell(row=1, column=col_idx).value
-                if col_name:
-                    # 清理列名（去除*和空格）
-                    cleaned_col_name = str(col_name).replace('*', '').strip()
-                    col_name_to_index[cleaned_col_name] = col_idx
-
-            # 在第一行添加新列标题
-            max_col = ws.max_column
-            ws.cell(row=1, column=max_col + 1, value="对比结果")
-            for i, col in enumerate(compare_columns):
-                ws.cell(row=1, column=max_col + 2 + i, value=f"{col}")
-
-            # 创建一个辅助函数来计算主键值（与对比逻辑保持一致）
-            def calculate_composite_key(row_data, is_table2=False):
-                """根据规则计算复合主键值"""
-                key_parts = []
-
-                for pk in primary_keys:
-                    # 获取主键对应的规则
-                    pk_rule = self.rules.get(pk)
-
-                    # 如果是表二且主键有计算规则，则按规则计算
-                    if is_table2 and pk_rule and pk_rule.get("calc_rule"):
-                        # 对于表二，如果主键需要计算，则使用计算规则
-                        calc_rule = pk_rule["calc_rule"]
-                        data_type = pk_rule["data_type"]
-
-                        try:
-                            # 模拟计算过程（简化版）
-                            # 实际应该使用与CompareWorker中相同的calculate_field方法
-                            if '+' in calc_rule and data_type == "文本":
-                                # 字符串拼接情况，如"公司代码+资产编码"
-                                fields = [f.strip() for f in calc_rule.split('+')]
-                                concatenated_value = ""
-                                for field in fields:
-                                    field_col_idx = col_name_to_index.get(field)
-                                    if field_col_idx and row_data.get(field_col_idx):
-                                        concatenated_value += str(row_data[field_col_idx])
-                                key_parts.append(concatenated_value)
-                            else:
-                                # 其他情况使用直接获取的值
-                                pk_col_idx = col_name_to_index.get(pk)
-                                if pk_col_idx and row_data.get(pk_col_idx):
-                                    key_parts.append(str(row_data[pk_col_idx]))
-                                else:
-                                    key_parts.append("")
-                        except:
-                            # 出错时使用直接获取的值
-                            pk_col_idx = col_name_to_index.get(pk)
-                            if pk_col_idx and row_data.get(pk_col_idx):
-                                key_parts.append(str(row_data[pk_col_idx]))
-                            else:
-                                key_parts.append("")
-                    else:
-                        # 表一或其他不需要计算的情况，直接使用值
-                        pk_col_idx = col_name_to_index.get(pk)
-                        if pk_col_idx and row_data.get(pk_col_idx):
-                            key_parts.append(str(row_data[pk_col_idx]))
-                        else:
-                            key_parts.append("")
-
-                return ' + '.join(key_parts) if len(key_parts) > 1 else (key_parts[0] if key_parts else "")
-
-            # 批量处理所有数据行，减少重复计算
-            row_updates = []  # 收集所有需要更新的行信息
-            fill_operations = []  # 收集所有需要标红的操作
-
-            # 先收集所有行的信息
-            for row_idx in range(2, ws.max_row + 1):
-                # 读取当前行的所有数据
-                row_data = {}
-                for col_idx in range(1, ws.max_column + 1):
-                    row_data[col_idx] = ws.cell(row=row_idx, column=col_idx).value
-
-                # 构建当前行的主键（与对比部分保持一致）
-                if not is_first_file:  # 表二文件
-                    # 使用表二的主键计算逻辑
-                    key = calculate_composite_key(row_data, is_table2=True)
-                else:  # 表一文件
-                    # 表一使用直接获取的主键值
-                    key_parts = []
-                    for pk in primary_keys:
-                        pk_col_idx = col_name_to_index.get(pk)
-                        if pk_col_idx and row_data.get(pk_col_idx):
-                            key_parts.append(str(row_data[pk_col_idx]))
-                        else:
-                            key_parts.append("")
-                    key = ' + '.join(key_parts) if len(key_parts) > 1 else (key_parts[0] if key_parts else "")
-
-                # 确定对比结果
-                comparison_result = ""
-                if key in missing_in_file2_keys:
-                    comparison_result = "此数据不存在于SAP" if is_first_file else "此数据不存在于平台"
-                elif key in missing_in_file1_keys:
-                    comparison_result = "此数据不存在于平台" if is_first_file else "此数据不存在于SAP"
-                elif key in diff_dict:
-                    comparison_result = "不一致"
+            # 4. 计算行主键（与比对阶段一致）
+            if is_first_file:
+                # 表一：直接取主键列
+                df["_key"] = df[primary_keys].astype(str).agg(" + ".join, axis=1)
+            else:
+                # 表二：根据规则里的计算表达式动态生成
+                pk_field = next(f for f, r in self.rules.items() if r.get("is_primary"))
+                rule = self.rules[pk_field]
+                if rule.get("calc_rule"):
+                    df["_key"] = self.worker.calculate_field(df, rule["calc_rule"], rule["data_type"]).astype(str)
                 else:
-                    comparison_result = "一致"
+                    df["_key"] = df[rule["table2_field"]].astype(str)
 
-                # 收集该行需要的更新信息
-                row_updates.append({
-                    'row_idx': row_idx,
-                    'key': key,
-                    'comparison_result': comparison_result,
-                    'row_data': row_data
-                })
+            # 5. 建立差异映射
+            diff_map, miss, extra = {}, set(), set()
+            for it in getattr(self.worker, 'diff_full_rows', []):
+                key = " + ".join([str(it['source' if is_first_file else 'target'].get(pk, ""))
+                                  for pk in primary_keys])
+                diff_map[key] = it
+            for row in getattr(self.worker, 'missing_rows', []):
+                miss.add(" + ".join([str(row.get(pk, "")) for pk in primary_keys]))
+            for row in getattr(self.worker, 'extra_in_file2', []):
+                extra.add(" + ".join([str(row.get(pk, "")) for pk in primary_keys]))
 
-            # 批量执行更新操作，减少与Excel文件的交互次数
-            for update_info in row_updates:
-                row_idx = update_info['row_idx']
-                key = update_info['key']
-                comparison_result = update_info['comparison_result']
-                row_data = update_info['row_data']
+            # 6. 需要追加的列（顺序 = 规则顺序）
+            comp_cols = [f for f in self.rules.keys() if not self.rules[f].get("is_primary")]
 
-                # 填入对比结果
-                ws.cell(row=row_idx, column=max_col + 1, value=comparison_result)
+            # 7. 计算追加值
+            keys = df["_key"].tolist()
+            comp_results = [
+                "此数据不存在于SAP" if k in miss else  # 表一多余 → 提示不存在于SAP
+                "此数据不存在于平台" if k in extra else  # 表二多余 → 提示不存在于平台
+                "不一致" if k in diff_map else
+                "一致"
+                for k in keys
+            ]
+            comp_details = {
+                fld: [
+                    (lambda k=k, fld=fld: "" if k not in diff_map else
+                    (lambda s=diff_map[k]['source'], t=diff_map[k]['target']:
+                     (lambda v1=str(s.get(fld, "")), v2=str(t.get(fld, "")):
+                      f"不一致：表一={v1}, 表二={v2}"
+                      if not self.worker.values_equal_by_rule(
+                          v1, v2,
+                          self.rules[fld]["data_type"],
+                          self.rules[fld].get("tail_diff"),
+                          fld) else "")())())()
+                    for k in keys
+                ]
+                for fld in comp_cols
+            }
 
-                # 填入各列的差异详情
-                if key in diff_dict:
-                    diff_data = diff_dict[key]
-                    # 根据是表一还是表二来获取正确的数据源
-                    if is_first_file:
-                        source_data = diff_data.get('source', {})
-                        target_data = diff_data.get('target', {})
-                    else:
-                        source_data = diff_data.get('source', {})
-                        target_data = diff_data.get('target', {})
+            # 8. 用 xlsxwriter 重写副本：不改动原列，仅追加
+            with xlsxwriter.Workbook(dst, {'nan_inf_to_errors': True}) as wb:
+                ws = wb.add_worksheet(sheet_name)
+                header_fmt = wb.add_format({'bold': True, 'bg_color': '#FFC7CE'})
+                red_fmt = wb.add_format({'bg_color': '#FF0000', 'font_color': '#FFFFFF'})
 
-                    for i, col in enumerate(compare_columns):
-                        if col in source_data and col in target_data:
-                            val1 = source_data[col]
-                            val2 = target_data[col]
+                orig_cols = len(df.columns) - 1  # 去掉 _key
+                orig_rows = len(df)
 
-                            # 获取该列的规则
-                            rule = self.rules.get(col, {})
-                            data_type = rule.get("data_type", "文本")  # 默认为文本类型
-                            tail_diff = rule.get("tail_diff")
+                # 原标题
+                for c, col_name in enumerate(df.columns[:-1]):
+                    ws.write(0, c, col_name, header_fmt)
+                # 原数据
+                for r in range(orig_rows):
+                    for c in range(orig_cols):
+                        ws.write(r + 1, c, df.iloc[r, c])
 
-                            # 使用规则判断值是否相等
-                            are_equal = self.worker.values_equal_by_rule(val1, val2, data_type, tail_diff, col)
-                            if not are_equal:
-                                # 如果是资产分类且有映射，使用原始值
-                                if col == "资产分类" and hasattr(self.worker, 'asset_code_to_original'):
-                                    original_val1 = self.worker.asset_code_to_original.get(val1, val1)
-                                    original_val2 = self.worker.asset_code_to_original.get(val2, val2)
-                                    diff_detail = f"不一致：表一={original_val1}, 表二={original_val2}"
-                                else:
-                                    diff_detail = f"不一致：表一={val1}, 表二={val2}"
+                # 追加“对比结果”
+                next_col = orig_cols
+                ws.write(0, next_col, "对比结果", header_fmt)
+                for r in range(orig_rows):
+                    val = comp_results[r]
+                    ws.write(r + 1, next_col, val)
+                    if val != "一致":
+                        ws.write(r + 1, next_col, val, red_fmt)
 
-                                ws.cell(row=row_idx, column=max_col + 2 + i, value=diff_detail)
+                # 依次追加规则字段列
+                for fld in comp_cols:
+                    next_col += 1
+                    ws.write(0, next_col, fld, header_fmt)
+                    for r in range(orig_rows):
+                        val = comp_details[fld][r]
+                        ws.write(r + 1, next_col, val)
+                        if val:
+                            ws.write(r + 1, next_col, val, red_fmt)
 
-                                # 记录需要标红的单元格
-                                if comparison_result == "不一致":
-                                    fill_operations.append((row_idx, max_col + 2 + i))
-
-                    # 记录需要标红的对比结果单元格
-                    if comparison_result in ["不一致", "此数据不存在于SAP", "此数据不存在于平台"]:
-                        fill_operations.append((row_idx, max_col + 1))
-
-            # 批量执行所有标红操作
-            for row_idx, col_idx in fill_operations:
-                ws.cell(row=row_idx, column=col_idx).fill = red_fill
-
-            # 保存修改后的文件
-            wb.save(file_path)
-            wb.close()
-
+            self.log(f"✅ 导出完成 {dst.name}")
         except Exception as e:
-            self.log(f"修改文件 {file_path} 时出错: {str(e)}")
-            raise e
+            self.log(f"❌ 导出失败 {Path(src_file).name}: {e}")
 
+    # ---------- 单文件导出 ----------
+    def _export_one_file(self, src_file, sheet_name, is_first_file, out_dir):
+        try:
+            # 自动选引擎：行数>5万→polars；否则pandas+xlsxwriter
+            quick_count = self._quick_row_count(src_file, sheet_name)
+            use_polars = quick_count > 50_000
+            dst = Path(out_dir) / f"{Path(src_file).stem}_比对结果.xlsx"
+            if use_polars:
+                self._write_with_polars(src_file, sheet_name, is_first_file, dst)
+            else:
+                self._write_with_xlsxwriter(src_file, sheet_name, is_first_file, dst)
+        except Exception as e:
+            self.log(f"❌ 导出失败 {Path(src_file).name}: {e}")
+
+    # ---------- 快速估算行数 ----------
+    def _quick_row_count(self, file_path, sheet_name):
+        try:
+            df = pd.read_excel(file_path, sheet_name=sheet_name, nrows=0)
+            with pd.ExcelFile(file_path) as xls:
+                return xls.book.sheet_by_name(sheet_name).nrows
+        except:
+            return 0
+
+    # ---------- 方案A：xlsxwriter + pandas ----------
+    def _write_with_xlsxwriter(self, src_file, sheet_name, is_first_file, dst_file):
+        # 1) 读数据
+        df = pd.read_excel(src_file, sheet_name=sheet_name)
+
+        # 2) 清理 NaN/Inf
+        df = df.replace([float('inf'), float('-inf')], None)  # 先转 None
+        df = df.where(pd.notnull(df), None)  # 再转 None（覆盖 NaN）
+
+        # 3) 计算对比列
+        df = self._add_comparison_columns(df, is_first_file)
+
+        # 4) 写文件，打开 nan_inf 容错
+        with xlsxwriter.Workbook(
+                dst_file,
+                {
+                    'constant_memory': True,
+                    'nan_inf_to_errors': True  # ← 关键
+                }
+        ) as wb:
+            ws = wb.add_worksheet(sheet_name)
+
+            header_fmt = wb.add_format({'bold': True, 'bg_color': '#FFC7CE'})
+            red_fmt = wb.add_format({'bg_color': '#FF0000', 'font_color': '#FFFFFF'})
+
+            # 写标题
+            for c, col in enumerate(df.columns):
+                ws.write(0, c, col, header_fmt)
+
+            # 批量写数据（None 会自动写成空单元格）
+            for r, row in enumerate(df.itertuples(index=False), start=1):
+                for c, val in enumerate(row):
+                    ws.write(r, c, "" if val is None else val)
+
+            # 标记差异行
+            try:
+                res_idx = df.columns.get_loc("对比结果")
+                for r in range(1, len(df) + 1):
+                    val = df.iloc[r - 1, res_idx]
+                    if val != "一致":
+                        ws.write(r, res_idx, val or "", red_fmt)
+            except Exception:
+                pass
+
+        self.log(f"✅ xlsxwriter 导出完成 {Path(dst_file).name}")
+
+    # ---------- 方案B：polars 零拷贝 ----------
+    def _write_with_polars(self, src_file, sheet_name, is_first_file, dst_file):
+        # 1) 读为 polars DataFrame
+        df = pl.read_excel(src_file, sheet_name=sheet_name)
+        # 2) 计算对比列（复用逻辑，转回 pandas 计算后转回 polars，极快）
+        pdf = self._add_comparison_columns(df.to_pandas(), is_first_file)
+        # 3) 写
+        pl.from_pandas(pdf).write_excel(dst_file, worksheet=sheet_name)
+        self.log(f"✅ polars 导出完成 {dst_file.name}")
+
+    # ---------- 计算对比列（复用原逻辑，稍作适配） ----------
+    def _add_comparison_columns(self, df: pd.DataFrame, is_first_file: bool):
+        primary_keys = [f for f, r in self.rules.items() if r["is_primary"]]
+        compare_cols = list(self.rules.keys())
+
+        df = df.copy()
+        # 主键列
+        df["_key"] = df[primary_keys].astype(str).agg(" + ".join, axis=1)
+
+        # 差异映射
+        diff_map, miss, extra = {}, set(), set()
+        for it in getattr(self.worker, 'diff_full_rows', []):
+            key = " + ".join([str(it['source' if is_first_file else 'target'].get(pk, '')) for pk in primary_keys])
+            diff_map[key] = it
+        for row in getattr(self.worker, 'missing_rows', []):
+            miss.add(" + ".join([str(row.get(pk, '')) for pk in primary_keys]))
+        for row in getattr(self.worker, 'extra_in_file2', []):
+            extra.add(" + ".join([str(row.get(pk, '')) for pk in primary_keys]))
+
+        # 对比结果
+        def comp(row):
+            k = row["_key"]
+            if k in miss:
+                return "此数据不存在于SAP" if is_first_file else "此数据不存在于平台"
+            if k in extra:
+                return "此数据不存在于平台" if is_first_file else "此数据不存在于SAP"
+            return "不一致" if k in diff_map else "一致"
+
+        df["对比结果"] = df.apply(comp, axis=1)
+
+        # 各列差异详情
+        for col in compare_cols:
+            if col not in df.columns:
+                continue
+
+            def detail(row):
+                k = row["_key"]
+                if k not in diff_map:
+                    return ""
+                s, t = diff_map[k]['source'], diff_map[k]['target']
+                v1, v2 = s.get(col, ""), t.get(col, "")
+                rule = self.rules.get(col, {})
+                if not self.worker.values_equal_by_rule(v1, v2, rule.get("data_type"), rule.get("tail_diff"), col):
+                    return f"不一致：表一={v1}, 表二={v2}"
+                return ""
+
+            df[col] = df.apply(detail, axis=1)
+
+        return df.drop(columns=["_key"])
     def log(self, message):
         """日志输出"""
         self.log_area.appendPlainText(message)
