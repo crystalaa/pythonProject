@@ -76,6 +76,12 @@ class ExcelMergerSplitterApp:
         self.split_file = ""
         self.output_path = ""
         self.first_header = None  # 存储第一个文件的表头
+        self._cached_columns = None  # 保存列名，避免重复加载
+
+        # 拆分功能新增变量
+        self.split_by_column = tk.BooleanVar(value=False)  # 是否按列拆分
+        self.selected_column = tk.StringVar(value="")  # 选中的拆分列名
+        self.split_to_sheets = tk.BooleanVar(value=False)  # 是否拆分为多个页签
 
         # 创建UI
         self.create_widgets()
@@ -184,6 +190,30 @@ class ExcelMergerSplitterApp:
         split_options_frame = ttk.LabelFrame(split_tab, text="拆分选项", padding="10")
         split_options_frame.pack(fill=tk.X, pady=(0, 10))
 
+        # 拆分方式选择
+        split_method_frame = ttk.LabelFrame(split_options_frame, text="拆分方式", padding="5")
+        split_method_frame.pack(fill=tk.X, pady=(5, 0))
+
+        # 按行拆分单选
+        self.row_split_radio = ttk.Radiobutton(
+            split_method_frame,
+            text="按条目数拆分",
+            variable=self.split_by_column,
+            value=False,
+            command=self.toggle_split_method
+        )
+        self.row_split_radio.pack(anchor=tk.W, pady=(2, 2))
+
+        # 按列拆分单选
+        self.col_split_radio = ttk.Radiobutton(
+            split_method_frame,
+            text="按列值拆分",
+            variable=self.split_by_column,
+            value=True,
+            command=self.toggle_split_method
+        )
+        self.col_split_radio.pack(anchor=tk.W, pady=(2, 2))
+
         # 条目数设置
         rows_frame = ttk.Frame(split_options_frame)
         rows_frame.pack(fill=tk.X, pady=(5, 0))
@@ -193,6 +223,19 @@ class ExcelMergerSplitterApp:
         self.rows_per_file_var = tk.StringVar(value="1000")
         self.rows_per_file_entry = ttk.Entry(rows_frame, textvariable=self.rows_per_file_var, width=10)
         self.rows_per_file_entry.pack(side=tk.LEFT, padx=(0, 10))
+
+        # 列选择下拉框（初始禁用）
+        column_frame = ttk.Frame(split_options_frame)
+        column_frame.pack(fill=tk.X, pady=(5, 0))
+
+        ttk.Label(column_frame, text="拆分列:").pack(side=tk.LEFT, padx=(0, 10))
+
+        self.column_combobox = ttk.Combobox(
+            column_frame,
+            textvariable=self.selected_column,
+            state="disabled"
+        )
+        self.column_combobox.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10))
 
         # 输出目录
         split_output_frame = ttk.Frame(split_options_frame)
@@ -215,6 +258,18 @@ class ExcelMergerSplitterApp:
             variable=self.split_header_var
         )
         split_header_check.pack(anchor=tk.W, pady=(5, 0))
+
+        # 拆分结果选项
+        result_option_frame = ttk.Frame(split_options_frame)
+        result_option_frame.pack(fill=tk.X, pady=(5, 0))
+
+        self.split_result_var = tk.BooleanVar(value=False)
+        split_result_check = ttk.Checkbutton(
+            result_option_frame,
+            text="拆分为一个文件的多个页签（否则为多个文件）",
+            variable=self.split_to_sheets
+        )
+        split_result_check.pack(anchor=tk.W, pady=(5, 0))
 
         # ==================== 公共进度区域 ====================
         progress_frame = ttk.LabelFrame(main_frame, text="处理进度", padding="10")
@@ -354,6 +409,10 @@ class ExcelMergerSplitterApp:
             self.split_output_entry.insert(0, os.path.join(dir_name, f"{base_name}_拆分结果"))
             logger.info(f"选择了待拆分文件: {file_path}")
 
+            # 如果当前是按列拆分模式，加载列名
+            if self.split_by_column.get():
+                self.load_columns_from_file()
+
     def browse_split_output(self):
         initial_dir = self.split_output_entry.get() or os.getcwd()
         dir_path = filedialog.askdirectory(
@@ -365,6 +424,40 @@ class ExcelMergerSplitterApp:
             self.split_output_entry.delete(0, tk.END)
             self.split_output_entry.insert(0, dir_path)
             logger.info(f"设置拆分输出目录: {dir_path}")
+
+    def toggle_split_method(self):
+        """切换拆分方式时启用/禁用相关控件"""
+        if self.split_by_column.get():
+            # 按列拆分：禁用行数输入，启用列选择
+            self.rows_per_file_entry.config(state="disabled")
+            self.column_combobox.config(state="readonly")
+            # 尝试加载列名（如果已选择文件）
+            self.load_columns_from_file()
+        else:
+            # 按行拆分：启用行数输入，禁用列选择
+            self.rows_per_file_entry.config(state="normal")
+            self.column_combobox.config(state="disabled")
+
+    def load_columns_from_file(self):
+        """从选中的文件加载列名到下拉框"""
+        split_file = self.split_file_entry.get()
+        if not split_file or not os.path.exists(split_file):
+            return
+
+        try:
+            # 读取文件获取表头
+            df = self.read_table_file(split_file)
+            if len(df) > 0:
+                headers = df.iloc[0].tolist()
+                # 过滤空表头
+                headers = [h for h in headers if str(h).strip()]
+                self.column_combobox['values'] = headers
+                if headers:
+                    self.selected_column.set(headers[0])
+                logger.info(f"从文件加载了 {len(headers)} 个列名")
+        except Exception as e:
+            logger.error(f"加载列名失败: {str(e)}")
+            messagebox.showerror("错误", f"加载列名失败: {str(e)}")
 
     # ==================== 公共方法 ====================
     def update_status(self, message):
@@ -399,6 +492,102 @@ class ExcelMergerSplitterApp:
         self.split_output_browse_btn.config(state=tk.NORMAL)
         self.split_btn.config(state=tk.NORMAL)
 
+    def read_table_file(self, file_path):
+        """
+        公共文件读取方法，支持多种表格格式
+        返回包含所有数据的DataFrame（包含表头行）
+        """
+        file_ext = os.path.splitext(file_path)[1].lower()
+        logger.info(f"开始解析文件: {file_path}，格式: {file_ext}")
+
+        try:
+            if file_ext == '.csv':
+                # CSV文件处理（保持原逻辑）
+                encodings = ['utf-8', 'gbk', 'gb2312', 'utf-16']
+                df = None
+                for encoding in encodings:
+                    try:
+                        df = pd.read_csv(
+                            file_path,
+                            encoding=encoding,
+                            header=None,  # 不自动解析表头
+                            dtype=str,  # 所有列按字符串读取
+                            keep_default_na=False
+                        )
+                        logger.debug(f"成功使用 {encoding} 编码读取CSV文件")
+                        break
+                    except Exception as e:
+                        logger.debug(f"使用 {encoding} 编码读取CSV失败: {str(e)}")
+                        continue
+                if df is None:
+                    raise Exception(f"无法解析CSV文件，尝试了多种编码")
+                return df
+
+            elif file_ext in ['.xlsx', '.et']:
+                # XLSX和WPS表格处理（包含您的格式处理逻辑）
+                wb = load_workbook(file_path, read_only=True)
+                ws = wb.active
+                data = []
+                for row in ws.iter_rows():
+                    current_row = []
+                    for cell in row:
+                        value = cell.value
+                        fmt = cell.number_format  # 获取单元格格式
+
+                        if fmt is None:
+                            current_row.append(str(value) if value is not None else "")
+                        else:
+                            if isinstance(value, (float, int)):
+                                if '.' in fmt:
+                                    decimal_part = fmt.split('.')[-1]
+                                    decimal_places = len(
+                                        decimal_part.replace('%', '').replace('#', '').replace('0', ''))  # 精确获取位数
+                                    formatted_value = f"{value:.{decimal_places}f}"
+                                else:
+                                    formatted_value = f"{value:.0f}"
+                                current_row.append(formatted_value)
+                            elif hasattr(value, 'strftime'):  # 日期时间类型
+                                try:
+                                    # 转换Excel格式到strftime格式
+                                    fmt_converted = (fmt.replace('yyyy', '%Y')
+                                                     .replace('mm', '%m')
+                                                     .replace('dd', '%d')
+                                                     .replace('hh', '%H')
+                                                     .replace('ss', '%S'))
+                                    formatted_value = value.strftime(fmt_converted)
+                                except:
+                                    formatted_value = str(value)
+                                current_row.append(formatted_value)
+                            elif '%' in fmt and isinstance(value, (int, float)):  # 百分比类型
+                                decimal_places = fmt.count('0') - 1  # e.g. 0.00% -> 2
+                                formatted_value = f"{value:.{decimal_places}%}"
+                                current_row.append(formatted_value)
+                            else:
+                                current_row.append(str(value) if value is not None else "")
+                    data.append(current_row)
+                wb.close()  # 关闭工作簿释放资源
+                df = pd.DataFrame(data)
+                logger.debug(f"成功解析XLSX/ET文件，共 {len(df)} 行")
+                return df
+
+            elif file_ext == '.xls':
+                # XLS文件处理（保持原逻辑）
+                df = pd.read_excel(
+                    file_path,
+                    header=None,
+                    engine='xlrd',
+                    dtype=str,
+                    keep_default_na=False
+                )
+                logger.debug(f"成功解析XLS文件，共 {len(df)} 行")
+                return df
+
+            else:
+                raise Exception(f"不支持的文件格式: {file_ext}")
+
+        except Exception as e:
+            logger.error(f"解析文件 {file_path} 失败: {str(e)}")
+            raise Exception(f"文件解析错误: {str(e)}")
     # ==================== 合并处理 ====================
     def start_merge(self):
         if not self.merge_files:
@@ -522,9 +711,14 @@ class ExcelMergerSplitterApp:
                     combined_df.to_excel(writer, index=False, sheet_name='Sheet1')
                     worksheet = writer.sheets['Sheet1']
                     # 设置所有单元格为文本格式
-                    for i in range(worksheet.ncols):
-                        for j in range(worksheet.nrows):
-                            worksheet.write(j, i, worksheet.row(j)[i].value, xlwt.easyxf('text: format_string="@"'))
+                    for col_idx in range(worksheet.ncols):
+                        for row_idx in range(worksheet.nrows):
+                            worksheet.write(
+                                row_idx,
+                                col_idx,
+                                worksheet.row(row_idx)[col_idx].value,
+                                xlwt.easyxf('text: format_string="@"')
+                            )
 
             self.update_progress(100)
             self.update_status("合并完成!")
@@ -547,14 +741,23 @@ class ExcelMergerSplitterApp:
             logger.warning("尝试开始拆分但未选择有效文件")
             return
 
-        try:
-            rows_per_file = int(self.rows_per_file_var.get())
-            if rows_per_file <= 0:
-                raise ValueError("条目数必须为正数")
-        except ValueError as e:
-            messagebox.showwarning("警告", f"无效的条目数: {str(e)}")
-            logger.warning(f"无效的条目数: {str(e)}")
-            return
+        # 检查拆分方式
+        if not self.split_by_column.get():
+            # 按行数拆分
+            try:
+                rows_per_file = int(self.rows_per_file_var.get())
+                if rows_per_file <= 0:
+                    raise ValueError("条目数必须为正数")
+            except ValueError as e:
+                messagebox.showwarning("警告", f"无效的条目数: {str(e)}")
+                logger.warning(f"无效的条目数: {str(e)}")
+                return
+        else:
+            # 按列拆分
+            if not self.selected_column.get():
+                messagebox.showwarning("警告", "请选择拆分列")
+                logger.warning("尝试按列拆分但未选择列")
+                return
 
         output_dir = self.split_output_entry.get()
         if not output_dir:
@@ -571,17 +774,16 @@ class ExcelMergerSplitterApp:
         # 在新线程中执行拆分操作
         split_thread = threading.Thread(
             target=self.split_file_proc,
-            args=(split_file, rows_per_file, output_dir)
+            args=(split_file, output_dir)
         )
         split_thread.daemon = True
         split_thread.start()
         logger.info("启动拆分线程")
 
-    def split_file_proc(self, split_file, rows_per_file, output_dir):
+    def split_file_proc(self, split_file, output_dir):
         try:
             self.update_status("准备拆分文件...")
             self.update_progress(0)
-            logger.info(f"开始拆分文件: {split_file}, 每个文件 {rows_per_file} 行")
 
             file_ext = os.path.splitext(split_file)[1].lower()
             file_name = os.path.splitext(os.path.basename(split_file))[0]
@@ -602,6 +804,7 @@ class ExcelMergerSplitterApp:
                 df = df.iloc[1:].copy()
             else:
                 raise Exception("待拆分文件只有表头，没有实际数据")
+
             # 检查数据
             total_rows = len(df)
             if total_rows == 0:
@@ -610,69 +813,158 @@ class ExcelMergerSplitterApp:
             logger.info(f"文件读取完成，共 {total_rows} 行数据")
             self.update_status(f"文件读取完成，共 {total_rows} 行数据")
 
-            # 计算拆分数量
-            total_chunks = (total_rows + rows_per_file - 1) // rows_per_file
-            logger.info(f"将拆分为 {total_chunks} 个文件")
-            # 获取表头
-            header = df.columns
-            # 拆分并保存
-            for i in range(total_chunks):
-                # 计算当前分片的起始和结束索引
-                start_idx = i * rows_per_file
-                end_idx = min((i + 1) * rows_per_file, total_rows)
-                # 提取当前分片数据
-                chunk = df.iloc[start_idx:end_idx].copy()
-                # 如果需要，添加表头
-                # if self.split_header_var.get() or i == 0:
-                    # 确保表头正确
-                chunk.columns = header
-                # 生成输出文件名
-                output_filename = f"{file_name}_part_{i + 1}{file_ext}"
-                output_path = os.path.join(output_dir, output_filename)
-                # 保存分片文件
-                try:
-                    if file_ext == '.csv':
-                        chunk.to_csv(
-                            output_path,
-                            index=False,
-                            encoding='utf-8-sig'
-                        )
-                    elif file_ext in ['.xlsx', '.et']:
+            # 根据拆分方式执行不同逻辑
+            if not self.split_by_column.get():
+                # 按行数拆分
+                rows_per_file = int(self.rows_per_file_var.get())
+                logger.info(f"开始按行数拆分: 每个文件 {rows_per_file} 行")
+                total_chunks = (total_rows + rows_per_file - 1) // rows_per_file
+
+                # 判断是否拆分为一个文件的多个页签
+                if self.split_to_sheets.get():
+                    # 多页签模式 - 只生成一个文件
+                    output_path = os.path.join(output_dir, f"{file_name}_split_by_rows{file_ext}")
+
+                    # 只支持xlsx和et格式的多页签
+                    if file_ext in ['.xlsx', '.et']:
                         with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
-                            chunk.to_excel(writer, index=False, sheet_name='Sheet1')
-                            # 设置所有单元格为文本格式
-                            worksheet = writer.sheets['Sheet1']
-                            for column in worksheet.columns:
-                                for cell in column:
-                                    cell.number_format = '@'  # 文本格式
-                    elif file_ext == '.xls':
-                        import xlwt  # 延迟导入，仅在需要时加载
-                        with pd.ExcelWriter(output_path, engine='xlwt') as writer:
-                            chunk.to_excel(writer, index=False, sheet_name='Sheet1')
-                            worksheet = writer.sheets['Sheet1']
-                            # 设置所有单元格为文本格式
-                            for col_idx in range(worksheet.ncols):
-                                for row_idx in range(worksheet.nrows):
-                                    worksheet.write(
-                                        row_idx,
-                                        col_idx,
-                                        worksheet.row(row_idx)[col_idx].value,
-                                        xlwt.easyxf('text: format_string="@"')
-                                    )
+                            # 写入总览页签
+                            # header_df = pd.DataFrame([header])
+                            # header_df.to_excel(writer, index=False, sheet_name='总览')
 
-                    logger.debug(f"保存分片文件成功: {output_path}")
-                except Exception as e:
-                    raise Exception(f"保存分片 {i + 1} 失败: {str(e)}")
+                            for i in range(total_chunks):
+                                # 计算当前块的起始和结束索引
+                                start_idx = i * rows_per_file
+                                end_idx = min((i + 1) * rows_per_file, total_rows)
+                                chunk = df.iloc[start_idx:end_idx].copy()
+                                chunk.columns = header
+                                # 页签名
+                                sheet_name = f'第{i + 1}部分'
+                                chunk.to_excel(writer, index=False, sheet_name=sheet_name)
+                                # 设置文本格式
+                                worksheet = writer.sheets[sheet_name]
+                                for column in worksheet.columns:
+                                    for cell in column:
+                                        cell.number_format = '@'
 
-                # 更新进度
-                progress = ((i + 1) / total_chunks) * 100
-                self.update_progress(progress)
-                self.update_status(f"已完成 {i + 1}/{total_chunks} 个分片")
+                                # 更新进度
+                                progress = ((i + 1) / total_chunks) * 100
+                                self.update_progress(progress)
+                                self.update_status(f"已完成 {i + 1}/{total_chunks} 个页签")
+
+                        message = f"文件拆分完成，生成1个文件包含 {total_chunks} 个页签"
+                    else:
+                        # 不支持多页签的格式，自动切换为多文件模式
+                        logger.warning("不支持多页签的格式，自动切换为多文件模式")
+                        for i in range(total_chunks):
+                            start_idx = i * rows_per_file
+                            end_idx = min((i + 1) * rows_per_file, total_rows)
+                            chunk = df.iloc[start_idx:end_idx].copy()
+                            chunk.columns = header
+                            output_filename = f"{file_name}_part_{i + 1}{file_ext}"
+                            output_path = os.path.join(output_dir, output_filename)
+                            self.save_split_chunk(chunk, header, output_path, file_ext)
+
+                            # 更新进度
+                            progress = ((i + 1) / total_chunks) * 100
+                            self.update_progress(progress)
+                            self.update_status(f"已完成 {i + 1}/{total_chunks} 个分片")
+                            message = f"文件拆分完成，共生成 {total_chunks} 个文件"
+
+                else:
+                    for i in range(total_chunks):
+                        start_idx = i * rows_per_file
+                        end_idx = min((i + 1) * rows_per_file, total_rows)
+                        chunk = df.iloc[start_idx:end_idx].copy()
+                        chunk.columns = header
+                        output_filename = f"{file_name}_part_{i + 1}{file_ext}"
+                        output_path = os.path.join(output_dir, output_filename)
+                        self.save_split_chunk(chunk, header, output_path, file_ext)
+
+                        # 更新进度
+                        progress = ((i + 1) / total_chunks) * 100
+                        self.update_progress(progress)
+                        self.update_status(f"已完成 {i + 1}/{total_chunks} 个分片")
+                        message = f"文件拆分完成，共生成 {total_chunks} 个文件"
+
+
+
+
+            else:
+                # 按列值拆分
+                column_name = self.selected_column.get()
+                logger.info(f"开始按列值拆分: 列名 '{column_name}'")
+
+                # 检查列是否存在
+                if column_name not in df.columns:
+                    raise Exception(f"文件中不存在列: {column_name}")
+
+                # 获取唯一值列表
+                unique_values = df[column_name].unique()
+                unique_values = [v for v in unique_values if pd.notna(v) and str(v).strip()]
+
+                if not unique_values:
+                    raise Exception(f"列 '{column_name}' 没有有效的唯一值")
+
+                total_chunks = len(unique_values)
+                logger.info(f"发现 {total_chunks} 个唯一值，将进行拆分")
+
+                # 拆分为多个页签
+                if self.split_to_sheets.get():
+                    output_path = os.path.join(output_dir, f"{file_name}_split_by_{column_name}{file_ext}")
+                    if file_ext in ['.xlsx', '.et']:
+                        with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
+                            # 写入原始表头
+                            # header_df = pd.DataFrame([header])
+                            # header_df.to_excel(writer, index=False, sheet_name='总览')
+
+                            for i, value in enumerate(unique_values):
+                                # 筛选数据
+                                chunk = df[df[column_name] == value].copy()
+
+                                # 写入页签
+                                sheet_name = f"{value}"[:31]  # Excel页签最大31字符
+                                chunk.to_excel(writer, index=False, sheet_name=sheet_name)
+
+                                # 设置文本格式
+                                worksheet = writer.sheets[sheet_name]
+                                for column in worksheet.columns:
+                                    for cell in column:
+                                        cell.number_format = '@'
+
+                                # 更新进度
+                                progress = ((i + 1) / total_chunks) * 100
+                                self.update_progress(progress)
+                                self.update_status(f"已完成 {i + 1}/{total_chunks} 个页签")
+                    else:
+                        raise Exception("只有.xlsx和.et格式支持多页签拆分")
+
+                    message = f"文件拆分完成，生成1个文件包含 {total_chunks} 个页签"
+
+                # 拆分为多个文件
+                else:
+                    for i, value in enumerate(unique_values):
+                        # 筛选数据
+                        chunk = df[df[column_name] == value].copy()
+
+                        # 生成文件名（处理特殊字符）
+                        safe_value = str(value).replace('/', '_').replace('\\', '_').replace(':', '_')
+                        output_filename = f"{file_name}_{column_name}_{safe_value}{file_ext}"
+                        output_path = os.path.join(output_dir, output_filename)
+
+                        self.save_split_chunk(chunk, header, output_path, file_ext)
+
+                        # 更新进度
+                        progress = ((i + 1) / total_chunks) * 100
+                        self.update_progress(progress)
+                        self.update_status(f"已完成 {i + 1}/{total_chunks} 个文件")
+
+                    message = f"文件拆分完成，共生成 {total_chunks} 个文件"
 
             self.update_progress(100)
             self.update_status("拆分完成!")
             logger.info("文件拆分成功完成")
-            messagebox.showinfo("成功", f"文件拆分完成，共生成 {total_chunks} 个文件，已保存到:\n{output_dir}")
+            messagebox.showinfo("成功", f"{message}，已保存到:\n{output_dir}")
 
         except Exception as e:
             self.update_status(f"拆分失败: {str(e)}")
@@ -682,101 +974,54 @@ class ExcelMergerSplitterApp:
             # 重新启用按钮
             self._enable_all_buttons()
 
-    def read_table_file(self, file_path):
-        """
-        公共文件读取方法，支持多种表格格式
-        返回包含所有数据的DataFrame（包含表头行）
-        """
-        file_ext = os.path.splitext(file_path)[1].lower()
-        logger.info(f"开始解析文件: {file_path}，格式: {file_ext}")
-
+    def save_split_chunk(self, chunk, header, output_path, file_ext):
+        """保存拆分后的块数据"""
         try:
+            # 是否需要添加表头
+            # if self.split_header_var.get():
+            #     # 确保 chunk 数据中不包含表头行
+            #     if not chunk.empty and (chunk.iloc[0].tolist() == header.tolist()):
+            #         chunk = chunk.iloc[1:]  # 移除第一行（表头行）
+            #
+            #     # 创建带表头的DataFrame
+            #     header_df = pd.DataFrame([header])
+            #     header_df.columns = header
+            #     chunk_with_header = pd.concat([header_df, chunk], ignore_index=True)
+            # else:
+            #     chunk_with_header = chunk.copy()
+
             if file_ext == '.csv':
-                # CSV文件处理（保持原逻辑）
-                encodings = ['utf-8', 'gbk', 'gb2312', 'utf-16']
-                df = None
-                for encoding in encodings:
-                    try:
-                        df = pd.read_csv(
-                            file_path,
-                            encoding=encoding,
-                            header=None,  # 不自动解析表头
-                            dtype=str,  # 所有列按字符串读取
-                            keep_default_na=False
-                        )
-                        logger.debug(f"成功使用 {encoding} 编码读取CSV文件")
-                        break
-                    except Exception as e:
-                        logger.debug(f"使用 {encoding} 编码读取CSV失败: {str(e)}")
-                        continue
-                if df is None:
-                    raise Exception(f"无法解析CSV文件，尝试了多种编码")
-                return df
-
-            elif file_ext in ['.xlsx', '.et']:
-                # XLSX和WPS表格处理（包含您的格式处理逻辑）
-                wb = load_workbook(file_path, read_only=True)
-                ws = wb.active
-                data = []
-                for row in ws.iter_rows():
-                    current_row = []
-                    for cell in row:
-                        value = cell.value
-                        fmt = cell.number_format  # 获取单元格格式
-
-                        if fmt is None:
-                            current_row.append(str(value) if value is not None else "")
-                        else:
-                            if isinstance(value, (float,int)):
-                                if '.' in fmt:
-                                    decimal_part = fmt.split('.')[-1]
-                                    decimal_places = len(decimal_part.replace('%', '').replace('#', '').replace('0', ''))  # 精确获取位数
-                                    formatted_value = f"{value:.{decimal_places}f}"
-                                else:
-                                    formatted_value = f"{value:.0f}"
-                                current_row.append(formatted_value)
-                            elif hasattr(value, 'strftime'):  # 日期时间类型
-                                try:
-                                    # 转换Excel格式到strftime格式
-                                    fmt_converted = (fmt.replace('yyyy', '%Y')
-                                                     .replace('mm', '%m')
-                                                     .replace('dd', '%d')
-                                                     .replace('hh', '%H')
-                                                     .replace('ss', '%S'))
-                                    formatted_value = value.strftime(fmt_converted)
-                                except:
-                                    formatted_value = str(value)
-                                current_row.append(formatted_value)
-                            elif '%' in fmt and isinstance(value, (int, float)):  # 百分比类型
-                                decimal_places = fmt.count('0') - 1  # e.g. 0.00% -> 2
-                                formatted_value = f"{value:.{decimal_places}%}"
-                                current_row.append(formatted_value)
-                            else:
-                                current_row.append(str(value) if value is not None else "")
-                    data.append(current_row)
-                wb.close()  # 关闭工作簿释放资源
-                df = pd.DataFrame(data)
-                logger.debug(f"成功解析XLSX/ET文件，共 {len(df)} 行")
-                return df
-
-            elif file_ext == '.xls':
-                # XLS文件处理（保持原逻辑）
-                df = pd.read_excel(
-                    file_path,
-                    header=None,
-                    engine='xlrd',
-                    dtype=str,
-                    keep_default_na=False
+                # 先写入表头再写入数据
+                chunk.to_csv(
+                    output_path,
+                    index=False,
+                    encoding='utf-8-sig'
                 )
-                logger.debug(f"成功解析XLS文件，共 {len(df)} 行")
-                return df
-
-            else:
-                raise Exception(f"不支持的文件格式: {file_ext}")
-
+            elif file_ext in ['.xlsx', '.et']:
+                with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
+                    chunk.to_excel(writer, index=False, sheet_name='Sheet1')
+                    # 设置所有单元格为文本格式
+                    worksheet = writer.sheets['Sheet1']
+                    for column in worksheet.columns:
+                        for cell in column:
+                            cell.number_format = '@'  # 文本格式
+            elif file_ext == '.xls':
+                import xlwt
+                with pd.ExcelWriter(output_path, engine='xlwt') as writer:
+                    chunk.to_excel(writer, index=False, sheet_name='Sheet1')
+                    worksheet = writer.sheets['Sheet1']
+                    # 设置所有单元格为文本格式
+                    for col_idx in range(worksheet.ncols):
+                        for row_idx in range(worksheet.nrows):
+                            worksheet.write(
+                                row_idx,
+                                col_idx,
+                                worksheet.row(row_idx)[col_idx].value,
+                                xlwt.easyxf('text: format_string="@"')
+                            )
+            logger.debug(f"保存分片文件成功: {output_path}")
         except Exception as e:
-            logger.error(f"解析文件 {file_path} 失败: {str(e)}")
-            raise Exception(f"文件解析错误: {str(e)}")
+            raise Exception(f"保存分片失败: {str(e)}")
 
 
 if __name__ == "__main__":
