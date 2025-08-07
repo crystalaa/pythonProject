@@ -5,8 +5,9 @@ import logging
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
 from PyQt5.QtCore import QThread, pyqtSignal
-from openpyxl import load_workbook
 from data_handler import read_excel_fast, read_mapping_table
+from jiangsu.sapCheck.rule_handler import read_enum_mapping
+
 
 class CompareWorker(QThread):
     """用于在独立线程中执行比较操作"""
@@ -28,6 +29,7 @@ class CompareWorker(QThread):
         self.missing_rows = []
         self.extra_in_file2 = []
         self.diff_full_rows = []
+        self.enum_map = read_enum_mapping(rule_file)  # 新增
 
     @staticmethod
     def normalize_value(val):
@@ -123,6 +125,38 @@ class CompareWorker(QThread):
         # 如果两个值都是空，则认为相等
         if val1 == "" and val2 == "":
             return True
+        # ✅ 新增：监管资产属性字段特殊处理
+        if field_name == "监管资产属性":
+            def extract_last_segment(val, sep):
+                if not val:
+                    return ""
+                parts = str(val).split(sep)
+                return parts[-1].strip()
+
+            val1_clean = extract_last_segment(val1, '\\')
+            val2_clean = extract_last_segment(val2, '-')
+            return val1_clean == val2_clean
+        # --- 枚举值映射：站线电压等级 ---
+        if field_name == "线站电压等级":
+            # 平台表是名称 -> 编码
+            code1 = self.enum_map.get(val1, val1)
+            # ERP 本身就是编码
+            return code1 == val2
+        # ✅ 新增：布尔值映射逻辑
+        bool_map = {
+            "是": "Y",
+            "否": "N",
+            "Y": "是",
+            "N": "否"
+        }
+        if val1 in bool_map and val2 in bool_map:
+            if bool_map[val1] == val2 or val1 == bool_map[val2]:
+                return True
+        if field_name == "折旧方法":
+            if val1 == "年限平均法" and val2 == "直线法":
+                return True
+            if val1 == "直线法" and val2 == "年限平均法":
+                return True
 
         if data_type == "数值":
             # 数值型比较
@@ -251,8 +285,8 @@ class CompareWorker(QThread):
                 # 找到匹配项，返回ERP资产明细类别前4位
                 converted_code = str(matches.iloc[0][erp_detail_col])[:4]
             else:
-                # 没有找到匹配项，返回原值前4位
-                converted_code = str(sap_value)[:4]
+                # 没有找到匹配项，返回原值
+                converted_code = str(sap_value)
 
             # 保存编码到原始值的映射
             self.asset_code_to_original[converted_code] = sap_value
@@ -576,10 +610,13 @@ class CompareWorker(QThread):
                         diff_mask = (series1_cmp != series2_cmp) & ~both_empty
 
                     elif data_type == "文本":
-                        # 文本型比较
-                        series1_norm = series1.fillna('').astype(str).str.strip()
-                        series2_norm = series2.fillna('').astype(str).str.strip()
-                        diff_mask = series1_norm != series2_norm
+                        def mapped_equal(a, b, field):
+                            return self.values_equal_by_rule(a, b, "文本", None, field)
+
+                        diff_mask = ~pd.Series([
+                            mapped_equal(self.normalize_value(s1).strip(), self.normalize_value(s2).strip(), field1)
+                            for s1, s2 in zip(series1, series2)
+                        ], index=series1.index)
 
                     # 找出有差异的行索引
                     diff_indices = df1_common[diff_mask].index
@@ -710,7 +747,7 @@ class CompareWorker(QThread):
                 "equal_count": equal_count,
                 "diff_ratio": diff_count / len(common_codes) if len(common_codes) > 0 else 0.0,
             }
-
+            self.asset_code_map = self.asset_code_to_original  # 仅多一行
             if diff_count == 0:
                 self.log_signal.emit("【共同主键的数据完全一致】，没有差异。")
             else:

@@ -1,4 +1,5 @@
 # rule_handler.py
+import pandas as pd
 from openpyxl import load_workbook
 
 def read_rules(file_path):
@@ -23,3 +24,17 @@ def read_rules(file_path):
         return rules
     except Exception as e:
         raise Exception(f"读取规则文件时发生错误: {str(e)}")
+
+def read_enum_mapping(rule_file):
+    """
+    读取规则文件中的'枚举值-线站电压等级'页签
+    返回 dict: 名称 -> 编码
+    """
+    try:
+        df = pd.read_excel(rule_file, sheet_name='枚举值-线站电压等级', dtype=str)
+        # 假设列名就是“编码”和“名称”
+        df = df[['编码', '名称']].dropna()
+        return dict(zip(df['名称'].astype(str).str.strip(),
+                        df['编码'].astype(str).str.strip()))
+    except Exception as e:
+        raise Exception(f"读取枚举值映射失败: {e}")

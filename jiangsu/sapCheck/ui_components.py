@@ -9,8 +9,6 @@ import time
 from PyQt5.QtWidgets import QWidget, QPushButton, QFileDialog, QLabel, QVBoxLayout, QHBoxLayout, \
     QPlainTextEdit, QTabWidget, QComboBox, QProgressDialog, QApplication
 from PyQt5.QtCore import Qt
-from openpyxl import load_workbook
-from openpyxl.styles import PatternFill
 from data_handler import LoadColumnWorker
 from rule_handler import read_rules
 from comparator import CompareWorker
@@ -394,19 +392,31 @@ class ExcelComparer(QWidget):
                 "一致"
                 for k in keys
             ]
+
+            def detail(row_key, fld):
+                if row_key not in diff_map:
+                    return ""
+                s, t = diff_map[row_key]['source'], diff_map[row_key]['target']
+
+                # 资产分类特殊处理：用中文提示
+                if fld == "资产分类":
+                    code1 = s.get(fld, "")
+                    code2 = t.get(fld, "")
+                    v1 = self.worker.asset_code_map.get(code1, code1)
+                    v2 = self.worker.asset_code_map.get(code2, code2)
+                else:
+                    v1 = self.normalize_value(s.get(fld, ""))
+                    v2 = self.normalize_value(t.get(fld, ""))
+
+                if self.worker.values_equal_by_rule(v1, v2,
+                                                    self.rules[fld]["data_type"],
+                                                    self.rules[fld].get("tail_diff"),
+                                                    fld):
+                    return ""
+                return f"不一致：平台表={v1 or ''}, ERP表={v2 or ''}"
+
             comp_details = {
-                fld: [
-                    (lambda k=k, fld=fld: "" if k not in diff_map else
-                    (lambda s=diff_map[k]['source'], t=diff_map[k]['target']:
-                     (lambda v1=str(s.get(fld, "")), v2=str(t.get(fld, "")):
-                      f"不一致：平台表={v1}, ERP表={v2}"
-                      if not self.worker.values_equal_by_rule(
-                          v1, v2,
-                          self.rules[fld]["data_type"],
-                          self.rules[fld].get("tail_diff"),
-                          fld) else "")())())()
-                    for k in keys
-                ]
+                fld: [detail(k, fld) for k in keys]
                 for fld in comp_cols
             }
 
@@ -602,6 +612,14 @@ class ExcelComparer(QWidget):
     def log(self, message):
         """日志输出"""
         self.log_area.appendPlainText(message)
+
+
+    @staticmethod
+    def normalize_value(val):
+        """统一空值表示"""
+        if pd.isna(val) or val is None or (isinstance(val, str) and str(val).strip() == ''):
+            return ''
+        return str(val).strip()
 
 
 def exception_hook(exc_type, exc_value, exc_traceback):
