@@ -408,10 +408,11 @@ class ExcelMergerSplitterApp:
             self.split_output_entry.delete(0, tk.END)
             self.split_output_entry.insert(0, os.path.join(dir_name, f"{base_name}_拆分结果"))
             logger.info(f"选择了待拆分文件: {file_path}")
-
-            # 如果当前是按列拆分模式，加载列名
-            if self.split_by_column.get():
-                self.load_columns_from_file()
+            # 一次性加载列名并缓存
+            self._load_and_cache_columns(file_path)
+            # # 如果当前是按列拆分模式，加载列名
+            # if self.split_by_column.get():
+            #     self.load_columns_from_file()
 
     def browse_split_output(self):
         initial_dir = self.split_output_entry.get() or os.getcwd()
@@ -431,8 +432,16 @@ class ExcelMergerSplitterApp:
             # 按列拆分：禁用行数输入，启用列选择
             self.rows_per_file_entry.config(state="disabled")
             self.column_combobox.config(state="readonly")
+
+            # 不再重新加载，直接用缓存
+            if self._cached_columns:
+                self.column_combobox['values'] = self._cached_columns
+                self.selected_column.set(self._cached_columns[0] if self._cached_columns else "")
+            else:
+                self.rows_per_file_entry.config(state="normal")
+                self.column_combobox.config(state="disabled")
             # 尝试加载列名（如果已选择文件）
-            self.load_columns_from_file()
+            # self.load_columns_from_file()
         else:
             # 按行拆分：启用行数输入，禁用列选择
             self.rows_per_file_entry.config(state="normal")
@@ -1022,6 +1031,22 @@ class ExcelMergerSplitterApp:
             logger.debug(f"保存分片文件成功: {output_path}")
         except Exception as e:
             raise Exception(f"保存分片失败: {str(e)}")
+
+    def _load_and_cache_columns(self, file_path):
+        """读取文件并缓存列名"""
+        try:
+            df = self.read_table_file(file_path)
+            if not df.empty:
+                headers = [h for h in df.iloc[0].tolist() if str(h).strip()]
+                self._cached_columns = headers
+                # 填充下拉框
+                self.column_combobox['values'] = headers
+                if headers:
+                    self.selected_column.set(headers[0])
+                logger.info(f"已缓存列名：{len(headers)} 个")
+        except Exception as e:
+            logger.error(f"加载列名失败：{e}")
+            self._cached_columns = []
 
 
 if __name__ == "__main__":
