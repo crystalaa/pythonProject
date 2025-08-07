@@ -270,8 +270,8 @@ class CompareWorker(QThread):
             self.log_signal.emit("正在并行读取Excel文件...")
 
             with ThreadPoolExecutor(max_workers=2) as executor:
-                future1 = executor.submit(read_excel_fast, self.file1, self.sheet_name1)
-                future2 = executor.submit(read_excel_fast, self.file2, self.sheet_name2)
+                future1 = executor.submit(read_excel_fast, self.file1, self.sheet_name1, is_file1=True)
+                future2 = executor.submit(read_excel_fast, self.file2, self.sheet_name2, is_file1=False)
                 try:
                     df1 = future1.result()
                     df2 = future2.result()

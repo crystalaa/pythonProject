@@ -71,7 +71,7 @@ class ExcelComparer(QWidget):
 
     def initUI(self):
         """初始化用户界面"""
-        self.setWindowTitle("Excel文件比较工具V2.4")
+        self.setWindowTitle("ERP期初数据核对")
         self.resize(1000, 700)
 
         main_layout = QVBoxLayout()
@@ -347,7 +347,9 @@ class ExcelComparer(QWidget):
 
             # 2. 读原表（全部字符串，防类型问题）
             df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
-
+            if not is_first_file:
+                df = pd.read_excel(dst, sheet_name=sheet_name, skiprows=1, dtype=str).fillna("")
+                # df = self._rename_erp_columns(df, self.rules)
             # 3. 动态主键字段
             primary_keys = [f for f, r in self.rules.items() if r.get("is_primary")]
 
@@ -443,6 +445,27 @@ class ExcelComparer(QWidget):
         except Exception as e:
             self.log(f"❌ 导出失败 {Path(src_file).name}: {e}")
 
+    def _rename_erp_columns(self, df, rules):
+        """
+        把 ERP 的 Unnamed: X 列名，按规则顺序映射成 table2_field，
+        使得 calculate_field 里的字段名都能匹配到真实列。
+        """
+        # 建立“规则顺序 -> 实际列名”映射
+        rename_map = {}
+        for rule_field, rule in rules.items():
+            tbl2 = rule["table2_field"]
+            # 找到实际列名（按顺序）
+            if tbl2 in df.columns:
+                # 已经对齐，无需改名
+                continue
+            # 如果规则写的是“公司代码”，但列名是 Unnamed: 1，则手动映射
+            # 这里采用“位置映射”：规则顺序与实际列顺序一致
+            # 例如：规则第 1 个 table2_field -> df 第 1 列
+            # 需要用户保证顺序一致；若不一致，可在规则里加“顺序号”字段
+            idx = list(rules.keys()).index(rule_field)
+            if idx < len(df.columns):
+                rename_map[df.columns[idx]] = tbl2
+        return df.rename(columns=rename_map)
     # ---------- 单文件导出 ----------
     def _export_one_file(self, src_file, sheet_name, is_first_file, out_dir):
         try:
