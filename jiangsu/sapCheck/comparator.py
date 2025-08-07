@@ -38,7 +38,7 @@ class CompareWorker(QThread):
 
     def calculate_field(self, df, calc_rule, data_type):
         """
-        根据计算规则和数据类型生成表二字段值
+        根据计算规则和数据类型生成ERP表字段值
         支持：
         - 文本类型：字符串拼接（如"公司代码+资产编码"）
         - 数值类型：数值运算（如"使用年限+使用期间/12"）
@@ -195,9 +195,9 @@ class CompareWorker(QThread):
 
     def convert_asset_category(self, df1, df2, mapping_df):
         """资产分类转换逻辑"""
-        # 表一的资产分类字段
+        # 平台表的资产分类字段
         asset_category_col1 = "资产分类"
-        # 表二的资产分类字段
+        # ERP表的资产分类字段
         asset_category_col2 = "SAP资产类别描述"
 
         # 映射表的相关字段
@@ -210,7 +210,7 @@ class CompareWorker(QThread):
         # 创建映射字典，用于将转换后的编码映射回原始值
         self.asset_code_to_original = {}  # 转换后编码 -> 原始值
 
-        # 转换表一的资产分类
+        # 转换平台表的资产分类
         def convert_category(value):
             # 在映射表中查找匹配的记录
             matches = mapping_df[mapping_df[source_col] == value]
@@ -220,13 +220,13 @@ class CompareWorker(QThread):
                 # 唯一匹配项，直接返回同源目录编码前4位
                 converted_code = str(matches.iloc[0][code_col])[:4]
             else:
-                # 多个匹配项，需要根据表二的值来确定唯一项
-                # 拼接21年资产目录大类和ERP资产明细类描述，与表二的SAP资产类别描述比较
+                # 多个匹配项，需要根据ERP表的值来确定唯一项
+                # 拼接21年资产目录大类和ERP资产明细类描述，与ERP表的SAP资产类别描述比较
                 converted_code = None
                 for _, row in matches.iterrows():
                     # 构造映射后的值
                     mapped_value = f"{row[target_col]}-{row[detail_col]}"
-                    # 检查是否在表二中存在
+                    # 检查是否在ERP表中存在
                     if mapped_value in df2[asset_category_col2].values:
                         # 找到匹配项，返回同源目录编码前4位
                         converted_code = str(row[code_col])[:4]
@@ -241,7 +241,7 @@ class CompareWorker(QThread):
 
             return converted_code
 
-        # 转换表二的资产分类
+        # 转换ERP表的资产分类
         def convert_category_table2(sap_value):
             # 在映射表中查找匹配的记录
             matches = mapping_df[
@@ -288,25 +288,25 @@ class CompareWorker(QThread):
 
             # 检查数据行是否存在
             if df1.empty:
-                self.log_signal.emit("❌ 错误：表一除了表头外没有数据行，请检查文件内容！")
+                self.log_signal.emit("❌ 错误：平台表除了表头外没有数据行，请检查文件内容！")
                 return
 
             if df2.empty:
-                self.log_signal.emit("❌ 错误：表二除了表头外没有数据行，请检查文件内容！")
+                self.log_signal.emit("❌ 错误：ERP表除了表头外没有数据行，请检查文件内容！")
                 return
 
             df1.columns = df1.columns.str.replace('[*\\s]', '', regex=True)
             df2.columns = df2.columns.str.replace('[*\\s]', '', regex=True)
 
-            # 检查规则中的列是否在表一和表二表二中都存在
+            # 检查规则中的列是否在平台表和ERP表中都存在
             table2_columns_to_check = []
             for rule in self.rules.values():
-                # 如果有计算规则，则不需要检查表二是否存在该字段
+                # 如果有计算规则，则不需要检查ERP表是否存在该字段
                 if not rule.get("calc_rule") and rule["table2_field"]:
                     table2_columns_to_check.append(rule["table2_field"])
 
-            table1_columns_to_compare = list(self.rules.keys())  # 表一字段名
-            # table2_columns_to_compare = [rule["table2_field"] for rule in self.rules.values()]  # 表二字段名
+            table1_columns_to_compare = list(self.rules.keys())  # 平台表字段名
+            # table2_columns_to_compare = [rule["table2_field"] for rule in self.rules.values()]  # ERP表字段名
             columns_to_compare = list(self.rules.keys())
 
             missing_in_file1 = [col for col in table1_columns_to_compare if col not in df1.columns]
@@ -315,9 +315,9 @@ class CompareWorker(QThread):
             if missing_in_file1 or missing_in_file2:
                 error_msg = ""
                 if missing_in_file1:
-                    error_msg += f"表一缺失以下规则定义的列：{', '.join(missing_in_file1)}\n"
+                    error_msg += f"平台表缺失以下规则定义的列：{', '.join(missing_in_file1)}\n"
                 if missing_in_file2:
-                    error_msg += f"表二缺失以下规则定义的列：{', '.join(missing_in_file2)}\n"
+                    error_msg += f"ERP表缺失以下规则定义的列：{', '.join(missing_in_file2)}\n"
                 self.log_signal.emit(f"❌ 比对失败：{error_msg}")
                 return
 
@@ -332,13 +332,13 @@ class CompareWorker(QThread):
             for field1, rule in self.rules.items():
                 if rule.get("calc_rule") and field1 in df2.columns:
                     df2.drop(columns=[field1], inplace=True)
-                    self.log_signal.emit(f"删除表二中原有的 '{rule['table2_field']}' 列，将使用计算规则生成的新列")
+                    self.log_signal.emit(f"删除ERP表中原有的 '{rule['table2_field']}' 列，将使用计算规则生成的新列")
                 if field1 != rule["table2_field"] and field1 in df2.columns:
                     df2.drop(columns=[field1], inplace=True)
                 if rule.get("calc_rule"):
-                    self.log_signal.emit(f"正在计算表二字段: {field1} (规则: {rule['calc_rule']})")
+                    self.log_signal.emit(f"正在计算ERP表字段: {field1} (规则: {rule['calc_rule']})")
                     try:
-                        # 生成临时字段名（避免与表二原有字段冲突）
+                        # 生成临时字段名（避免与ERP表原有字段冲突）
                         temp_field = f"__calc_{field1}__"
                         calc_temp_fields[field1] = temp_field
 
@@ -382,17 +382,17 @@ class CompareWorker(QThread):
                 # 检查主键列在数据中是否存在
             for pk in self.primary_keys:
                 if pk not in df1.columns:
-                    self.log_signal.emit(f"❌ 错误：表一中不存在主键列 '{pk}'")
+                    self.log_signal.emit(f"❌ 错误：平台表中不存在主键列 '{pk}'")
                     return
                 if pk not in df2.columns:
-                    self.log_signal.emit(f"❌ 错误：表二中不存在主键列 '{pk}'")
+                    self.log_signal.emit(f"❌ 错误：ERP表中不存在主键列 '{pk}'")
                     return
 
                 # 检查主键是否有重复值
             df1_duplicates = df1[df1.duplicated(subset=self.primary_keys, keep=False)]
             if not df1_duplicates.empty:
                 duplicate_count = df1_duplicates.shape[0]
-                self.log_signal.emit(f"❌ 错误：表一中存在 {duplicate_count} 条重复的主键记录")
+                self.log_signal.emit(f"❌ 错误：平台表中存在 {duplicate_count} 条重复的主键记录")
                 # 显示前几个重复的主键示例
                 duplicate_examples = df1_duplicates[self.primary_keys].head(5)
                 example_lines = []
@@ -406,7 +406,7 @@ class CompareWorker(QThread):
             df2_duplicates = df2[df2.duplicated(subset=self.primary_keys, keep=False)]
             if not df2_duplicates.empty:
                 duplicate_count = df2_duplicates.shape[0]
-                self.log_signal.emit(f"❌ 错误：表二中存在 {duplicate_count} 条重复的主键记录")
+                self.log_signal.emit(f"❌ 错误：ERP表中存在 {duplicate_count} 条重复的主键记录")
                 # 显示前几个重复的主键示例
                 duplicate_examples = df2_duplicates[self.primary_keys].head(5)
                 example_lines = []
@@ -423,10 +423,10 @@ class CompareWorker(QThread):
                 df2_empty_keys = df2[pd.isna(df2[pk]) | (df2[pk].astype(str).astype(str).str.strip() == '')]
 
                 if len(df1_empty_keys) > 0:
-                    self.log_signal.emit(f"⚠️ 警告：表一中主键列 '{pk}' 存在 {len(df1_empty_keys)} 条空值记录")
+                    self.log_signal.emit(f"⚠️ 警告：平台表中主键列 '{pk}' 存在 {len(df1_empty_keys)} 条空值记录")
 
                 if len(df2_empty_keys) > 0:
-                    self.log_signal.emit(f"⚠️ 警告：表二中主键列 '{pk}' 存在 {len(df2_empty_keys)} 条空值记录")
+                    self.log_signal.emit(f"⚠️ 警告：ERP表中主键列 '{pk}' 存在 {len(df2_empty_keys)} 条空值记录")
 
             # 保存原始数据帧用于导出（包含主键列）
             df1_original = df1.copy()
@@ -449,15 +449,15 @@ class CompareWorker(QThread):
             df2_empty_count = sum(df2_empty_index)
 
             if df1_empty_count > 0:
-                self.log_signal.emit(f"⚠️ 警告：表一中有 {df1_empty_count} 条记录的主键为空")
+                self.log_signal.emit(f"⚠️ 警告：平台表中有 {df1_empty_count} 条记录的主键为空")
 
             if df2_empty_count > 0:
-                self.log_signal.emit(f"⚠️ 警告：表二中有 {df2_empty_count} 条记录的主键为空")
+                self.log_signal.emit(f"⚠️ 警告：ERP表中有 {df2_empty_count} 条记录的主键为空")
 
             if len(df1) != len(df2):
-                self.log_signal.emit(f"提示：两个文件的行数不一致（表一有 {len(df1)} 行，表二有 {len(df2)} 行）")
+                self.log_signal.emit(f"提示：两个文件的行数不一致（平台表有 {len(df1)} 行，ERP表有 {len(df2)} 行）")
 
-            # 查找表二中缺失的主键
+            # 查找ERP表中缺失的主键
             missing_in_file2 = df1.index.difference(df2.index)
             if not missing_in_file2.empty:
                 missing_df = df1.loc[missing_in_file2].copy()
@@ -469,9 +469,9 @@ class CompareWorker(QThread):
 
                 self.missing_rows = missing_df.to_dict(orient='records')
                 missing_list = "\n".join([f" - {code}" for code in missing_in_file2])
-                self.log_signal.emit(f"【表二中缺失的主键】（共 {len(missing_in_file2)} 条）：\n{missing_list}")
+                self.log_signal.emit(f"【ERP表中缺失的主键】（共 {len(missing_in_file2)} 条）：\n{missing_list}")
 
-            # 查找表二中多出的主键
+            # 查找ERP表中多出的主键
             missing_in_file1 = df2.index.difference(df1.index)
             if not missing_in_file1.empty:
                 missing_df_file1 = df2.loc[missing_in_file1].copy()
@@ -484,7 +484,7 @@ class CompareWorker(QThread):
                 self.extra_in_file2 = missing_df_file1.to_dict(orient='records')
                 missing_list_file1 = "\n".join([f" - {code}" for code in missing_in_file1])
                 self.log_signal.emit(
-                    f"【表二中多出的主键】（表一中没有，共 {len(missing_in_file1)} 条）：\n{missing_list_file1}")
+                    f"【ERP表中多出的主键】（平台表中没有，共 {len(missing_in_file1)} 条）：\n{missing_list_file1}")
 
             # 找出共同的主键
             common_codes = df1.index.intersection(df2.index)
@@ -619,9 +619,9 @@ class CompareWorker(QThread):
                         # 使用原始中文值显示
                         original_val1 = self.asset_code_to_original.get(val1, val1)
                         original_val2 = self.asset_code_to_original.get(val2, val2)
-                        diff_details.append(f" - 列 [{col}] 不一致：表一={original_val1}, 表二={original_val2}")
+                        diff_details.append(f" - 列 [{col}] 不一致：平台表={original_val1}, ERP表={original_val2}")
                     else:
-                        diff_details.append(f" - 列 [{col}] 不一致：表一={val1}, 表二={val2}")
+                        diff_details.append(f" - 列 [{col}] 不一致：平台表={val1}, ERP表={val2}")
 
                 diff_log_messages.append(f"\n主键：{code}")
                 diff_log_messages.extend(diff_details)

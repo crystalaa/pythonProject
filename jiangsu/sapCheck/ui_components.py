@@ -80,11 +80,11 @@ class ExcelComparer(QWidget):
         file_layout = QHBoxLayout()
 
         left_layout = QVBoxLayout()
-        self.label1 = QLabel("未选择表一")
-        self.btn1 = QPushButton("选择表一")
+        self.label1 = QLabel("未选择平台表")
+        self.btn1 = QPushButton("选择平台表")
         self.btn1.clicked.connect(self.select_file1)
 
-        self.sheet_label1 = QLabel("选择表一页签：")
+        self.sheet_label1 = QLabel("选择平台表页签：")
         self.sheet_combo1 = QComboBox()
         self.sheet_combo1.currentTextChanged.connect(self.on_sheet_selection_changed)
 
@@ -94,11 +94,11 @@ class ExcelComparer(QWidget):
         left_layout.addWidget(self.sheet_combo1)
 
         right_layout = QVBoxLayout()
-        self.label2 = QLabel("未选择表二")
-        self.btn2 = QPushButton("选择表二")
+        self.label2 = QLabel("未选择ERP表")
+        self.btn2 = QPushButton("选择ERP表")
         self.btn2.clicked.connect(self.select_file2)
 
-        self.sheet_label2 = QLabel("选择表二页签：")
+        self.sheet_label2 = QLabel("选择ERP表页签：")
         self.sheet_combo2 = QComboBox()
         self.sheet_combo2.currentTextChanged.connect(self.on_sheet_selection_changed)
 
@@ -162,14 +162,14 @@ class ExcelComparer(QWidget):
             self.columns1 = []
             self.sheet_combo1.clear()
             self.sheet_combo1.setEnabled(True)
-            self.sheet_label1.setText("选择表一页签：")
+            self.sheet_label1.setText("选择平台表页签：")
             if hasattr(self, 'worker_sheet1'):
                 self.worker_sheet1 = None
         if is_file2:
             self.columns2 = []
             self.sheet_combo2.clear()
             self.sheet_combo2.setEnabled(True)
-            self.sheet_label2.setText("选择表二页签：")
+            self.sheet_label2.setText("选择ERP表页签：")
             if hasattr(self, 'worker_sheet2'):
                 self.worker_sheet2 = None
         self.compare_btn.setEnabled(False)
@@ -183,9 +183,9 @@ class ExcelComparer(QWidget):
         if file:
             self.file1 = file
             filename = os.path.basename(file)
-            self.label1.setText(f"表一: {filename}")
+            self.label1.setText(f"平台表: {filename}")
             # 显示加载对话框
-            self.show_loading_dialog("正在加载表一页签...")
+            self.show_loading_dialog("正在加载平台表页签...")
             self.load_sheet_and_columns(file, is_file1=True)
 
     def select_file2(self):
@@ -195,8 +195,8 @@ class ExcelComparer(QWidget):
             self.file2 = file
             filename = os.path.basename(file)
 
-            self.label2.setText(f"表二: {filename}")
-            self.show_loading_dialog("正在加载表二页签...")
+            self.label2.setText(f"ERP表: {filename}")
+            self.show_loading_dialog("正在加载ERP表页签...")
             self.load_sheet_and_columns(file, is_file2=True)
 
     def show_loading_dialog(self, message="正在加载，请稍候..."):
@@ -304,14 +304,14 @@ class ExcelComparer(QWidget):
                 summary_text = (
                     f"📊 比对汇总报告\n"
                     f"--------------------------------\n"
-                    f"• 总{primary_key}数量（表一）：{total_file1}\n"
-                    f"• 总{primary_key}数量（表二）：{total_file2}\n"
-                    f"• 表二中缺失的{primary_key}：{missing_count}\n"
-                    f"• 表二中多出的{primary_key}：{extra_count}\n"
+                    f"• 总{primary_key}数量（平台表）：{total_file1}\n"
+                    f"• 总{primary_key}数量（ERP表）：{total_file2}\n"
+                    f"• ERP表中缺失的{primary_key}：{missing_count}\n"
+                    f"• ERP表中多出的{primary_key}：{extra_count}\n"
                     f"• 共同{primary_key}数量：{common_count}\n"
                     f"• 列不一致的{primary_key}数量：{diff_count}\n"
                     f"• 列一致的{primary_key}数量：{equal_count}\n"
-                    f"• 表二中缺失的列：{missing_columns_str}\n"
+                    f"• ERP表中缺失的列：{missing_columns_str}\n"
                     f"--------------------------------\n"
                     f"• 差异数据占比：{diff_ratio:.2%}\n"
                 )
@@ -355,10 +355,10 @@ class ExcelComparer(QWidget):
 
             # 4. 计算行主键（与比对阶段一致）
             if is_first_file:
-                # 表一：直接取主键列
+                # 平台表：直接取主键列
                 df["_key"] = df[primary_keys].astype(str).agg(" + ".join, axis=1)
             else:
-                # 表二：根据规则里的计算表达式动态生成
+                # ERP表：根据规则里的计算表达式动态生成
                 pk_field = next(f for f, r in self.rules.items() if r.get("is_primary"))
                 rule = self.rules[pk_field]
                 if rule.get("calc_rule"):
@@ -383,8 +383,8 @@ class ExcelComparer(QWidget):
             # 7. 计算追加值
             keys = df["_key"].tolist()
             comp_results = [
-                "此数据不存在于SAP" if k in miss else  # 表一多余 → 提示不存在于SAP
-                "此数据不存在于平台" if k in extra else  # 表二多余 → 提示不存在于平台
+                "此数据不存在于SAP" if k in miss else  # 平台表多余 → 提示不存在于SAP
+                "此数据不存在于平台" if k in extra else  # ERP表多余 → 提示不存在于平台
                 "不一致" if k in diff_map else
                 "一致"
                 for k in keys
@@ -394,7 +394,7 @@ class ExcelComparer(QWidget):
                     (lambda k=k, fld=fld: "" if k not in diff_map else
                     (lambda s=diff_map[k]['source'], t=diff_map[k]['target']:
                      (lambda v1=str(s.get(fld, "")), v2=str(t.get(fld, "")):
-                      f"不一致：表一={v1}, 表二={v2}"
+                      f"不一致：平台表={v1}, ERP表={v2}"
                       if not self.worker.values_equal_by_rule(
                           v1, v2,
                           self.rules[fld]["data_type"],
@@ -588,7 +588,7 @@ class ExcelComparer(QWidget):
                 v1, v2 = s.get(col, ""), t.get(col, "")
                 rule = self.rules.get(col, {})
                 if not self.worker.values_equal_by_rule(v1, v2, rule.get("data_type"), rule.get("tail_diff"), col):
-                    return f"不一致：表一={v1}, 表二={v2}"
+                    return f"不一致：平台表={v1}, ERP表={v2}"
                 return ""
 
             df[col] = df.apply(detail, axis=1)
