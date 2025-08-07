@@ -344,6 +344,11 @@ class ExcelComparer(QWidget):
             # 1. 复制原文件
             dst = Path(out_dir) / f"{Path(src_file).stem}_比对结果.xlsx"
             shutil.copy2(src_file, dst)
+            # 1.1 去掉只读属性（Windows / Linux / macOS 通用）
+            try:
+                os.chmod(dst, 0o666)  # Linux / macOS
+            except Exception:
+                pass  # Windows 会抛异常，忽略即可
 
             # 2. 读原表（全部字符串，防类型问题）
             df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
