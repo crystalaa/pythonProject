@@ -9,6 +9,8 @@ import time
 from PyQt5.QtWidgets import QWidget, QPushButton, QFileDialog, QLabel, QVBoxLayout, QHBoxLayout, \
     QPlainTextEdit, QTabWidget, QComboBox, QProgressDialog, QApplication
 from PyQt5.QtCore import Qt
+from openpyxl import load_workbook
+
 from data_handler import LoadColumnWorker
 from rule_handler import read_rules
 from comparator import CompareWorker
@@ -347,12 +349,24 @@ class ExcelComparer(QWidget):
                 os.chmod(dst, 0o666)  # Linux / macOS
             except Exception:
                 pass  # Windows 会抛异常，忽略即可
-
-            # 2. 读原表（全部字符串，防类型问题）
-            df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
+            wb = load_workbook(filename=dst, read_only=False)
+            ws = wb[sheet_name]
+            has_merged_cell = False
+            for row in ws.iter_rows(max_row=2):
+                for cell in row:
+                    if cell.coordinate in ws.merged_cells:
+                        has_merged_cell = True
+                        break
             if not is_first_file:
-                df = pd.read_excel(dst, sheet_name=sheet_name, skiprows=1, dtype=str).fillna("")
-                # df = self._rename_erp_columns(df, self.rules)
+                # 遍历合并单元格范围
+                if has_merged_cell:
+                    df = pd.read_excel(dst, sheet_name=sheet_name, skiprows=1, dtype=str).fillna("")
+                else:
+                    # 2. 读原表（全部字符串，防类型问题）
+                    df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
+            else:
+                df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
+
             # 3. 动态主键字段
             primary_keys = [f for f, r in self.rules.items() if r.get("is_primary")]
 

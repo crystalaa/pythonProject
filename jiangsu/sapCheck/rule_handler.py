@@ -38,3 +38,18 @@ def read_enum_mapping(rule_file):
                         df['编码'].astype(str).str.strip()))
     except Exception as e:
         raise Exception(f"读取枚举值映射失败: {e}")
+
+# 新增函数
+def read_erp_combo_map(rule_file):
+    """
+    返回 dict：
+        key   = 平台单值（如 'A'）
+        value = 允许的组合字符串列表（如 ['A', 'A|B', 'A|B|C']）
+    """
+    df = pd.read_excel(rule_file, sheet_name='枚举值-关联实物管理系统代码及名称', dtype=str)
+    df = df[['平台实物管理系统代码', '江苏ERP系统PM卡片ABC标识']].dropna()
+    # 把组合列按 | 拆成列表，再转成 set，便于 in 判断
+    grouped = df.groupby('平台实物管理系统代码')['江苏ERP系统PM卡片ABC标识'] \
+        .apply(lambda x: set(v for s in x for v in s.split('|'))) \
+        .to_dict()
+    return grouped

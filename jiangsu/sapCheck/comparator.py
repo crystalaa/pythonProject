@@ -6,7 +6,7 @@ import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
 from PyQt5.QtCore import QThread, pyqtSignal
 from data_handler import read_excel_fast, read_mapping_table
-from jiangsu.sapCheck.rule_handler import read_enum_mapping
+from rule_handler import read_enum_mapping, read_erp_combo_map
 
 
 class CompareWorker(QThread):
@@ -30,7 +30,7 @@ class CompareWorker(QThread):
         self.extra_in_file2 = []
         self.diff_full_rows = []
         self.enum_map = read_enum_mapping(rule_file)  # 新增
-
+        self.erp_combo_map = read_erp_combo_map(rule_file)
     @staticmethod
     def normalize_value(val):
         """统一空值表示"""
@@ -136,6 +136,16 @@ class CompareWorker(QThread):
             val1_clean = extract_last_segment(val1, '\\')
             val2_clean = extract_last_segment(val2, '-')
             return val1_clean == val2_clean
+        if field_name == "关联实物管理系统代码":
+            # 平台单值
+            plat = val1.strip()
+            # ERP 组合
+            erp_combo = val2.strip()
+
+            # 找到平台值对应的全部合法组合
+            allowed_combos = self.erp_combo_map.get(plat, [])
+            # 只要 ERP 组合出现在允许列表里即一致
+            return erp_combo in allowed_combos
         # --- 枚举值映射：站线电压等级 ---
         if field_name == "线站电压等级":
             # 平台表是名称 -> 编码
