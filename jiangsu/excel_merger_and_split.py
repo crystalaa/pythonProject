@@ -18,8 +18,13 @@ warnings.filterwarnings('ignore')
 
 # 配置日志
 def setup_logging():
-    # 获取当前脚本所在目录
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # 获取当前脚本所在目录或exe所在目录
+    if getattr(sys, 'frozen', False):
+        # 如果是exe环境，获取exe文件所在目录
+        script_dir = os.path.dirname(sys.executable)
+    else:
+        # 如果是开发环境，获取脚本文件所在目录
+        script_dir = os.path.dirname(os.path.abspath(__file__))
     # 创建日志文件路径
     log_file = os.path.join(script_dir, 'excel_tool.log')
 
@@ -82,7 +87,7 @@ class ExcelMergerSplitterApp:
         self.split_by_column = tk.BooleanVar(value=False)  # 是否按列拆分
         self.selected_column = tk.StringVar(value="")  # 选中的拆分列名
         self.split_to_sheets = tk.BooleanVar(value=False)  # 是否拆分为多个页签
-
+        self.header_styles = {}  # 存储表头样式
         # 创建UI
         self.create_widgets()
 
@@ -405,8 +410,11 @@ class ExcelMergerSplitterApp:
             # 自动设置输出目录
             dir_name = os.path.dirname(file_path)
             base_name = os.path.splitext(os.path.basename(file_path))[0]
+            output_path = os.path.join(dir_name, f"{base_name}_拆分结果")
+            # 标准化路径分隔符
+            output_path = os.path.normpath(output_path)
             self.split_output_entry.delete(0, tk.END)
-            self.split_output_entry.insert(0, os.path.join(dir_name, f"{base_name}_拆分结果"))
+            self.split_output_entry.insert(0, output_path)
             logger.info(f"选择了待拆分文件: {file_path}")
             # 一次性加载列名并缓存
             self._load_and_cache_columns(file_path)
@@ -957,9 +965,12 @@ class ExcelMergerSplitterApp:
                         chunk = df[df[column_name] == value].copy()
 
                         # 生成文件名（处理特殊字符）
-                        safe_value = str(value).replace('/', '_').replace('\\', '_').replace(':', '_')
-                        output_filename = f"{file_name}_{column_name}_{safe_value}{file_ext}"
-                        output_path = os.path.join(output_dir, output_filename)
+                        # safe_value = str(value).replace('/', '_').replace('\\', '_').replace(':', '_')
+                        safe_value = self.sanitize_filename(str(value))
+                        output_filename = f"{file_name}_{column_name}_{value}{file_ext}"
+                        safe_output_filename = self.sanitize_filename(str(output_filename))
+
+                        output_path = os.path.join(output_dir, safe_output_filename)
 
                         self.save_split_chunk(chunk, header, output_path, file_ext)
 
@@ -1032,18 +1043,79 @@ class ExcelMergerSplitterApp:
         except Exception as e:
             raise Exception(f"保存分片失败: {str(e)}")
 
+    def sanitize_filename(self, filename):
+        # 清理文件名中的非法字符
+        # Windows中不允许的字符: \ / : * ? " < > |
+
+        illegal_chars = ['\\', '/', ':', '*', '?', '"', '<', '>', '|']
+        sanitized = filename
+        for char in illegal_chars:
+            sanitized = sanitized.replace(char, '_')
+        # 去除首尾空格和点号
+        sanitized = sanitized.strip('. ')
+        # 如果文件名为空，返回默认名称
+        if not sanitized:
+            sanitized = 'unnamed'
+        # 限制文件名长度（Windows最大255字符）
+        if len(sanitized) > 200:  # 留一些空间给文件扩展名
+            sanitized = sanitized[:200]
+        return sanitized
+
     def _load_and_cache_columns(self, file_path):
         """读取文件并缓存列名"""
         try:
-            df = self.read_table_file(file_path)
-            if not df.empty:
-                headers = [h for h in df.iloc[0].tolist() if str(h).strip()]
-                self._cached_columns = headers
-                # 填充下拉框
-                self.column_combobox['values'] = headers
-                if headers:
-                    self.selected_column.set(headers[0])
-                logger.info(f"已缓存列名：{len(headers)} 个")
+            file_ext = os.path.splitext(file_path)[1].lower()
+
+            if file_ext in ['.xlsx', '.et']:
+                # 对于Excel文件，只读取第一行来提高性能
+                wb = load_workbook(file_path, read_only=True)
+                ws = wb.active
+                # 只读取第一行
+                header_row = next(ws.iter_rows(max_row=1))
+                headers = [str(cell.value) if cell.value is not None else "" for cell in header_row]
+                wb.close()
+            elif file_ext == '.xls':
+                # 对于XLS文件，只读取前几行
+                df = pd.read_excel(
+                    file_path,
+                    header=None,
+                    engine='xlrd',
+                    nrows=1,  # 只读取第一行
+                    dtype=str,
+                    keep_default_na=False
+                )
+                headers = df.iloc[0].tolist() if not df.empty else []
+            elif file_ext == '.csv':
+                # 对于CSV文件，只读取第一行
+                encodings = ['utf-8', 'gbk', 'gb2312', 'utf-16']
+                headers = []
+                for encoding in encodings:
+                    try:
+                        df = pd.read_csv(
+                            file_path,
+                            encoding=encoding,
+                            header=None,
+                            nrows=1,  # 只读取第一行
+                            dtype=str,
+                            keep_default_na=False
+                        )
+                        headers = df.iloc[0].tolist() if not df.empty else []
+                        break
+                    except Exception:
+                        continue
+            else:
+                # 对于其他格式，回退到原来的完整读取方法
+                df = self.read_table_file(file_path)
+                headers = df.iloc[0].tolist() if not df.empty else []
+
+            # 过滤空表头
+            headers = [h for h in headers if str(h).strip()]
+            self._cached_columns = headers
+            # 填充下拉框
+            self.column_combobox['values'] = headers
+            if headers:
+                self.selected_column.set(headers[0])
+            logger.info(f"已缓存列名：{len(headers)} 个")
         except Exception as e:
             logger.error(f"加载列名失败：{e}")
             self._cached_columns = []
