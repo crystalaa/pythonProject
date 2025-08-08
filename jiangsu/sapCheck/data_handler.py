@@ -116,14 +116,17 @@ def read_excel_with_header(file_path, sheet_name, skip_rows=0, is_file1=True):
                 cols = [str(v or '') for v in rows[header_row - 1]]
                 data_start = header_row
         cols = [re.sub(r'[\*\s]+', '', c) for c in cols]
+        data_rows = list(ws.iter_rows(min_row=data_start + 1, values_only=True))
+
+        df = pd.DataFrame(data_rows, columns=cols)
         wb.close()
 
         # ---------- 2. read_only 读数据 ----------
-        wb_data = load_workbook(file_path, data_only=True, read_only=True)
-        ws_data = wb_data[sheet_name]
-        data_rows = list(ws_data.iter_rows(min_row=data_start + 1, values_only=True))
-        df = pd.DataFrame(data_rows, columns=cols)
-        wb_data.close()
+        # wb_data = load_workbook(file_path, data_only=True, read_only=True)
+        # ws_data = wb_data[sheet_name]
+        # data_rows = list(ws_data.iter_rows(min_row=data_start + 1, values_only=True))
+        # df = pd.DataFrame(data_rows, columns=cols)
+        # wb_data.close()
         return df
 
     else:
@@ -145,10 +148,10 @@ def read_excel_with_header(file_path, sheet_name, skip_rows=0, is_file1=True):
         else:
             cols = [str(sh.cell_value(skip_rows, c)) for c in range(sh.ncols)]
             data_start = skip_rows + 1
-        cols = [re.sub(r'[\*\s]+', '', c) for c in cols]
-        data = [sh.row_values(r) for r in range(data_start, sh.nrows)]
-        df = pd.DataFrame(data, columns=cols)
-        return df
+    cols = [re.sub(r'[\*\s]+', '', c) for c in cols]
+    data = [sh.row_values(r) for r in range(data_start, sh.nrows)]
+    df = pd.DataFrame(data, columns=cols)
+    return df
 
 def _read_xls_with_header(file_path, sheet_name, skip_rows, is_file1):
     import xlrd
