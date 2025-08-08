@@ -87,24 +87,34 @@ def read_excel_with_header(file_path, sheet_name, skip_rows=0, is_file1=True):
         ws = wb[sheet_name]
         rows = list(ws.iter_rows(values_only=True))
 
-        if is_file1 and len(rows) >= 2:
-            # 平台文件：一级 + 二级
-            level1 = [str(v or '') for v in rows[0]]
-            level2 = [str(v or '') for v in rows[1]]
-            # 把一级合并单元格向右填充
-            for merged in ws.merged_cells.ranges:
-                if merged.bounds[1] == 1:  # 第1行
-                    min_col, max_col = merged.bounds[0], merged.bounds[2]
-                    fill_val = level1[min_col - 1]
-                    for c in range(min_col, max_col + 1):
-                        level1[c - 1] = fill_val
-            cols = [f"{a}-{b}".strip('-') for a, b in zip(level1, level2)]
-            data_start = 2
+        if is_file1:
+            if ws.merged_cells.ranges:
+                # 平台文件：一级 + 二级
+                level1 = [str(v or '') for v in rows[0]]
+                level2 = [str(v or '') for v in rows[1]]
+                # 把一级合并单元格向右填充
+                for merged in ws.merged_cells.ranges:
+                    if merged.bounds[1] == 1:  # 第1行
+                        min_col, max_col = merged.bounds[0], merged.bounds[2]
+                        fill_val = level1[min_col - 1]
+                        for c in range(min_col, max_col + 1):
+                            level1[c - 1] = fill_val
+                cols = [f"{a}-{b}".strip('-') for a, b in zip(level1, level2)]
+                data_start = 2
+            else:
+                header_row = 1
+                cols = [str(v or '') for v in rows[header_row - 1]]
+                data_start = header_row
         else:
-            # ERP 文件：跳过 skip_rows
-            header_row = 1 if is_file1 else (skip_rows + 1)
-            cols = [str(v or '') for v in rows[header_row - 1]]
-            data_start = header_row
+            if ws.merged_cells.ranges:
+                # ERP 文件：跳过 skip_rows
+                header_row = 1 if is_file1 else (skip_rows + 1)
+                cols = [str(v or '') for v in rows[header_row - 1]]
+                data_start = header_row
+            else:
+                header_row = 1
+                cols = [str(v or '') for v in rows[header_row - 1]]
+                data_start = header_row
         cols = [re.sub(r'[\*\s]+', '', c) for c in cols]
         wb.close()
 

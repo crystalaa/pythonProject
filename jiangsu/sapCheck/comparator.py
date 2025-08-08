@@ -249,7 +249,7 @@ class CompareWorker(QThread):
             # 在映射表中查找匹配的记录
             matches = mapping_df[mapping_df[source_col] == value]
             if len(matches) == 0:
-                converted_code = None  # 没有匹配项
+                converted_code = str(value)  # 没有匹配项
             elif len(matches) == 1:
                 # 唯一匹配项，直接返回同源目录编码前4位
                 converted_code = str(matches.iloc[0][code_col])[:4]
