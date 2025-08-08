@@ -262,7 +262,7 @@ class CompareWorker(QThread):
                 converted_code = str(value)  # 没有匹配项
             elif len(matches) == 1:
                 # 唯一匹配项，直接返回同源目录编码前4位
-                converted_code = str(matches.iloc[0][code_col])[:4]
+                converted_code = str(matches.iloc[0][code_col])[:2]
             else:
                 # 多个匹配项，需要根据ERP表的值来确定唯一项
                 # 拼接21年资产目录大类和ERP资产明细类描述，与ERP表的SAP资产类别描述比较
@@ -273,11 +273,11 @@ class CompareWorker(QThread):
                     # 检查是否在ERP表中存在
                     if mapped_value in df2[asset_category_col2].values:
                         # 找到匹配项，返回同源目录编码前4位
-                        converted_code = str(row[code_col])[:4]
+                        converted_code = str(row[code_col])[:2]
                         break
                 # 如果没有找到匹配项，返回第一条记录的同源目录编码前4位
                 if converted_code is None:
-                    converted_code = str(matches.iloc[0][code_col])[:4]
+                    converted_code = str(matches.iloc[0][code_col])[:2]
 
             # 保存编码到原始值的映射
             if converted_code is not None:
@@ -293,7 +293,7 @@ class CompareWorker(QThread):
             ]
             if len(matches) > 0:
                 # 找到匹配项，返回ERP资产明细类别前4位
-                converted_code = str(matches.iloc[0][erp_detail_col])[:4]
+                converted_code = str(matches.iloc[0][erp_detail_col])[:2]
             else:
                 # 没有找到匹配项，返回原值
                 converted_code = str(sap_value)
