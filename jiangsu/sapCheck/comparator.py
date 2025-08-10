@@ -1,8 +1,10 @@
-# comparator.py
 import sys
+import time
 import traceback
 import logging
 import pandas as pd
+import re
+import gc
 from concurrent.futures import ThreadPoolExecutor
 from PyQt5.QtCore import QThread, pyqtSignal
 from data_handler import read_excel_fast, read_mapping_table
@@ -14,7 +16,8 @@ class CompareWorker(QThread):
     log_signal = pyqtSignal(str)
     progress_signal = pyqtSignal(int)  # 用于更新进度条
 
-    def __init__(self, file1, file2, rule_file, sheet_name1, sheet_name2, primary_keys=None, rules=None):
+    def __init__(self, file1, file2, rule_file, sheet_name1, sheet_name2,
+                 primary_keys=None, rules=None, skip_rows=0, chunk_size=10000):
         super().__init__()
         self.file1 = file1
         self.file2 = file2
@@ -23,14 +26,20 @@ class CompareWorker(QThread):
         self.sheet_name2 = sheet_name2
         self.primary_keys = primary_keys if primary_keys else []
         self.rules = rules if rules else {}
+        self.skip_rows = skip_rows
+        self.chunk_size = chunk_size  # 分块大小参数
+
+        # 结果存储
         self.missing_assets = []
         self.diff_records = []
         self.summary = {}
         self.missing_rows = []
         self.extra_in_file2 = []
         self.diff_full_rows = []
-        self.enum_map = read_enum_mapping(rule_file)  # 新增
+        self.enum_map = read_enum_mapping(rule_file)
         self.erp_combo_map = read_erp_combo_map(rule_file)
+        self.asset_code_to_original = {}  # 资产分类编码到原始值的映射
+
     @staticmethod
     def normalize_value(val):
         """统一空值表示"""
@@ -39,43 +48,33 @@ class CompareWorker(QThread):
         return str(val).strip()
 
     def calculate_field(self, df, calc_rule, data_type):
-        """
-        根据计算规则和数据类型生成ERP表字段值
-        支持：
-        - 文本类型：字符串拼接（如"公司代码+资产编码"）
-        - 数值类型：数值运算（如"使用年限+使用期间/12"）
-        - 字符串截取（如"WBS编码[:12]"）
-        - 字段运算（如"累计购置值-累计折旧额"）
-        """
+        """根据计算规则和数据类型生成ERP表字段值"""
         if not calc_rule:
             return None
 
         try:
-            # 处理字符串截取（通用逻辑）
+            # 处理字符串截取
             if '[:' in calc_rule and ']' in calc_rule:
                 field, length_str = calc_rule.split('[:')
                 field = field.strip()
                 length = int(length_str.strip(']').strip())
                 if field not in df.columns:
                     raise Exception(f"字段不存在：{field}")
-                # 截取字符串前N位（处理空值）
                 return df[field].fillna('').astype(str).str[:length]
 
             # 根据数据类型处理不同运算
             if data_type == "文本":
-                # 文本类型：+表示字符串拼接
                 fields = [f.strip() for f in calc_rule.split('+')]
-                # 检查所有字段是否存在
                 missing_fields = [f for f in fields if f not in df.columns]
                 if missing_fields:
                     raise Exception(f"表达式中包含不存在的字段：{missing_fields}")
-                # 字符串拼接（空值处理为空白字符串）
+
                 result = df[fields[0]].fillna('').astype(str)
                 for field in fields[1:]:
                     result += df[field].fillna('').astype(str)
                 return result
+
             elif data_type == "数值":
-                # 数值类型：执行数值运算
                 import re
                 field_pattern = re.compile(r'[a-zA-Z\u4e00-\u9fa5]+')
                 fields_in_rule = field_pattern.findall(calc_rule)
@@ -86,13 +85,11 @@ class CompareWorker(QThread):
                 # 转换为数值类型，空值处理为0
                 df_numeric = df.copy()
                 for field in fields_in_rule:
-                    # 如果字段名包含"折旧"，取绝对值
                     if "折旧" in field:
                         df_numeric[field] = pd.to_numeric(df[field], errors='coerce').fillna(0).abs()
                     else:
                         df_numeric[field] = pd.to_numeric(df[field], errors='coerce').fillna(0)
 
-                # 执行计算
                 result = df_numeric.eval(calc_rule)
                 return result
             else:
@@ -104,28 +101,22 @@ class CompareWorker(QThread):
     def _get_value(self, df, part):
         """辅助函数：解析运算中的值（可能是字段或数值）"""
         part = part.strip()
-        # 检查是否为字段
         if part in df.columns:
-            # 尝试转换为数值（处理空值为0）
             return pd.to_numeric(df[part], errors='coerce').fillna(0)
-        # 尝试解析为数值（如"12"）
         try:
             return float(part)
         except ValueError:
             raise Exception(f"无法解析值：{part}（不是字段也不是数值）")
 
     def values_equal_by_rule(self, val1, val2, data_type, tail_diff, field_name=""):
-        """
-        根据规则判断两个值是否相等
-        """
-        # 统一空值表示
+        """根据规则判断两个值是否相等"""
         val1 = self.normalize_value(val1)
         val2 = self.normalize_value(val2)
 
-        # 如果两个值都是空，则认为相等
         if val1 == "" and val2 == "":
             return True
-        # ✅ 新增：监管资产属性字段特殊处理
+
+        # 监管资产属性字段特殊处理
         if field_name == "监管资产属性":
             def extract_last_segment(val, sep):
                 if not val:
@@ -136,52 +127,42 @@ class CompareWorker(QThread):
             val1_clean = extract_last_segment(val1, '\\')
             val2_clean = extract_last_segment(val2, '-')
             return val1_clean == val2_clean
-        if field_name == "关联实物管理系统代码":
-            # 平台单值
-            plat = val1.strip()
-            # ERP 组合
-            erp_combo = val2.strip()
 
-            # 找到平台值对应的全部合法组合
+        # 关联实物管理系统代码处理
+        if field_name == "关联实物管理系统代码":
+            plat = val1.strip()
+            erp_combo = val2.strip()
             allowed_combos = self.erp_combo_map.get(plat, [])
-            # 只要 ERP 组合出现在允许列表里即一致
             return erp_combo in allowed_combos
-        # --- 枚举值映射：站线电压等级 ---
+
+        # 线站电压等级处理
         if field_name == "线站电压等级":
-            # 平台表是名称 -> 编码
             code1 = self.enum_map.get(val1, val1)
-            # ERP 本身就是编码
             return code1 == val2
-        # ✅ 新增：布尔值映射逻辑
-        bool_map = {
-            "是": "Y",
-            "否": "N",
-            "Y": "是",
-            "N": "否"
-        }
+
+        # 布尔值映射逻辑
+        bool_map = {"是": "Y", "否": "N", "Y": "是", "N": "否"}
         if val1 in bool_map and val2 in bool_map:
             if bool_map[val1] == val2 or val1 == bool_map[val2]:
                 return True
+
+        # 折旧方法处理
         if field_name == "折旧方法":
-            if val1 == "年限平均法" and val2 == "直线法":
-                return True
-            if val1 == "直线法" and val2 == "年限平均法":
+            if (val1 == "年限平均法" and val2 == "直线法") or \
+                    (val1 == "直线法" and val2 == "年限平均法"):
                 return True
 
+        # 数值型比较
         if data_type == "数值":
-            # 数值型比较
             num1 = pd.to_numeric(val1, errors='coerce')
             num2 = pd.to_numeric(val2, errors='coerce')
 
-            # 检查是否为NaN
             if pd.isna(num1) and pd.isna(num2):
                 return True
             elif pd.isna(num1) or pd.isna(num2):
                 return False
 
-            # 如果字段名包含"折旧"，取绝对值
-            field_contains_depreciation = "折旧" in field_name
-            if field_contains_depreciation:
+            if "折旧" in field_name:
                 num1 = abs(num1)
                 num2 = abs(num2)
 
@@ -190,96 +171,81 @@ class CompareWorker(QThread):
             else:
                 return abs(num1 - num2) <= float(tail_diff)
 
+        # 日期型比较
         elif data_type == "日期":
-            # 日期型比较
             def parse_date(date_str):
-                """尝试多种格式解析日期，返回标准化字符串（YYYY-MM-DD）"""
                 if pd.isna(date_str) or str(date_str).strip() == "":
                     return ""
                 date_str = str(date_str).strip()
-                if not date_str:
-                    return ""
-                # 尝试多种常见日期格式
                 formats = ['%Y-%m-%d', '%Y/%m/%d', '%Y年%m月%d日',
-                           '%m-%d-%Y', '%m/%d/%Y', '%Y%m%d']
+                           '%m-%d-%Y', '%m/%d/%Y', '%Y%m%d','%Y-%m-%d %H:%M:%S']
                 for fmt in formats:
                     try:
                         return pd.to_datetime(date_str, format=fmt).strftime('%Y-%m-%d')
                     except (ValueError, TypeError):
                         continue
-                # 如果所有格式都解析失败，返回原始字符串
                 return date_str
 
-            # 统一解析两列日期
             parsed1 = parse_date(val1)
             parsed2 = parse_date(val2)
 
-            # 处理空值情况
             if parsed1 == "" and parsed2 == "":
                 return True
 
-            # 根据精度需求截取
             if tail_diff == "月":
-                cmp1 = parsed1[:7]  # YYYY-MM
+                cmp1 = parsed1[:7]
                 cmp2 = parsed2[:7]
             elif tail_diff == "年":
-                cmp1 = parsed1[:4]  # YYYY
+                cmp1 = parsed1[:4]
                 cmp2 = parsed2[:4]
-            else:  # 默认精确到日
-                cmp1 = parsed1  # YYYY-MM-DD
-                cmp2 = parsed2
-
+            elif tail_diff == "日":
+                cmp1 = parsed1[:10]
+                cmp2 = parsed2[:10]    # 取年月日（YYYY-MM-DD）
+            elif tail_diff == "时":
+                cmp1 = parsed1[:13]
+                cmp2 = parsed2[:13]   # 取年月日时（YYYY-MM-DD HH）
+            elif tail_diff == "分":
+                cmp1 = parsed1[:16]
+                cmp2 = parsed2[:16]  # 取年月日时分（YYYY-MM-DD HH:MM）
+            elif tail_diff == "秒":
+                cmp1 = parsed1[:19]
+                cmp2 = parsed2[:19]   # 取完整时间（YYYY-MM-DD HH:MM:SS）
             return cmp1 == cmp2
 
+        # 文本型比较
         elif data_type == "文本":
-            # 文本型比较
             return val1 == val2
 
         return val1 == val2
 
     def convert_asset_category(self, df1, df2, mapping_df):
         """资产分类转换逻辑"""
-        # 平台表的资产分类字段
         asset_category_col1 = "资产分类"
-        # ERP表的资产分类字段
         asset_category_col2 = "SAP资产类别描述"
 
-        # 映射表的相关字段
         source_col = "同源目录完整名称"
         target_col = "21年资产目录大类"
         detail_col = "ERP资产明细类描述"
         code_col = "同源目录编码"
         erp_detail_col = "ERP资产明细类别"
 
-        # 创建映射字典，用于将转换后的编码映射回原始值
-        self.asset_code_to_original = {}  # 转换后编码 -> 原始值
-
         # 转换平台表的资产分类
         def convert_category(value):
-            # 在映射表中查找匹配的记录
             matches = mapping_df[mapping_df[source_col] == value]
             if len(matches) == 0:
-                converted_code = str(value)  # 没有匹配项
+                converted_code = str(value)
             elif len(matches) == 1:
-                # 唯一匹配项，直接返回同源目录编码前4位
                 converted_code = str(matches.iloc[0][code_col])[:2]
             else:
-                # 多个匹配项，需要根据ERP表的值来确定唯一项
-                # 拼接21年资产目录大类和ERP资产明细类描述，与ERP表的SAP资产类别描述比较
                 converted_code = None
                 for _, row in matches.iterrows():
-                    # 构造映射后的值
                     mapped_value = f"{row[target_col]}-{row[detail_col]}"
-                    # 检查是否在ERP表中存在
                     if mapped_value in df2[asset_category_col2].values:
-                        # 找到匹配项，返回同源目录编码前4位
                         converted_code = str(row[code_col])[:2]
                         break
-                # 如果没有找到匹配项，返回第一条记录的同源目录编码前4位
                 if converted_code is None:
                     converted_code = str(matches.iloc[0][code_col])[:2]
 
-            # 保存编码到原始值的映射
             if converted_code is not None:
                 self.asset_code_to_original[converted_code] = value
 
@@ -287,19 +253,16 @@ class CompareWorker(QThread):
 
         # 转换ERP表的资产分类
         def convert_category_table2(sap_value):
-            # 在映射表中查找匹配的记录
             matches = mapping_df[
                 mapping_df.apply(lambda row: f"{row[target_col]}-{row[detail_col]}" == sap_value, axis=1)
             ]
             if len(matches) > 0:
-                # 找到匹配项，返回ERP资产明细类别前4位
                 converted_code = str(matches.iloc[0][erp_detail_col])[:2]
             else:
-                # 没有找到匹配项，返回原值
                 converted_code = str(sap_value)
 
-            # 保存编码到原始值的映射
-            self.asset_code_to_original[converted_code] = sap_value
+            if converted_code is not None:
+                self.asset_code_to_original[converted_code] = sap_value
 
             return converted_code
 
@@ -311,22 +274,30 @@ class CompareWorker(QThread):
 
     def run(self):
         try:
-            self.log_signal.emit("正在并行读取Excel文件...")
+            self.log_signal.emit("正在读取Excel文件（分块模式）...")
+            time0 = time.time()
+            # 读取文件（使用优化后的分块读取函数）
+            df1 = read_excel_fast(
+                self.file1,
+                self.sheet_name1,
+                is_file1=True,
+                chunk_size=self.chunk_size
+            )
+            # df1 = None
+            self.log_signal.emit(f"✅ 平台表读取完成，共 {len(df1)} 行数据")
 
-            with ThreadPoolExecutor(max_workers=2) as executor:
-                future1 = executor.submit(read_excel_fast, self.file1, self.sheet_name1, is_file1=True)
-                future2 = executor.submit(read_excel_fast, self.file2, self.sheet_name2, is_file1=False)
-                try:
-                    df1 = future1.result()
-                    df2 = future2.result()
-                except Exception as e:
-                    raise Exception(f"读取文件时发生错误: {str(e)}")
+            df2 = read_excel_fast(
+                self.file2,
+                self.sheet_name2,
+                is_file1=False,
+                skip_rows=self.skip_rows,
+                chunk_size=self.chunk_size
+            )
+            self.log_signal.emit(f"✅ ERP表读取完成，共 {len(df2)} 行数据")
 
-            self.log_signal.emit("✅ Excel文件读取完成，开始比较数据...")
             self.log_signal.emit("开始比较数据...")
             # 读取资产分类映射表
             mapping_df = read_mapping_table(self.rule_file)
-
             # 转换资产分类
             df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
 
@@ -339,20 +310,17 @@ class CompareWorker(QThread):
                 self.log_signal.emit("❌ 错误：ERP表除了表头外没有数据行，请检查文件内容！")
                 return
 
+            # 清理列名
             df1.columns = df1.columns.str.replace('[*\\s]', '', regex=True)
             df2.columns = df2.columns.str.replace('[*\\s]', '', regex=True)
 
-            # 检查规则中的列是否在平台表和ERP表中都存在
+            # 检查规则中的列是否存在
             table2_columns_to_check = []
             for rule in self.rules.values():
-                # 如果有计算规则，则不需要检查ERP表是否存在该字段
                 if not rule.get("calc_rule") and rule["table2_field"]:
                     table2_columns_to_check.append(rule["table2_field"])
 
-            table1_columns_to_compare = list(self.rules.keys())  # 平台表字段名
-            # table2_columns_to_compare = [rule["table2_field"] for rule in self.rules.values()]  # ERP表字段名
-            columns_to_compare = list(self.rules.keys())
-
+            table1_columns_to_compare = list(self.rules.keys())
             missing_in_file1 = [col for col in table1_columns_to_compare if col not in df1.columns]
             missing_in_file2 = [col for col in table2_columns_to_check if col not in df2.columns]
 
@@ -365,60 +333,57 @@ class CompareWorker(QThread):
                 self.log_signal.emit(f"❌ 比对失败：{error_msg}")
                 return
 
-            # 在"检查规则中的列是否存在"之后添加计算字段逻辑
+            # 处理计算字段
             self.log_signal.emit("✅ 开始处理计算字段...")
-
-            # 处理需要计算的字段
-            # 存储计算字段的临时名称映射（原字段名 -> 临时名称）
             calc_temp_fields = {}
 
-            # 处理需要计算的字段（使用临时名称避免冲突）
             for field1, rule in self.rules.items():
                 if rule.get("calc_rule") and field1 in df2.columns:
                     df2.drop(columns=[field1], inplace=True)
-                    self.log_signal.emit(f"删除ERP表中原有的 '{rule['table2_field']}' 列，将使用计算规则生成的新列")
+                    self.log_signal.emit(f"忽略ERP表中原有的 '{rule['table2_field']}' 列，将使用计算规则生成的新列")
                 if field1 != rule["table2_field"] and field1 in df2.columns:
                     df2.drop(columns=[field1], inplace=True)
+
                 if rule.get("calc_rule"):
                     self.log_signal.emit(f"正在计算ERP表字段: {field1} (规则: {rule['calc_rule']})")
                     try:
-                        # 生成临时字段名（避免与ERP表原有字段冲突）
                         temp_field = f"__calc_{field1}__"
                         calc_temp_fields[field1] = temp_field
-
-                        # 计算字段值并存储到临时字段
-                        calculated_values = self.calculate_field(
+                        df2[temp_field] = self.calculate_field(
                             df2,
                             rule["calc_rule"],
                             rule["data_type"]
                         )
-                        df2[temp_field] = calculated_values
                     except Exception as e:
                         self.log_signal.emit(f"⚠️ 计算字段 {field1} 时出错: {str(e)}")
 
-            # 修改映射逻辑（使用临时字段名进行映射）
+            # 字段映射
             mapped_columns = {}
             for field1, rule in self.rules.items():
                 field2 = rule["table2_field"]
-                # 如果是计算字段，使用临时字段名映射
                 if field1 in calc_temp_fields:
                     mapped_columns[calc_temp_fields[field1]] = field1
                 elif field2 in df2.columns:
                     mapped_columns[field2] = field1
-            # 映射完成后打印日志
+
             mapped_log = "\n".join([f"  {k} -> {v}" for k, v in mapped_columns.items()])
             self.log_signal.emit(f"字段映射关系：\n{mapped_log}")
             df2.rename(columns=mapped_columns, inplace=True)
-            # 删除临时字段（可选）
+
+            # 删除临时字段释放内存
             for temp_field in calc_temp_fields.values():
                 if temp_field in df2.columns:
                     del df2[temp_field]
-            # 保留需要比对的列
-            all_needed_columns = list(set(columns_to_compare + self.primary_keys))
-            df1 = df1[all_needed_columns]
-            df2 = df2[all_needed_columns]
+            del calc_temp_fields
+            gc.collect()
 
-            # 检查主键列是否为空
+            # 只保留需要比对的列，减少内存占用
+            all_needed_columns = list(set(table1_columns_to_compare + self.primary_keys))
+            df1 = df1[all_needed_columns].copy()
+            df2 = df2[all_needed_columns].copy()
+            gc.collect()
+
+            # 主键检查
             if not self.primary_keys:
                 self.log_signal.emit("❌ 错误：规则文件中未定义主键字段，请检查规则文件！")
                 return
@@ -590,7 +555,7 @@ class CompareWorker(QThread):
                                 return ""
                             # 尝试多种常见日期格式
                             formats = ['%Y-%m-%d', '%Y/%m/%d', '%Y年%m月%d日',
-                                       '%m-%d-%Y', '%m/%d/%Y', '%Y%m%d']
+                                       '%m-%d-%Y', '%m/%d/%Y', '%Y%m%d','%Y-%m-%d %H:%M:%S']
                             for fmt in formats:
                                 try:
                                     return pd.to_datetime(date_str, format=fmt).strftime('%Y-%m-%d')
@@ -613,9 +578,18 @@ class CompareWorker(QThread):
                         elif tail_diff == "年":
                             series1_cmp = series1_parsed.str[:4]  # YYYY
                             series2_cmp = series2_parsed.str[:4]
-                        else:  # 默认精确到日
-                            series1_cmp = series1_parsed  # YYYY-MM-DD
-                            series2_cmp = series2_parsed
+                        elif tail_diff == "日":
+                            series1_cmp = series1_parsed[:10]
+                            series2_cmp = series2_parsed[:10]  # 取年月日（YYYY-MM-DD）
+                        elif tail_diff == "时":
+                            series1_cmp = series1_parsed[:13]
+                            series2_cmp = series2_parsed[:13]  # 取年月日时（YYYY-MM-DD HH）
+                        elif tail_diff == "分":
+                            series1_cmp = series1_parsed[:16]
+                            series2_cmp = series2_parsed[:16]  # 取年月日时分（YYYY-MM-DD HH:MM）
+                        elif tail_diff == "秒":
+                            series1_cmp = series1_parsed[:19]
+                            series2_cmp = series2_parsed[:19]
 
                         diff_mask = (series1_cmp != series2_cmp) & ~both_empty
 
@@ -766,10 +740,14 @@ class CompareWorker(QThread):
                     self.log_signal.emit('\n'.join(diff_log_messages))
                 else:
                     self.log_signal.emit("⚠️ 未找到具体差异列，请检查数据是否一致。")
+            time1 = time.time()
+            self.log_signal.emit(f"对比完成，总耗时{time1 - time0:.1f}s")
 
         except Exception as e:
             logging.error(traceback.format_exc())
             self.log_signal.emit(f"发生错误：{str(e)}")
         finally:
+            # 强制垃圾回收释放内存
+            gc.collect()
             self.quit()
             self.wait()

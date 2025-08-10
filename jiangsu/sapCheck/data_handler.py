@@ -1,18 +1,16 @@
-# data_handler.py
-import os
 import re
-
 import pandas as pd
-from concurrent.futures import ThreadPoolExecutor
 from PyQt5.QtCore import QThread, pyqtSignal
 from openpyxl import load_workbook
 import xlrd
+import gc
+import zipfile
+import xml.etree.ElementTree as ET
 
 class LoadColumnWorker(QThread):
-    """用于在独立线程中读取列名"""
-    columns_loaded = pyqtSignal(str, list)  # 参数为文件路径和列名列表
+    """用于在独立线程中读取Excel列名和页签"""
+    sheet_names_loaded = pyqtSignal(str, list)  # 发送文件路径和页签列表
     error_occurred = pyqtSignal(str)
-    sheet_names_loaded = pyqtSignal(str, list)
 
     def __init__(self, file_path, sheet_name=None):
         super().__init__()
@@ -21,220 +19,259 @@ class LoadColumnWorker(QThread):
 
     def run(self):
         try:
-            # 读取页签名称
-            sheet_names = get_sheet_names(self.file_path)
+            # 获取所有页签名称
+            if self.file_path.lower().endswith('.xlsx'):
+
+                with zipfile.ZipFile(self.file_path, 'r') as zf:
+                    # 极少数大文件 workbook.xml 会分片；read() 会一次性读进来，通常 < 200 KB
+                    xml_bytes = zf.read('xl/workbook.xml')
+
+                # 去掉命名空间，方便查找
+                root = ET.fromstring(xml_bytes)
+                ns = {'ns': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
+                sheet_names = [sheet.attrib['name'] for sheet in root.findall('.//ns:sheet', ns)]
+            else:  # .xls
+                # with zipfile.ZipFile(self.file_path,) as z:
+                #     xml = z.read('xl/workbook.xml')
+                # root = ET.fromstring(xml)
+                # ns = {'n': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
+                # sheet_names = [s.attrib['name'] for s in root.findall('.//n:sheet', ns)]
+                wb = xlrd.open_workbook(self.file_path)
+                sheet_names = wb.sheet_names()
+                wb.release_resources()
             self.sheet_names_loaded.emit(self.file_path, sheet_names)
-            if not self.sheet_name:
-                return
-            # 读取列名
-            columns = read_excel_columns(self.file_path, self.sheet_name)
-            if columns is None:
-                return
-            self.columns_loaded.emit(self.file_path, columns)
         except Exception as e:
-            self.error_occurred.emit(str(e))
+            self.error_occurred.emit(f"读取页签失败: {str(e)}")
 
-def read_excel_columns(file_path, sheet_name):
-    """快速读取Excel文件的列名"""
+
+
+
+
+
+def read_excel_fast(file_path, sheet_name, is_file1=True, skip_rows=0, chunk_size=10000):
+    """
+    快速读取Excel文件，支持大文件分块读取和多表头处理
+    优化点：
+    1. 分离表头和数据读取，解决read_only模式下无法获取合并单元格的问题
+    2. 分块读取大型文件，显著降低内存占用
+    3. 及时释放资源，减少内存泄漏
+    """
     try:
-        if not sheet_name:  # 空字符串、None 都视为未选择
-            return
+        if file_path.lower().endswith('.xlsx'):
+            # # 阶段1：读取表头和合并单元格信息（使用非只读模式）
+            wb_header = load_workbook(file_path, data_only=True, read_only=False, keep_links=False)
+            ws_header = wb_header[sheet_name]
 
-        if file_path.lower().endswith('.xls'):
-            # 处理 .xls 文件
-            import xlrd
-            try:
-                workbook = xlrd.open_workbook(file_path)
-                worksheet = workbook.sheet_by_name(sheet_name)
-                if worksheet.nrows > 0:
-                    columns = [cell.value for cell in worksheet.row(0)]
-                    cleaned_columns = [col.replace('*', '').strip() if isinstance(col, str) else col for col in columns]
-                    return cleaned_columns
-            except xlrd.biffh.XLRDError as e:
-                # 如果是版本问题，尝试用 openpyxl 处理（可能是实际为 .xlsx 格式的文件）
-                if "xlsx file" in str(e).lower():
-                    wb = load_workbook(filename=file_path, read_only=True, data_only=True)
-                    ws = wb[sheet_name]
-                    columns = [cell.value for cell in next(ws.iter_rows())]
-                    cleaned_columns = [col.replace('*', '').strip() if isinstance(col, str) else col for col in columns]
-                    wb.close()
-                    return cleaned_columns
-                else:
-                    raise e
-        else:
-            # 处理 .xlsx 文件
-            wb = load_workbook(filename=file_path, read_only=True, data_only=True)
-            ws = wb[sheet_name]
-            columns = [cell.value for cell in next(ws.iter_rows())]
-            cleaned_columns = [col.replace('*', '').strip() if isinstance(col, str) else col for col in columns]
-            wb.close()
-            return cleaned_columns
-    except Exception as e:
-        raise Exception(f"读取Excel列名时发生错误: {str(e)}")
+            # 读取表头行（最多读取前2行）
+            max_header_rows = 2
+            header_rows = list(ws_header.iter_rows(values_only=True, max_row=max_header_rows))
+            merged_ranges = list(ws_header.merged_cells.ranges) if ws_header.merged_cells else []
 
+            # 关闭表头工作簿释放内存
+            wb_header.close()
+            del wb_header, ws_header
+            gc.collect()
 
+            # 处理表头
+            if is_file1 and len(header_rows) >= 2 and merged_ranges:
+                # 平台文件：处理一级+二级表头
+                level1 = [str(v or '') for v in header_rows[0]]
+                level2 = [str(v or '') for v in header_rows[1]]
 
-def read_excel_with_header(file_path, sheet_name, skip_rows=0, is_file1=True):
-    """
-    读取带一级/二级表头（合并单元格已自动填充）的 Excel
-    is_file1=True  -> 平台文件：一级-二级 拼接
-    is_file1=False -> ERP文件：跳过 skip_rows 行后取表头
-    返回列名与规则完全对齐的 DataFrame
-    """
-    if file_path.lower().endswith('.xlsx'):
-        # ---------- 1. 普通模式读表头 ----------
-        wb = load_workbook(file_path, data_only=True, read_only=False)
-        ws = wb[sheet_name]
-        rows = list(ws.iter_rows(values_only=True))
-
-        if is_file1:
-            if ws.merged_cells.ranges:
-                # 平台文件：一级 + 二级
-                level1 = [str(v or '') for v in rows[0]]
-                level2 = [str(v or '') for v in rows[1]]
-                # 把一级合并单元格向右填充
-                for merged in ws.merged_cells.ranges:
+                # 处理一级表头的合并单元格
+                for merged in merged_ranges:
+                    # merged.bounds格式：(min_row, min_col, max_row, max_col)，索引从1开始
                     if merged.bounds[1] == 1:  # 第1行
                         min_col, max_col = merged.bounds[0], merged.bounds[2]
                         fill_val = level1[min_col - 1]
                         for c in range(min_col, max_col + 1):
                             level1[c - 1] = fill_val
+
+                # 合并两级表头
                 cols = [f"{a}-{b}".strip('-') for a, b in zip(level1, level2)]
-                data_start = 2
-            else:
-                header_row = 1
-                cols = [str(v or '') for v in rows[header_row - 1]]
-                data_start = header_row
-        else:
-            if ws.merged_cells.ranges:
-                # ERP 文件：跳过 skip_rows
-                header_row = 1 if is_file1 else (skip_rows + 1)
-                cols = [str(v or '') for v in rows[header_row - 1]]
-                data_start = header_row
-            else:
-                header_row = 1
-                cols = [str(v or '') for v in rows[header_row - 1]]
-                data_start = header_row
-        cols = [re.sub(r'[\*\s]+', '', c) for c in cols]
-        data_rows = list(ws.iter_rows(min_row=data_start + 1, values_only=True))
+                data_start_row = 3  # 数据从第3行开始（索引从1开始）
 
-        df = pd.DataFrame(data_rows, columns=cols)
-        wb.close()
-
-        # ---------- 2. read_only 读数据 ----------
-        # wb_data = load_workbook(file_path, data_only=True, read_only=True)
-        # ws_data = wb_data[sheet_name]
-        # data_rows = list(ws_data.iter_rows(min_row=data_start + 1, values_only=True))
-        # df = pd.DataFrame(data_rows, columns=cols)
-        # wb_data.close()
-        return df
-
-    else:
-        # ---------- .xls 处理 ----------
-        bk = xlrd.open_workbook(file_path)
-        sh = bk.sheet_by_name(sheet_name)
-        if is_file1 and sh.nrows >= 2:
-            level1 = [str(sh.cell_value(0, c)) for c in range(sh.ncols)]
-            level2 = [str(sh.cell_value(1, c)) for c in range(sh.ncols)]
-            # xlrd merged_cells 的格式：(row_low, row_high, col_low, col_high)
-            for crange in sh.merged_cells:
-                if crange[0] == 0:  # 第1行
-                    min_col, max_col = crange[2], crange[3]
-                    fill_val = level1[min_col]
-                    for c in range(min_col, max_col):
-                        level1[c] = fill_val
-            cols = [f"{a}-{b}".strip('-') for a, b in zip(level1, level2)]
-            data_start = 2
-        else:
-            cols = [str(sh.cell_value(skip_rows, c)) for c in range(sh.ncols)]
-            data_start = skip_rows + 1
-    cols = [re.sub(r'[\*\s]+', '', c) for c in cols]
-    data = [sh.row_values(r) for r in range(data_start, sh.nrows)]
-    df = pd.DataFrame(data, columns=cols)
-    return df
-
-def _read_xls_with_header(file_path, sheet_name, skip_rows, is_file1):
-    import xlrd
-    bk = xlrd.open_workbook(file_path)
-    sh = bk.sheet_by_name(sheet_name)
-    if is_file1 and sh.nrows >= 2:
-        level1 = [str(sh.cell_value(0, c)) for c in range(sh.ncols)]
-        level2 = [str(sh.cell_value(1, c)) for c in range(sh.ncols)]
-        cols = [f"{a}-{b}".strip('-') for a, b in zip(level1, level2)]
-        data_start = 2
-    else:
-        cols = [str(sh.cell_value(skip_rows, c)) for c in range(sh.ncols)]
-        data_start = skip_rows + 1
-    data = [sh.row_values(r) for r in range(data_start, sh.nrows)]
-    df = pd.DataFrame(data, columns=cols)
-    df.columns = [re.sub(r'[\*\s]+', '', c) for c in df.columns]
-    return df
-
-
-def read_excel_fast(file_path, sheet_name,is_file1=True):
-    return read_excel_with_header(file_path, sheet_name, skip_rows=1, is_file1=is_file1)
-    # """快速读取Excel文件"""
-    # try:
-    #     if file_path.lower().endswith('.xls'):
-    #         # 处理 .xls 文件
-    #
-    #         workbook = xlrd.open_workbook(file_path)
-    #         worksheet = workbook.sheet_by_name(sheet_name)
-    #
-    #         data = []
-    #         columns = None
-    #         for i in range(worksheet.nrows):
-    #             row = worksheet.row(i)
-    #             if i == 0:
-    #                 columns = [cell.value for cell in row]
-    #             else:
-    #                 data.append([cell.value for cell in row])
-    #
-    #         return pd.DataFrame(data, columns=columns)
-    #     else:
-    #         wb = load_workbook(filename=file_path, read_only=True, data_only=True)
-    #         ws = wb[sheet_name]
-    #         data = []
-    #         columns = None
-    #         for i, row in enumerate(ws.rows):
-    #             if i == 0:
-    #                 columns = [cell.value for cell in row]
-    #             else:
-    #                 data.append([cell.value for cell in row])
-    #         wb.close()
-    #         return pd.DataFrame(data, columns=columns)
-    # except Exception as e:
-    #     raise Exception(f"读取Excel文件时发生错误: {str(e)}")
-
-def get_sheet_names(file_path):
-    """获取 Excel 文件的所有页签名称"""
-    try:
-
-        if file_path.lower().endswith('.xls'):
-            # 处理 .xls 文件
-            # 处理 .xls 文件
-            import xlrd
-            try:
-                workbook = xlrd.open_workbook(file_path)
-                sheetnames = workbook.sheet_names()
-                return sheetnames
-            except xlrd.biffh.XLRDError as e:
-                # 如果是版本问题，尝试用 openpyxl 处理（可能是实际为 .xlsx 格式的文件）
-                if "xlsx file" in str(e).lower():
-                    wb = load_workbook(filename=file_path, read_only=True)
-                    sheetnames = wb.sheetnames
-                    wb.close()
-                    return sheetnames
+            elif is_file1 and len(header_rows) >= 2 and not merged_ranges:
+                # ERP文件或单级表头处理
+                header_row_idx = skip_rows
+                if len(header_rows) > header_row_idx:
+                    cols = [str(v) if v is not None else '' for v in header_rows[header_row_idx]]
                 else:
-                    raise e
+                    cols = []
+                data_start_row = header_row_idx + 2  # 数据开始行（索引从1开始）
+            elif not is_file1 and not merged_ranges:
+                # 非平台文件：处理一级表头
+                header_row_idx = skip_rows
+                if len(header_rows) > header_row_idx:
+                    cols = [str(v) if v is not None else '' for v in header_rows[header_row_idx]]
+                else:
+                    cols = []
+                data_start_row = header_row_idx + 2  # 数据开始行（索引从1开始）
+            elif not is_file1 and merged_ranges:
+
+                header_row = 1 if is_file1 else (skip_rows + 2)
+                cols = [str(v or '') for v in header_rows[header_row - 1]]
+                data_start_row = header_row + 1
+
+            # 清理列名
+            cols = [re.sub(r'[\*\s]+', '', c) for c in cols]
+            if not cols:
+                raise ValueError("未能正确解析表头，请检查文件格式")
+
+
+            # 阶段2：分块读取数据（使用只读模式）
+            wb_data = load_workbook(file_path, data_only=True, read_only=True, keep_links=False)
+            ws_data = wb_data[sheet_name]
+
+            # 获取总数据行数（减去表头行）
+            total_rows = ws_data.max_row
+            if total_rows < data_start_row:
+                wb_data.close()
+                return pd.DataFrame(columns=cols)  # 空数据框
+
+            # 分块读取数据
+            chunks = []
+            current_row = data_start_row
+
+            while current_row <= total_rows:
+                # 计算当前块的结束行
+                end_row = min(current_row + chunk_size - 1, total_rows)
+
+                # 读取当前块数据
+                data_rows = list(ws_data.iter_rows(
+                    min_row=current_row,
+                    max_row=end_row,
+                    values_only=True
+                ))
+
+                # 创建数据块DataFrame
+                chunk_df = pd.DataFrame(data_rows, columns=cols)
+                chunks.append(chunk_df)
+
+                # 更新进度并释放内存
+                current_row = end_row + 1
+                del data_rows, chunk_df
+                gc.collect()
+
+            # 关闭数据工作簿
+            wb_data.close()
+            del wb_data, ws_data
+            gc.collect()
+
+            # 合并所有数据块
+            if chunks:
+                df = pd.concat(chunks, ignore_index=True)
+                del chunks
+                gc.collect()
+                return df
+            else:
+                return pd.DataFrame(columns=cols)
+
+        elif file_path.lower().endswith('.xls'):
+            max_header_rows = 2
+            bk = xlrd.open_workbook(file_path, on_demand=True)
+            sh = bk.sheet_by_name(sheet_name)
+            header_rows = [
+                [str(sh.cell_value(r, c)) if sh.cell_value(r, c) is not None else ''
+                 for c in range(sh.ncols)]
+                for r in range(min(max_header_rows, sh.nrows))
+            ]
+            # ---------- 阶段1：读取两级表头 ----------
+
+            level1_raw = [str(sh.cell_value(0, c)).strip()
+                          for c in range(sh.ncols)]
+            non_empty = sum(1 for v in level1_raw if v)
+            empty = sum(1 for v in level1_raw if not v)
+            # 真合并标志：只要存在横向合并且覆盖第 0 行即可
+            real_merge = any(r1 == 0 and r2 == 0 for r1, r2, _, _ in sh.merged_cells)
+
+            # 视觉合并判定
+            visual_merge = (non_empty > 0 and empty > 0) and (not real_merge)
+
+            # ---------- 阶段2：与 xlsx 完全等价的列名生成 ----------
+            if is_file1 and (visual_merge or real_merge) :
+                # 平台文件：一级+二级表头
+
+
+                level1 = header_rows[0]
+                level2 = header_rows[1]
+
+                # 视觉合并：把左侧非空值向右填充
+                last = ''
+                for c in range(sh.ncols):
+                    if level1[c]:
+                        last = level1[c]
+                    else:
+                        level1[c] = last
+
+                cols = [f"{a}-{b}".strip('-') for a, b in zip(level1, level2)]
+                data_start_row = 2  # 行号从 0 开始，数据从第 3 行（索引 2）开始
+
+            elif is_file1 and not visual_merge and not real_merge:
+                # ERP文件或单级表头
+                header_row_idx = skip_rows + 1
+                cols = [str(v) for v in header_rows[header_row_idx]]
+
+                data_start_row = header_row_idx + 1  # 数据行索引（从 0 开始）
+
+            elif not is_file1 and  not visual_merge and not real_merge:
+                # 非平台文件：一级表头
+                header_row_idx = skip_rows + 1
+                cols = [str(v or '') for v in header_rows[header_row_idx]]
+                data_start_row = header_row_idx + 1
+
+            elif not is_file1  and (visual_merge or real_merge):
+                # 非平台但有合并（罕见）
+                header_row_idx = skip_rows + 1
+                # cols = [str(v or '') for v in header_rows[header_row_idx]]
+                cols = [str(sh.cell_value(skip_rows + 1, c)) for c in range(sh.ncols)]
+                data_start_row = header_row_idx + 1
+            else:
+                # 兜底
+                cols = []
+                data_start_row = 0
+
+            # 清理列名
+            cols = [re.sub(r'[\*\s]+', '', c) for c in cols]
+
+            # 分块读取数据
+            chunks = []
+            total_rows = sh.nrows
+            current_row = data_start_row
+
+            while current_row < total_rows:
+                end_row = min(current_row + chunk_size, total_rows)
+                data = []
+                for r in range(current_row, end_row):
+                    row_values = [sh.cell_value(r, c) for c in range(sh.ncols)]
+                    data.append(row_values)
+
+                chunk_df = pd.DataFrame(data, columns=cols)
+                chunks.append(chunk_df)
+
+                current_row = end_row
+                del data, chunk_df
+                gc.collect()
+
+            # 释放资源
+            bk.release_resources()
+            del bk, sh
+            gc.collect()
+
+            # 合并数据块
+            if chunks:
+                df = pd.concat(chunks, ignore_index=True)
+                del chunks
+                gc.collect()
+                return df
+            else:
+                return pd.DataFrame(columns=cols)
+
         else:
-            # 处理 .xlsx 文件
-            wb = load_workbook(filename=file_path, read_only=True)
-            sheetnames = wb.sheetnames
-            wb.close()
-            return sheetnames
+            raise ValueError(f"不支持的文件格式: {file_path}")
+
     except Exception as e:
-        raise Exception(f"读取页签名称时发生错误: {str(e)}")
+        raise Exception(f"读取Excel文件失败: {str(e)}")
 
 def read_mapping_table(file_path):
     """读取资产分类映射表，返回 DataFrame"""
