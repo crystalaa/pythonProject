@@ -8,6 +8,7 @@ import time
 import warnings
 import logging
 from openpyxl import load_workbook
+import gc
 
 import xlwt
 from openpyxl.styles import numbers
@@ -605,6 +606,51 @@ class ExcelMergerSplitterApp:
         except Exception as e:
             logger.error(f"解析文件 {file_path} 失败: {str(e)}")
             raise Exception(f"文件解析错误: {str(e)}")
+
+    def read_table_file_chunked(self, file_path, chunksize=1000):
+        """
+        分块读取文件的方法，用于处理大文件
+        """
+        file_ext = os.path.splitext(file_path)[1].lower()
+        logger.info(f"开始分块解析文件: {file_path}，格式: {file_ext}")
+
+        if file_ext == '.csv':
+            encodings = ['utf-8', 'gbk', 'gb2312', 'utf-16']
+            for encoding in encodings:
+                try:
+                    for chunk in pd.read_csv(
+                            file_path,
+                            encoding=encoding,
+                            header=None,
+                            dtype=str,
+                            keep_default_na=False,
+                            chunksize=chunksize
+                    ):
+                        yield chunk
+                    break
+                except Exception as e:
+                    logger.debug(f"使用 {encoding} 编码读取CSV失败: {str(e)}")
+                    continue
+            else:
+                raise Exception(f"无法解析CSV文件，尝试了多种编码")
+
+        elif file_ext in ['.xlsx', '.et']:
+            # 对于Excel文件，我们仍然需要一次性读取，但可以优化内存使用
+            df = self.read_table_file(file_path)
+            total_rows = len(df)
+            for i in range(0, total_rows, chunksize):
+                yield df.iloc[i:i + chunksize]
+
+        elif file_ext == '.xls':
+            # 对于XLS文件，同样需要一次性读取
+            df = self.read_table_file(file_path)
+            total_rows = len(df)
+            for i in range(0, total_rows, chunksize):
+                yield df.iloc[i:i + chunksize]
+
+        else:
+            raise Exception(f"不支持的文件格式: {file_ext}")
+
     # ==================== 合并处理 ====================
     def start_merge(self):
         if not self.merge_files:
@@ -636,112 +682,200 @@ class ExcelMergerSplitterApp:
             self.update_progress(0)
             logger.info(f"开始合并 {len(self.merge_files)} 个文件到 {output_path}")
 
-            all_data = []
+            output_ext = os.path.splitext(output_path)[1].lower()
             first_file = True
             total_files = len(self.merge_files)
 
-            for i, file_path in enumerate(self.merge_files):
-                # 更新进度
-                progress = (i / total_files) * 100
-                self.update_progress(progress)
-                self.update_status(f"正在处理: {os.path.basename(file_path)} ({i + 1}/{total_files})")
-
-                logger.info(f"正在处理文件 {i + 1}/{total_files}: {file_path}")
-
-                # 根据文件扩展名选择合适的读取方法
-                file_ext = os.path.splitext(file_path)[1].lower()
-
-                try:
-                   df = self.read_table_file(file_path)
-
-                except Exception as e:
-                    self.update_status(f"处理 {os.path.basename(file_path)} 时出错: {str(e)}")
-                    logger.error(f"处理文件 {file_path} 时出错: {str(e)}")
-                    time.sleep(2)
-                    continue
-
-                # 验证文件是否有数据
-                if df.empty:
-                    self.update_status(f"警告: {os.path.basename(file_path)} 为空文件，已跳过")
-                    logger.warning(f"文件为空，已跳过: {file_path}")
-                    time.sleep(1)
-                    continue
-
-                # 处理表头和数据
-                if first_file:
-                    # 第一个文件：保存表头，添加数据部分（跳过表头行）
-                    self.first_header = df.iloc[0].copy()  # 保存表头
-                    if len(df) > 1:
-                        all_data.append(df.iloc[1:].copy())  # 添加数据部分
-                    logger.debug(f"处理第一个文件，表头列数: {len(self.first_header)}")
-                    first_file = False
-                else:
-                    # 后续文件：跳过表头行，只添加数据
-                    if len(df) > 1:
-                        # 检查列数是否与表头一致
-                        if len(df.columns) != len(self.first_header):
-                            raise Exception(f"文件 {os.path.basename(file_path)} 列数与第一个文件不一致，无法合并")
-                        all_data.append(df.iloc[1:].copy())  # 跳过表头行
-                        logger.debug(f"处理后续文件，列数匹配: {len(df.columns)}")
-
-            # 检查是否有数据
-            if not all_data:
-                raise Exception("没有可合并的数据，请检查输入文件")
-
-            logger.info(f"共收集到 {len(all_data)} 个数据片段")
-
-            # 合并所有数据
-            self.update_status("正在合并所有数据...")
-            logger.info("开始合并所有数据")
-            combined_df = pd.concat(all_data, ignore_index=True)
-
-            # 设置表头
-            combined_df.columns = self.first_header
-            logger.info(f"设置表头，总列数: {len(self.first_header)}")
-
-            # 保存合并结果
-            self.update_status("正在保存合并结果...")
-            output_ext = os.path.splitext(output_path)[1].lower()
-            logger.info(f"保存合并结果到: {output_path}")
-
+            # 根据输出文件类型选择合适的写入方式
             if output_ext == '.csv':
-                # CSV保存时保持字符串格式
-                combined_df.to_csv(
-                    output_path,
-                    index=False,
-                    encoding='utf-8-sig'
-                )
+                with open(output_path, 'w', encoding='utf-8-sig', newline='') as f:
+                    for i, file_path in enumerate(self.merge_files):
+                        # 更新进度
+                        progress = (i / total_files) * 100
+                        self.update_progress(progress)
+                        self.update_status(f"正在处理: {os.path.basename(file_path)} ({i + 1}/{total_files})")
+
+                        logger.info(f"正在处理文件 {i + 1}/{total_files}: {file_path}")
+
+                        try:
+                            # 分块读取文件
+                            for chunk_idx, df_chunk in enumerate(
+                                    self.read_table_file_chunked(file_path, chunksize=1000)):
+                                if df_chunk.empty:
+                                    continue
+
+                                # 处理表头
+                                if first_file and chunk_idx == 0:
+                                    # 第一个文件的第一块：保存表头并写入
+                                    self.first_header = df_chunk.iloc[0].copy()
+                                    df_chunk.to_csv(f, index=False, header=False)
+                                    first_file = False
+                                else:
+                                    # 后续文件或块：只写入数据部分
+                                    if chunk_idx == 0:
+                                        # 第一块需要跳过表头行
+                                        if len(df_chunk) > 1:
+                                            df_chunk.iloc[1:].to_csv(f, index=False, header=False)
+                                    else:
+                                        # 后续块直接写入
+                                        df_chunk.to_csv(f, index=False, header=False)
+
+                                # 释放内存
+                                del df_chunk
+                                gc.collect()
+
+                        except Exception as e:
+                            self.update_status(f"处理 {os.path.basename(file_path)} 时出错: {str(e)}")
+                            logger.error(f"处理文件 {file_path} 时出错: {str(e)}")
+                            time.sleep(2)
+                            continue
+
             elif output_ext in ['.xlsx', '.et']:
-                # Excel保存时设置为文本格式
                 with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
-                    combined_df.to_excel(writer, index=False, sheet_name='Sheet1')
-                    # 获取工作表
-                    worksheet = writer.sheets['Sheet1']
-                    # 设置所有单元格为文本格式
-                    for column in worksheet.columns:
-                        for cell in column:
-                            cell.number_format = '@'  # 文本格式
+                    row_offset = 0
+
+                    for i, file_path in enumerate(self.merge_files):
+                        # 更新进度
+                        progress = (i / total_files) * 100
+                        self.update_progress(progress)
+                        self.update_status(f"正在处理: {os.path.basename(file_path)} ({i + 1}/{total_files})")
+
+                        logger.info(f"正在处理文件 {i + 1}/{total_files}: {file_path}")
+
+                        try:
+                            # 分块读取文件
+                            first_chunk_of_file = True
+                            for chunk_idx, df_chunk in enumerate(
+                                    self.read_table_file_chunked(file_path, chunksize=1000)):
+                                if df_chunk.empty:
+                                    continue
+
+                                # 处理表头
+                                if first_file and first_chunk_of_file:
+                                    # 第一个文件的第一块：保存表头并写入
+                                    self.first_header = df_chunk.iloc[0].copy()
+                                    df_chunk.to_excel(writer, index=False, sheet_name='Sheet1', startrow=row_offset,
+                                                      header=False)
+                                    row_offset += len(df_chunk)
+                                    first_file = False
+                                else:
+                                    # 后续文件或块：只写入数据部分
+                                    if first_chunk_of_file:
+                                        # 第一块需要跳过表头行
+                                        if len(df_chunk) > 1:
+                                            data_chunk = df_chunk.iloc[1:]
+                                            data_chunk.to_excel(writer, index=False, sheet_name='Sheet1',
+                                                                startrow=row_offset, header=False)
+                                            row_offset += len(data_chunk)
+                                    else:
+                                        # 后续块直接写入
+                                        df_chunk.to_excel(writer, index=False, sheet_name='Sheet1', startrow=row_offset,
+                                                          header=False)
+                                        row_offset += len(df_chunk)
+
+                                first_chunk_of_file = False
+
+                                # 释放内存
+                                del df_chunk
+                                gc.collect()
+
+                        except Exception as e:
+                            self.update_status(f"处理 {os.path.basename(file_path)} 时出错: {str(e)}")
+                            logger.error(f"处理文件 {file_path} 时出错: {str(e)}")
+                            time.sleep(2)
+                            continue
+
+                    # 设置列名（表头）
+                    if self.first_header is not None:
+                        # 手动设置第一行作为表头
+                        worksheet = writer.sheets['Sheet1']
+                        for col_idx, header_val in enumerate(self.first_header):
+                            worksheet.cell(row=1, column=col_idx + 1, value=header_val)
+                            worksheet.cell(row=1, column=col_idx + 1).number_format = '@'
+
             elif output_ext == '.xls':
-                # XLS格式保存
                 with pd.ExcelWriter(output_path, engine='xlwt') as writer:
-                    # 使用xlwt的文本格式
-                    combined_df.to_excel(writer, index=False, sheet_name='Sheet1')
-                    worksheet = writer.sheets['Sheet1']
-                    # 设置所有单元格为文本格式
-                    for col_idx in range(worksheet.ncols):
-                        for row_idx in range(worksheet.nrows):
-                            worksheet.write(
-                                row_idx,
-                                col_idx,
-                                worksheet.row(row_idx)[col_idx].value,
-                                xlwt.easyxf('text: format_string="@"')
-                            )
+                    for i, file_path in enumerate(self.merge_files):
+                        # 更新进度
+                        progress = (i / total_files) * 100
+                        self.update_progress(progress)
+                        self.update_status(f"正在处理: {os.path.basename(file_path)} ({i + 1}/{total_files})")
+
+                        logger.info(f"正在处理文件 {i + 1}/{total_files}: {file_path}")
+
+                        try:
+                            all_data = []
+                            first_file_chunk = True
+
+                            # 分块读取文件
+                            for chunk_idx, df_chunk in enumerate(
+                                    self.read_table_file_chunked(file_path, chunksize=1000)):
+                                if df_chunk.empty:
+                                    continue
+
+                                # 处理表头
+                                if first_file and first_file_chunk:
+                                    # 第一个文件的第一块：保存表头
+                                    self.first_header = df_chunk.iloc[0].copy()
+                                    if len(df_chunk) > 1:
+                                        all_data.append(df_chunk.iloc[1:].copy())
+                                    first_file = False
+                                else:
+                                    # 后续文件或块：只添加数据部分
+                                    if first_file_chunk:
+                                        # 第一块需要跳过表头行
+                                        if len(df_chunk) > 1:
+                                            all_data.append(df_chunk.iloc[1:].copy())
+                                    else:
+                                        # 后续块直接添加
+                                        all_data.append(df_chunk.copy())
+
+                                first_file_chunk = False
+
+                                # 释放内存
+                                del df_chunk
+                                gc.collect()
+
+                            # 合并当前文件的所有数据块并写入
+                            if all_data:
+                                combined_chunk = pd.concat(all_data, ignore_index=True)
+                                if i == 0:
+                                    # 第一个文件写入表头
+                                    combined_chunk.columns = self.first_header
+                                    combined_chunk.to_excel(writer, index=False, sheet_name='Sheet1')
+                                else:
+                                    # 后续文件追加写入
+                                    startrow = writer.sheets['Sheet1'].nrows
+                                    worksheet = writer.sheets['Sheet1']
+                                    # 写入数据
+                                    for row_idx, row in combined_chunk.iterrows():
+                                        for col_idx, value in enumerate(row):
+                                            worksheet.write(
+                                                startrow + row_idx,
+                                                col_idx,
+                                                value,
+                                                xlwt.easyxf('text: format_string="@"')
+                                            )
+
+                                # 释放内存
+                                del all_data, combined_chunk
+                                gc.collect()
+
+                        except Exception as e:
+                            self.update_status(f"处理 {os.path.basename(file_path)} 时出错: {str(e)}")
+                            logger.error(f"处理文件 {file_path} 时出错: {str(e)}")
+                            time.sleep(2)
+                            continue
 
             self.update_progress(100)
             self.update_status("合并完成!")
             logger.info("文件合并成功完成")
             messagebox.showinfo("成功", f"文件合并完成，已保存到:\n{output_path}")
 
+        except MemoryError:
+            self.update_status("合并失败: 内存不足")
+            logger.error("合并过程出错: 内存不足", exc_info=True)
+            messagebox.showerror("错误", "合并失败: 内存不足，请关闭其他程序或使用64位版本的Python")
         except Exception as e:
             self.update_status(f"合并失败: {str(e)}")
             logger.error(f"合并过程出错: {str(e)}", exc_info=True)
@@ -801,41 +935,73 @@ class ExcelMergerSplitterApp:
         try:
             self.update_status("准备拆分文件...")
             self.update_progress(0)
-
+            # 初始化 message 变量
+            message = ""
             file_ext = os.path.splitext(split_file)[1].lower()
             file_name = os.path.splitext(os.path.basename(split_file))[0]
 
-            # 读取文件
-            self.update_status("正在读取文件...")
-            logger.info(f"读取文件: {split_file}")
+            # 读取文件表头
+            self.update_status("正在读取文件表头...")
+            logger.info(f"读取文件表头: {split_file}")
 
             try:
-                df = self.read_table_file(split_file)
+                # 只读取第一行获取表头
+                header_df = self.read_table_file(split_file)
+                header = header_df.iloc[0]
             except Exception as e:
-                raise Exception(f"读取文件失败: {str(e)}")
+                raise Exception(f"读取文件表头失败: {str(e)}")
 
-            header = df.iloc[0]
-            df.columns = header
-
-            if len(df) > 1:
-                df = df.iloc[1:].copy()
-            else:
-                raise Exception("待拆分文件只有表头，没有实际数据")
-
-            # 检查数据
-            total_rows = len(df)
-            if total_rows == 0:
-                raise Exception("待拆分文件为空，无法进行拆分")
-
-            logger.info(f"文件读取完成，共 {total_rows} 行数据")
-            self.update_status(f"文件读取完成，共 {total_rows} 行数据")
+            logger.info(f"文件表头读取完成")
+            self.update_status(f"文件表头读取完成")
 
             # 根据拆分方式执行不同逻辑
             if not self.split_by_column.get():
                 # 按行数拆分
                 rows_per_file = int(self.rows_per_file_var.get())
                 logger.info(f"开始按行数拆分: 每个文件 {rows_per_file} 行")
-                total_chunks = (total_rows + rows_per_file - 1) // rows_per_file
+
+                # 计算总行数
+                total_rows = 0
+                try:
+                    if file_ext == '.csv':
+                        # 对于CSV文件，使用pandas计算行数
+                        encodings = ['utf-8', 'gbk', 'gb2312', 'utf-16']
+                        for encoding in encodings:
+                            try:
+                                total_rows = sum(1 for row in pd.read_csv(
+                                    split_file,
+                                    encoding=encoding,
+                                    chunksize=10000
+                                ))
+                                break
+                            except:
+                                continue
+                    elif file_ext in ['.xlsx', '.et']:
+                        # 对于Excel文件，使用openpyxl计算行数
+                        wb = load_workbook(split_file, read_only=True)
+                        ws = wb.active
+                        total_rows = ws.max_row
+                        wb.close()
+                    elif file_ext == '.xls':
+                        # 对于XLS文件，使用pandas计算行数
+                        total_rows = 0
+                        for chunk in pd.read_excel(
+                                split_file,
+                                engine='xlrd',
+                                chunksize=10000
+                        ):
+                            total_rows += len(chunk)
+                except Exception as e:
+                    logger.warning(f"无法准确计算总行数: {e}")
+                    total_rows = 100000  # 估计一个较大的值
+
+                if total_rows <= 1:
+                    raise Exception("待拆分文件只有表头，没有实际数据")
+
+                # 减去表头行，计算实际数据行数
+                data_rows = total_rows - 1
+                total_chunks = (data_rows + rows_per_file - 1) // rows_per_file
+                logger.info(f"总行数: {total_rows}, 数据行数: {data_rows}, 预计分片数: {total_chunks}")
 
                 # 判断是否拆分为一个文件的多个页签
                 if self.split_to_sheets.get():
@@ -845,67 +1011,108 @@ class ExcelMergerSplitterApp:
                     # 只支持xlsx和et格式的多页签
                     if file_ext in ['.xlsx', '.et']:
                         with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
-                            # 写入总览页签
-                            # header_df = pd.DataFrame([header])
-                            # header_df.to_excel(writer, index=False, sheet_name='总览')
+                            chunk_count = 0
+                            row_processed = 0
 
-                            for i in range(total_chunks):
-                                # 计算当前块的起始和结束索引
-                                start_idx = i * rows_per_file
-                                end_idx = min((i + 1) * rows_per_file, total_rows)
-                                chunk = df.iloc[start_idx:end_idx].copy()
-                                chunk.columns = header
-                                # 页签名
-                                sheet_name = f'第{i + 1}部分'
-                                chunk.to_excel(writer, index=False, sheet_name=sheet_name)
+                            # 分块读取并处理
+                            for df_chunk in self.read_table_file_chunked(split_file, chunksize=rows_per_file * 2):
+                                if df_chunk.empty:
+                                    continue
+
+                                # 跳过表头（如果在第一块中）
+                                if row_processed == 0 and len(df_chunk) > 0:
+                                    df_chunk = df_chunk.iloc[1:].copy()
+
+                                if df_chunk.empty:
+                                    continue
+
+                                # 处理当前块
+                                for _, row in df_chunk.iterrows():
+                                    # 当达到指定行数时，保存一个分片
+                                    if row_processed % rows_per_file == 0 and row_processed > 0:
+                                        chunk_count += 1
+
+                                    row_processed += 1
+
+                                # 释放内存
+                                del df_chunk
+                                gc.collect()
+
+                            # 重新读取并写入文件
+                            chunk_count = 0
+                            row_processed = 0
+                            current_data = []
+
+                            for df_chunk in self.read_table_file_chunked(split_file, chunksize=rows_per_file * 2):
+                                if df_chunk.empty:
+                                    continue
+
+                                # 跳过表头（如果在第一块中）
+                                if row_processed == 0 and len(df_chunk) > 0:
+                                    df_chunk = df_chunk.iloc[1:].copy()
+
+                                if df_chunk.empty:
+                                    continue
+
+                                for _, row in df_chunk.iterrows():
+                                    current_data.append(row)
+                                    row_processed += 1
+
+                                    # 当达到指定行数时，保存一个分片
+                                    if len(current_data) >= rows_per_file:
+                                        chunk_df = pd.DataFrame(current_data)
+                                        chunk_df.columns = header
+
+                                        # 页签名
+                                        sheet_name = f'第{chunk_count + 1}部分'
+                                        chunk_df.to_excel(writer, index=False, sheet_name=sheet_name)
+                                        # 设置文本格式
+                                        worksheet = writer.sheets[sheet_name]
+                                        for column in worksheet.columns:
+                                            for cell in column:
+                                                cell.number_format = '@'
+
+                                        chunk_count += 1
+                                        current_data = []
+
+                                        # 更新进度
+                                        progress = min((row_processed / data_rows) * 100, 100)
+                                        self.update_progress(progress)
+                                        self.update_status(f"已完成 {chunk_count}/{total_chunks} 个页签")
+
+                                # 释放内存
+                                del df_chunk
+                                gc.collect()
+
+                            # 处理最后一个块
+                            if current_data:
+                                chunk_df = pd.DataFrame(current_data)
+                                chunk_df.columns = header
+
+                                sheet_name = f'第{chunk_count + 1}部分'
+                                chunk_df.to_excel(writer, index=False, sheet_name=sheet_name)
                                 # 设置文本格式
                                 worksheet = writer.sheets[sheet_name]
                                 for column in worksheet.columns:
                                     for cell in column:
                                         cell.number_format = '@'
 
-                                # 更新进度
-                                progress = ((i + 1) / total_chunks) * 100
-                                self.update_progress(progress)
-                                self.update_status(f"已完成 {i + 1}/{total_chunks} 个页签")
+                                chunk_count += 1
 
-                        message = f"文件拆分完成，生成1个文件包含 {total_chunks} 个页签"
+                                # 更新进度
+                                self.update_progress(100)
+                                self.update_status(f"已完成 {chunk_count}/{total_chunks} 个页签")
+
+                        message = f"文件拆分完成，生成1个文件包含 {chunk_count} 个页签"
                     else:
                         # 不支持多页签的格式，自动切换为多文件模式
                         logger.warning("不支持多页签的格式，自动切换为多文件模式")
-                        for i in range(total_chunks):
-                            start_idx = i * rows_per_file
-                            end_idx = min((i + 1) * rows_per_file, total_rows)
-                            chunk = df.iloc[start_idx:end_idx].copy()
-                            chunk.columns = header
-                            output_filename = f"{file_name}_part_{i + 1}{file_ext}"
-                            output_path = os.path.join(output_dir, output_filename)
-                            self.save_split_chunk(chunk, header, output_path, file_ext)
-
-                            # 更新进度
-                            progress = ((i + 1) / total_chunks) * 100
-                            self.update_progress(progress)
-                            self.update_status(f"已完成 {i + 1}/{total_chunks} 个分片")
-                            message = f"文件拆分完成，共生成 {total_chunks} 个文件"
+                        self._split_to_multiple_files(split_file, output_dir, file_name, file_ext, header,
+                                                      rows_per_file, data_rows, total_chunks)
 
                 else:
-                    for i in range(total_chunks):
-                        start_idx = i * rows_per_file
-                        end_idx = min((i + 1) * rows_per_file, total_rows)
-                        chunk = df.iloc[start_idx:end_idx].copy()
-                        chunk.columns = header
-                        output_filename = f"{file_name}_part_{i + 1}{file_ext}"
-                        output_path = os.path.join(output_dir, output_filename)
-                        self.save_split_chunk(chunk, header, output_path, file_ext)
-
-                        # 更新进度
-                        progress = ((i + 1) / total_chunks) * 100
-                        self.update_progress(progress)
-                        self.update_status(f"已完成 {i + 1}/{total_chunks} 个分片")
-                        message = f"文件拆分完成，共生成 {total_chunks} 个文件"
-
-
-
+                    self._split_to_multiple_files(split_file, output_dir, file_name, file_ext, header, rows_per_file,
+                                                  data_rows, total_chunks)
 
             else:
                 # 按列值拆分
@@ -913,17 +1120,46 @@ class ExcelMergerSplitterApp:
                 logger.info(f"开始按列值拆分: 列名 '{column_name}'")
 
                 # 检查列是否存在
-                if column_name not in df.columns:
+                if column_name not in header.values:
                     raise Exception(f"文件中不存在列: {column_name}")
 
-                # 获取唯一值列表
-                unique_values = df[column_name].unique()
-                unique_values = [v for v in unique_values if pd.notna(v) and str(v).strip()]
+                # 使用字典存储每个唯一值的数据
+                unique_data = {}
+                row_count = 0
 
-                if not unique_values:
+                # 分块读取文件
+                for df_chunk in self.read_table_file_chunked(split_file, chunksize=1000):
+                    if df_chunk.empty:
+                        continue
+
+                    # 设置列名
+                    df_chunk.columns = header
+
+                    # 跳过表头（如果在第一块中）
+                    if row_count == 0 and len(df_chunk) > 0:
+                        df_chunk = df_chunk.iloc[1:].copy()
+
+                    if df_chunk.empty:
+                        continue
+
+                    # 按列值分组存储数据
+                    for _, row in df_chunk.iterrows():
+                        value = row[column_name]
+                        if pd.notna(value) and str(value).strip():
+                            if value not in unique_data:
+                                unique_data[value] = []
+                            unique_data[value].append(row)
+
+                        row_count += 1
+
+                    # 释放内存
+                    del df_chunk
+                    gc.collect()
+
+                if not unique_data:
                     raise Exception(f"列 '{column_name}' 没有有效的唯一值")
 
-                total_chunks = len(unique_values)
+                total_chunks = len(unique_data)
                 logger.info(f"发现 {total_chunks} 个唯一值，将进行拆分")
 
                 # 拆分为多个页签
@@ -931,13 +1167,10 @@ class ExcelMergerSplitterApp:
                     output_path = os.path.join(output_dir, f"{file_name}_split_by_{column_name}{file_ext}")
                     if file_ext in ['.xlsx', '.et']:
                         with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
-                            # 写入原始表头
-                            # header_df = pd.DataFrame([header])
-                            # header_df.to_excel(writer, index=False, sheet_name='总览')
-
-                            for i, value in enumerate(unique_values):
-                                # 筛选数据
-                                chunk = df[df[column_name] == value].copy()
+                            for i, (value, rows) in enumerate(unique_data.items()):
+                                # 创建DataFrame
+                                chunk = pd.DataFrame(rows)
+                                chunk.columns = header
 
                                 # 写入页签
                                 sheet_name = f"{value}"[:31]  # Excel页签最大31字符
@@ -953,24 +1186,26 @@ class ExcelMergerSplitterApp:
                                 progress = ((i + 1) / total_chunks) * 100
                                 self.update_progress(progress)
                                 self.update_status(f"已完成 {i + 1}/{total_chunks} 个页签")
+
+                                # 释放内存
+                                del chunk, rows
+                                gc.collect()
+
+                        message = f"文件拆分完成，生成1个文件包含 {total_chunks} 个页签"
                     else:
                         raise Exception("只有.xlsx和.et格式支持多页签拆分")
 
-                    message = f"文件拆分完成，生成1个文件包含 {total_chunks} 个页签"
-
                 # 拆分为多个文件
                 else:
-                    for i, value in enumerate(unique_values):
-                        # 筛选数据
-                        chunk = df[df[column_name] == value].copy()
+                    for i, (value, rows) in enumerate(unique_data.items()):
+                        # 创建DataFrame
+                        chunk = pd.DataFrame(rows)
+                        chunk.columns = header
 
                         # 生成文件名（处理特殊字符）
-                        # safe_value = str(value).replace('/', '_').replace('\\', '_').replace(':', '_')
                         safe_value = self.sanitize_filename(str(value))
-                        output_filename = f"{file_name}_{column_name}_{value}{file_ext}"
-                        safe_output_filename = self.sanitize_filename(str(output_filename))
-
-                        output_path = os.path.join(output_dir, safe_output_filename)
+                        output_filename = f"{file_name}_{column_name}_{safe_value}{file_ext}"
+                        output_path = os.path.join(output_dir, output_filename)
 
                         self.save_split_chunk(chunk, header, output_path, file_ext)
 
@@ -979,6 +1214,10 @@ class ExcelMergerSplitterApp:
                         self.update_progress(progress)
                         self.update_status(f"已完成 {i + 1}/{total_chunks} 个文件")
 
+                        # 释放内存
+                        del chunk, rows
+                        gc.collect()
+
                     message = f"文件拆分完成，共生成 {total_chunks} 个文件"
 
             self.update_progress(100)
@@ -986,6 +1225,10 @@ class ExcelMergerSplitterApp:
             logger.info("文件拆分成功完成")
             messagebox.showinfo("成功", f"{message}，已保存到:\n{output_dir}")
 
+        except MemoryError:
+            self.update_status("拆分失败: 内存不足")
+            logger.error("拆分过程出错: 内存不足", exc_info=True)
+            messagebox.showerror("错误", "拆分失败: 内存不足，请关闭其他程序或使用64位版本的Python")
         except Exception as e:
             self.update_status(f"拆分失败: {str(e)}")
             logger.error(f"拆分过程出错: {str(e)}", exc_info=True)
@@ -994,24 +1237,71 @@ class ExcelMergerSplitterApp:
             # 重新启用按钮
             self._enable_all_buttons()
 
+    def _split_to_multiple_files(self, split_file, output_dir, file_name, file_ext, header, rows_per_file, data_rows,
+                                 total_chunks):
+        """
+        拆分为多个文件的辅助方法
+        """
+        chunk_count = 0
+        row_processed = 0
+        current_data = []
+
+        # 分块读取并处理
+        for df_chunk in self.read_table_file_chunked(split_file, chunksize=rows_per_file * 2):
+            if df_chunk.empty:
+                continue
+
+            # 跳过表头（如果在第一块中）
+            if row_processed == 0 and len(df_chunk) > 0:
+                df_chunk = df_chunk.iloc[1:].copy()
+
+            if df_chunk.empty:
+                continue
+
+            for _, row in df_chunk.iterrows():
+                current_data.append(row)
+                row_processed += 1
+
+                # 当达到指定行数时，保存一个分片
+                if len(current_data) >= rows_per_file:
+                    chunk_df = pd.DataFrame(current_data)
+                    chunk_df.columns = header
+
+                    output_filename = f"{file_name}_part_{chunk_count + 1}{file_ext}"
+                    output_path = os.path.join(output_dir, output_filename)
+                    self.save_split_chunk(chunk_df, header, output_path, file_ext)
+
+                    chunk_count += 1
+                    current_data = []
+
+                    # 更新进度
+                    progress = min((row_processed / data_rows) * 100, 100)
+                    self.update_progress(progress)
+                    self.update_status(f"已完成 {chunk_count}/{total_chunks} 个分片")
+
+            # 释放内存
+            del df_chunk
+            gc.collect()
+
+        # 处理最后一个块
+        if current_data:
+            chunk_df = pd.DataFrame(current_data)
+            chunk_df.columns = header
+
+            output_filename = f"{file_name}_part_{chunk_count + 1}{file_ext}"
+            output_path = os.path.join(output_dir, output_filename)
+            self.save_split_chunk(chunk_df, header, output_path, file_ext)
+
+            chunk_count += 1
+
+            # 更新进度
+            self.update_progress(100)
+            self.update_status(f"已完成 {chunk_count}/{total_chunks} 个分片")
+
     def save_split_chunk(self, chunk, header, output_path, file_ext):
         """保存拆分后的块数据"""
         try:
-            # 是否需要添加表头
-            # if self.split_header_var.get():
-            #     # 确保 chunk 数据中不包含表头行
-            #     if not chunk.empty and (chunk.iloc[0].tolist() == header.tolist()):
-            #         chunk = chunk.iloc[1:]  # 移除第一行（表头行）
-            #
-            #     # 创建带表头的DataFrame
-            #     header_df = pd.DataFrame([header])
-            #     header_df.columns = header
-            #     chunk_with_header = pd.concat([header_df, chunk], ignore_index=True)
-            # else:
-            #     chunk_with_header = chunk.copy()
-
             if file_ext == '.csv':
-                # 先写入表头再写入数据
                 chunk.to_csv(
                     output_path,
                     index=False,
