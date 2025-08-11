@@ -334,13 +334,20 @@ class ExcelComparer(QWidget):
             (self.file2, self.sheet_combo2.currentText(), False, directory)
         ]
         t0 = time.time()
+        self.loading_dialog = QProgressDialog("正在导出报告，请稍候...", None, 0, 0, self)
+        self.loading_dialog.setWindowModality(Qt.WindowModal)
+        self.loading_dialog.setWindowTitle("导出")
+        self.loading_dialog.setCancelButton(None)
+        self.loading_dialog.show()
         with ThreadPoolExecutor(max_workers=2) as pool:
             pool.map(lambda t: self._export_final(*t), tasks)
         self.log(f"✅ 并行导出完成，总耗时 {time.time() - t0:.1f}s")
+        self.close_loading_dialog()
 
     # ---------- 最终导出实现 ----------
     def _export_final(self, src_file, sheet_name, is_first_file, out_dir):
         try:
+
             # 1. 复制原文件
             dst = Path(out_dir) / f"{Path(src_file).stem}_比对结果.xlsx"
             shutil.copy2(src_file, dst)
@@ -415,19 +422,28 @@ class ExcelComparer(QWidget):
                 # 资产分类特殊处理：用中文提示
                 if fld == "资产分类":
                     code1 = s.get(fld, "")
-                    code2 = t.get(fld, "")
+                    code2 = t.get('原21版资产分类', "")
                     v1 = self.worker.asset_code_map.get(code1, code1)
-                    v2 = self.worker.asset_code_map.get(code2, code2)
+                    v2 = t.get(fld)
+
+                    # 资产分类使用code1和code2进行比较
+                    if self.worker.values_equal_by_rule(code1, code2,
+                                                        self.rules[fld]["data_type"],
+                                                        self.rules[fld].get("tail_diff"),
+                                                        fld):
+                        return ""
+                    return f"不一致：平台表={v1 or ''}, ERP表={v2 or ''}"
                 else:
+                    # 其他字段使用v1和v2进行比较
                     v1 = self.normalize_value(s.get(fld, ""))
                     v2 = self.normalize_value(t.get(fld, ""))
 
-                if self.worker.values_equal_by_rule(v1, v2,
-                                                    self.rules[fld]["data_type"],
-                                                    self.rules[fld].get("tail_diff"),
-                                                    fld):
-                    return ""
-                return f"不一致：平台表={v1 or ''}, ERP表={v2 or ''}"
+                    if self.worker.values_equal_by_rule(v1, v2,
+                                                        self.rules[fld]["data_type"],
+                                                        self.rules[fld].get("tail_diff"),
+                                                        fld):
+                        return ""
+                    return f"不一致：平台表={v1 or ''}, ERP表={v2 or ''}"
 
             comp_details = {
                 fld: [detail(k, fld) for k in keys]

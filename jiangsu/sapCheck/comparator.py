@@ -157,7 +157,7 @@ class CompareWorker(QThread):
                 val1 = val1[:2]
             if val2.isdigit():
                 val2 = val2[:2]
-            return  val1 == val2
+            return val1 == val2
 
 
             # 数值型比较
@@ -226,20 +226,20 @@ class CompareWorker(QThread):
 
         return val1 == val2
 
-    def convert_asset_category(self, df1, df2, mapping_df):
+    def convert_asset_category(self, df1, mapping_df):
         """资产分类转换逻辑 - 使用merge优化"""
         asset_category_col1 = "资产分类"
-        asset_category_col2 = "SAP资产类别描述"
+        # asset_category_col2 = "SAP资产类别描述"
 
         source_col = "同源目录完整名称"
-        target_col = "21年资产目录大类"
-        detail_col = "ERP资产明细类描述"
+        # target_col = "21年资产目录大类"
+        # detail_col = "ERP资产明细类描述"
         code_col = "同源目录编码"
-        erp_detail_col = "ERP资产明细类别"
+        # erp_detail_col = "ERP资产明细类别"
 
         # 为平台表创建映射
         # 先处理一对一映射
-        unique_mapping = mapping_df.drop_duplicates(subset=[source_col], keep=False)
+        unique_mapping = mapping_df.drop_duplicates(subset=[source_col], keep='first')
         if not unique_mapping.empty:
             unique_map = dict(zip(unique_mapping[source_col], unique_mapping[code_col]))
             df1[asset_category_col1] = df1[asset_category_col1].map(
@@ -249,45 +249,45 @@ class CompareWorker(QThread):
             for k, v in unique_map.items():
                 self.asset_code_to_original[str(v)] = k
 
-        # 处理一对多映射
-        duplicated_sources = mapping_df[mapping_df.duplicated(subset=[source_col], keep=False)][source_col].unique()
-        if len(duplicated_sources) > 0:
-            # 创建SAP值集合用于快速匹配
-            sap_values_set = set(df2[asset_category_col2].values)
-
-            for source_value in duplicated_sources:
-                matches = mapping_df[mapping_df[source_col] == source_value]
-                converted_code = None
-
-                # 尝试匹配存在的SAP值
-                for _, row in matches.iterrows():
-                    mapped_value = f"{row[target_col]}-{row[detail_col]}"
-                    if mapped_value in sap_values_set:
-                        converted_code = str(row[code_col])
-                        break
-
-                # 默认使用第一条记录
-                if converted_code is None:
-                    converted_code = str(matches.iloc[0][code_col])
-
-                # 应用映射
-                mask = df1[asset_category_col1] == source_value
-                df1.loc[mask, asset_category_col1] = converted_code
-                self.asset_code_to_original[converted_code] = source_value
+        # # 处理一对多映射
+        # duplicated_sources = mapping_df[mapping_df.duplicated(subset=[source_col], keep=False)][source_col].unique()
+        # if len(duplicated_sources) > 0:
+        #     # 创建SAP值集合用于快速匹配
+        #     sap_values_set = set(df2[asset_category_col2].values)
+        #
+        #     for source_value in duplicated_sources:
+        #         matches = mapping_df[mapping_df[source_col] == source_value]
+        #         converted_code = None
+        #
+        #         # 尝试匹配存在的SAP值
+        #         for _, row in matches.iterrows():
+        #             mapped_value = f"{row[target_col]}-{row[detail_col]}"
+        #             if mapped_value in sap_values_set:
+        #                 converted_code = str(row[code_col])
+        #                 break
+        #
+        #         # 默认使用第一条记录
+        #         if converted_code is None:
+        #             converted_code = str(matches.iloc[0][code_col])
+        #
+        #         # 应用映射
+        #         mask = df1[asset_category_col1] == source_value
+        #         df1.loc[mask, asset_category_col1] = converted_code
+        #         self.asset_code_to_original[converted_code] = source_value
 
         # 为ERP表创建映射
-        mapping_df['sap_combined'] = mapping_df[target_col] + '-' + mapping_df[detail_col]
-        erp_mapping = dict(zip(mapping_df['sap_combined'], mapping_df[erp_detail_col]))
+        # mapping_df['sap_combined'] = mapping_df[target_col] + '-' + mapping_df[detail_col]
+        # erp_mapping = dict(zip(mapping_df['sap_combined'], mapping_df[erp_detail_col]))
 
-        df2[asset_category_col2] = df2[asset_category_col2].map(
-            lambda x: str(erp_mapping.get(x, x)) if pd.notna(x) else x
-        )
+        # df2[asset_category_col2] = df2[asset_category_col2].map(
+        #     lambda x: str(erp_mapping.get(x, x)) if pd.notna(x) else x
+        # )
 
         # 更新asset_code_to_original
-        for k, v in erp_mapping.items():
-            self.asset_code_to_original[str(v)] = k
+        # for k, v in erp_mapping.items():
+        #     self.asset_code_to_original[str(v)] = k
 
-        return df1, df2
+        return df1
 
     def _process_batch_comparison(self, df1_batch, df2_batch, batch_index, total_batches, df1_original, df2_original,
                                   pk_mapping):
@@ -312,7 +312,11 @@ class CompareWorker(QThread):
 
                 # 向量化获取两列数据
                 series1 = df1_batch[field1]
-                series2 = df2_batch[field1]
+                if field1 == "资产分类":
+                    series2 = df2_batch['原21版资产分类']
+                    default_series2 = df2_batch[field1]
+                else :
+                    series2 = df2_batch[field1]
 
                 if data_type == "数值":
                     # 数值型比较
@@ -398,6 +402,8 @@ class CompareWorker(QThread):
 
                     val1 = CompareWorker.normalize_value(series1.loc[idx])
                     val2 = CompareWorker.normalize_value(series2.loc[idx])
+                    if field1 == "资产分类":
+                        val2 = self.normalize_value(default_series2.loc[idx])
                     batch_diff_dict[idx].append((field1, val1, val2))
 
             # 为当前批次生成完整行数据
@@ -484,7 +490,7 @@ class CompareWorker(QThread):
             # 读取资产分类映射表
             mapping_df = read_mapping_table(self.rule_file)
             # 转换资产分类
-            df1, df2 = self.convert_asset_category(df1, df2, mapping_df)
+            df1 = self.convert_asset_category(df1, mapping_df)
 
             # 检查数据行是否存在
             if df1.empty:
@@ -799,7 +805,7 @@ class CompareWorker(QThread):
                     # 限制日志输出长度以避免界面卡顿
                     if len(diff_log_messages) > 5000:
                         truncated_messages = diff_log_messages[:5000]
-                        truncated_messages.append(f"\n...（还有 {len(diff_log_messages) - 5000} 条消息未显示）")
+                        truncated_messages.append(f"\n...（还有 {len(diff_dict) - 5000} 条消息未显示）")
                         self.log_signal.emit('\n'.join(truncated_messages))
                     else:
                         self.log_signal.emit('\n'.join(diff_log_messages))
