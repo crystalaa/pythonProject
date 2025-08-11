@@ -59,18 +59,15 @@ def read_excel_fast(file_path, sheet_name, is_file1=True, skip_rows=0, chunk_siz
     try:
         if file_path.lower().endswith('.xlsx'):
             # # 阶段1：读取表头和合并单元格信息（使用非只读模式）
-            wb_header = load_workbook(file_path, data_only=True, read_only=False, keep_links=False)
-            ws_header = wb_header[sheet_name]
+            wb = load_workbook(file_path, data_only=True, read_only=False, keep_links=False)
+            ws = wb[sheet_name]
 
             # 读取表头行（最多读取前2行）
             max_header_rows = 2
-            header_rows = list(ws_header.iter_rows(values_only=True, max_row=max_header_rows))
-            merged_ranges = list(ws_header.merged_cells.ranges) if ws_header.merged_cells else []
+            header_rows = list(ws.iter_rows(values_only=True, max_row=max_header_rows))
+            merged_ranges = list(ws.merged_cells.ranges) if ws.merged_cells else []
 
-            # 关闭表头工作簿释放内存
-            wb_header.close()
-            del wb_header, ws_header
-            gc.collect()
+
 
             # 处理表头
             if is_file1 and len(header_rows) >= 2 and merged_ranges:
@@ -119,14 +116,11 @@ def read_excel_fast(file_path, sheet_name, is_file1=True, skip_rows=0, chunk_siz
                 raise ValueError("未能正确解析表头，请检查文件格式")
 
 
-            # 阶段2：分块读取数据（使用只读模式）
-            wb_data = load_workbook(file_path, data_only=True, read_only=True, keep_links=False)
-            ws_data = wb_data[sheet_name]
 
             # 获取总数据行数（减去表头行）
-            total_rows = ws_data.max_row
+            total_rows = ws.max_row
             if total_rows < data_start_row:
-                wb_data.close()
+                wb.close()
                 return pd.DataFrame(columns=cols)  # 空数据框
 
             # 分块读取数据
@@ -138,7 +132,7 @@ def read_excel_fast(file_path, sheet_name, is_file1=True, skip_rows=0, chunk_siz
                 end_row = min(current_row + chunk_size - 1, total_rows)
 
                 # 读取当前块数据
-                data_rows = list(ws_data.iter_rows(
+                data_rows = list(ws.iter_rows(
                     min_row=current_row,
                     max_row=end_row,
                     values_only=True
@@ -154,8 +148,8 @@ def read_excel_fast(file_path, sheet_name, is_file1=True, skip_rows=0, chunk_siz
                 gc.collect()
 
             # 关闭数据工作簿
-            wb_data.close()
-            del wb_data, ws_data
+            wb.close()
+            del wb, ws
             gc.collect()
 
             # 合并所有数据块

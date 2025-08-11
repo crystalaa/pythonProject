@@ -17,7 +17,7 @@ class CompareWorker(QThread):
     progress_signal = pyqtSignal(int)  # 用于更新进度条
 
     def __init__(self, file1, file2, rule_file, sheet_name1, sheet_name2,
-                 primary_keys=None, rules=None, skip_rows=0, chunk_size=10000):
+                 primary_keys=None, rules=None, skip_rows=0, chunk_size=5000):
         super().__init__()
         self.file1 = file1
         self.file2 = file2
@@ -27,7 +27,7 @@ class CompareWorker(QThread):
         self.primary_keys = primary_keys if primary_keys else []
         self.rules = rules if rules else {}
         self.skip_rows = skip_rows
-        self.chunk_size = chunk_size  # 分块大小参数
+        self.chunk_size = chunk_size  # 减小分块大小以节省内存
 
         # 结果存储
         self.missing_assets = []
@@ -152,7 +152,15 @@ class CompareWorker(QThread):
                     (val1 == "直线法" and val2 == "年限平均法"):
                 return True
 
-        # 数值型比较
+        if field_name == "资产分类":
+            if val1.isdigit():
+                val1 = val1[:2]
+            if val2.isdigit():
+                val2 = val2[:2]
+            return  val1 == val2
+
+
+            # 数值型比较
         if data_type == "数值":
             num1 = pd.to_numeric(val1, errors='coerce')
             num2 = pd.to_numeric(val2, errors='coerce')
@@ -178,7 +186,7 @@ class CompareWorker(QThread):
                     return ""
                 date_str = str(date_str).strip()
                 formats = ['%Y-%m-%d', '%Y/%m/%d', '%Y年%m月%d日',
-                           '%m-%d-%Y', '%m/%d/%Y', '%Y%m%d','%Y-%m-%d %H:%M:%S']
+                           '%m-%d-%Y', '%m/%d/%Y', '%Y%m%d', '%Y-%m-%d %H:%M:%S']
                 for fmt in formats:
                     try:
                         return pd.to_datetime(date_str, format=fmt).strftime('%Y-%m-%d')
@@ -200,16 +208,16 @@ class CompareWorker(QThread):
                 cmp2 = parsed2[:4]
             elif tail_diff == "日":
                 cmp1 = parsed1[:10]
-                cmp2 = parsed2[:10]    # 取年月日（YYYY-MM-DD）
+                cmp2 = parsed2[:10]  # 取年月日（YYYY-MM-DD）
             elif tail_diff == "时":
                 cmp1 = parsed1[:13]
-                cmp2 = parsed2[:13]   # 取年月日时（YYYY-MM-DD HH）
+                cmp2 = parsed2[:13]  # 取年月日时（YYYY-MM-DD HH）
             elif tail_diff == "分":
                 cmp1 = parsed1[:16]
                 cmp2 = parsed2[:16]  # 取年月日时分（YYYY-MM-DD HH:MM）
             elif tail_diff == "秒":
                 cmp1 = parsed1[:19]
-                cmp2 = parsed2[:19]   # 取完整时间（YYYY-MM-DD HH:MM:SS）
+                cmp2 = parsed2[:19]  # 取完整时间（YYYY-MM-DD HH:MM:SS）
             return cmp1 == cmp2
 
         # 文本型比较
@@ -235,16 +243,16 @@ class CompareWorker(QThread):
             if len(matches) == 0:
                 converted_code = str(value)
             elif len(matches) == 1:
-                converted_code = str(matches.iloc[0][code_col])[:2]
+                converted_code = str(matches.iloc[0][code_col])
             else:
                 converted_code = None
                 for _, row in matches.iterrows():
                     mapped_value = f"{row[target_col]}-{row[detail_col]}"
                     if mapped_value in df2[asset_category_col2].values:
-                        converted_code = str(row[code_col])[:2]
+                        converted_code = str(row[code_col])
                         break
                 if converted_code is None:
-                    converted_code = str(matches.iloc[0][code_col])[:2]
+                    converted_code = str(matches.iloc[0][code_col])
 
             if converted_code is not None:
                 self.asset_code_to_original[converted_code] = value
@@ -257,7 +265,7 @@ class CompareWorker(QThread):
                 mapping_df.apply(lambda row: f"{row[target_col]}-{row[detail_col]}" == sap_value, axis=1)
             ]
             if len(matches) > 0:
-                converted_code = str(matches.iloc[0][erp_detail_col])[:2]
+                converted_code = str(matches.iloc[0][erp_detail_col])
             else:
                 converted_code = str(sap_value)
 
@@ -272,6 +280,175 @@ class CompareWorker(QThread):
 
         return df1, df2
 
+    def _process_batch_comparison(self, df1_batch, df2_batch, batch_index, total_batches, df1_original, df2_original,
+                                  pk_mapping):
+        """处理单个批次的数据比较"""
+        try:
+            self.log_signal.emit(f"正在处理第 {batch_index + 1}/{total_batches} 批数据...")
+
+            # 格式化索引
+            df1_batch.index = df1_batch.index.map(lambda x: ' + '.join(x) if isinstance(x, tuple) else str(x))
+            df2_batch.index = df2_batch.index.map(lambda x: ' + '.join(x) if isinstance(x, tuple) else str(x))
+
+            batch_diff_dict = {}
+            batch_diff_full_rows = []
+
+            for field1, rule in self.rules.items():
+                # 只比对规则文件中定义的列
+                if field1 not in df1_batch.columns or field1 not in df2_batch.columns:
+                    continue
+
+                data_type = rule["data_type"]
+                tail_diff = rule.get("tail_diff")
+
+                # 向量化获取两列数据
+                series1 = df1_batch[field1]
+                series2 = df2_batch[field1]
+
+                if data_type == "数值":
+                    # 数值型比较
+                    series1_num = pd.to_numeric(series1, errors='coerce')
+                    series2_num = pd.to_numeric(series2, errors='coerce')
+                    # 如果字段名包含"折旧"，取绝对值
+                    if "折旧" in field1:
+                        series1_num = series1_num.abs()
+                        series2_num = series2_num.abs()
+                    if tail_diff is None:
+                        diff_mask = (series1_num != series2_num) & \
+                                    ~(pd.isna(series1_num) & pd.isna(series2_num))
+                    else:
+                        diff_mask = (abs(series1_num - series2_num) > float(tail_diff)) & \
+                                    ~(pd.isna(series1_num) & pd.isna(series2_num))
+
+                elif data_type == "日期":
+                    # 日期型比较
+                    # 日期型比较：先统一解析为标准日期格式
+                    def parse_date(date_str):
+                        """尝试多种格式解析日期，返回标准化字符串（YYYY-MM-DD）"""
+                        if pd.isna(date_str):
+                            return ""
+                        date_str = str(date_str).strip()
+                        if not date_str:
+                            return ""
+                        # 尝试多种常见日期格式
+                        formats = ['%Y-%m-%d', '%Y/%m/%d', '%Y年%m月%d日',
+                                   '%m-%d-%Y', '%m/%d/%Y', '%Y%m%d', '%Y-%m-%d %H:%M:%S']
+                        for fmt in formats:
+                            try:
+                                return pd.to_datetime(date_str, format=fmt).strftime('%Y-%m-%d')
+                            except (ValueError, TypeError):
+                                continue
+                        # 如果所有格式都解析失败，返回原始字符串
+                        return date_str
+
+                    # 统一解析两列日期
+                    series1_parsed = series1.apply(parse_date)
+                    series2_parsed = series2.apply(parse_date)
+
+                    # 处理空值情况
+                    both_empty = (series1_parsed == "") & (series2_parsed == "")
+
+                    # 根据精度需求截取
+                    if tail_diff == "月":
+                        series1_cmp = series1_parsed.str[:7]  # YYYY-MM
+                        series2_cmp = series2_parsed.str[:7]
+                    elif tail_diff == "年":
+                        series1_cmp = series1_parsed.str[:4]  # YYYY
+                        series2_cmp = series2_parsed.str[:4]
+                    elif tail_diff == "日":
+                        series1_cmp = series1_parsed.str[:10]
+                        series2_cmp = series2_parsed.str[:10]  # 取年月日（YYYY-MM-DD）
+                    elif tail_diff == "时":
+                        series1_cmp = series1_parsed.str[:13]
+                        series2_cmp = series2_parsed.str[:13]  # 取年月日时（YYYY-MM-DD HH）
+                    elif tail_diff == "分":
+                        series1_cmp = series1_parsed.str[:16]
+                        series2_cmp = series2_parsed.str[:16]  # 取年月日时分（YYYY-MM-DD HH:MM）
+                    elif tail_diff == "秒":
+                        series1_cmp = series1_parsed.str[:19]
+                        series2_cmp = series2_parsed.str[:19]
+
+                    diff_mask = (series1_cmp != series2_cmp) & ~both_empty
+
+                elif data_type == "文本":
+                    def mapped_equal(a, b, field):
+                        return self.values_equal_by_rule(a, b, "文本", None, field)
+
+                    diff_mask = ~pd.Series([
+                        mapped_equal(self.normalize_value(s1).strip(), self.normalize_value(s2).strip(), field1)
+                        for s1, s2 in zip(series1, series2)
+                    ], index=series1.index)
+
+                # 找出有差异的行索引
+                diff_indices = df1_batch[diff_mask].index
+
+                # 批量添加差异记录
+                for idx in diff_indices:
+                    if idx not in batch_diff_dict:
+                        batch_diff_dict[idx] = []
+
+                    val1 = CompareWorker.normalize_value(series1.loc[idx])
+                    val2 = CompareWorker.normalize_value(series2.loc[idx])
+                    batch_diff_dict[idx].append((field1, val1, val2))
+
+            # 为当前批次生成完整行数据
+            for code_str, diffs in batch_diff_dict.items():
+                try:
+                    # 获取原始主键值
+                    original_pk_values = pk_mapping.get(code_str, code_str)
+
+                    # 构建筛选条件
+                    if isinstance(original_pk_values, tuple):
+                        # 多主键情况
+                        condition1 = True
+                        condition2 = True
+                        for i, pk in enumerate(self.primary_keys):
+                            condition1 = condition1 & (df1_original[pk].astype(str) == original_pk_values[i])
+                            condition2 = condition2 & (df2_original[pk].astype(str) == original_pk_values[i])
+                    else:
+                        # 单主键情况
+                        pk = self.primary_keys[0]
+                        condition1 = (df1_original[pk].astype(str) == original_pk_values)
+                        condition2 = (df2_original[pk].astype(str) == original_pk_values)
+
+                    # 获取完整行数据
+                    source_dict = df1_original[condition1].iloc[0].to_dict()
+                    target_dict = df2_original[condition2].iloc[0].to_dict()
+
+                    batch_diff_full_rows.append({
+                        "source": source_dict,
+                        "target": target_dict
+                    })
+                except (IndexError, KeyError, Exception):
+                    # 出现异常时使用原来的方法作为备选
+                    try:
+                        source_dict = df1_batch.loc[code_str].to_dict()
+                        target_dict = df2_batch.loc[code_str].to_dict()
+
+                        # 手动添加主键信息
+                        original_pk_values = pk_mapping.get(code_str, code_str)
+                        if isinstance(original_pk_values, tuple):
+                            for i, pk in enumerate(self.primary_keys):
+                                source_dict[pk] = original_pk_values[i]
+                                target_dict[pk] = original_pk_values[i]
+                        else:
+                            if self.primary_keys:
+                                source_dict[self.primary_keys[0]] = original_pk_values
+                                target_dict[self.primary_keys[0]] = original_pk_values
+
+                        batch_diff_full_rows.append({
+                            "source": source_dict,
+                            "target": target_dict
+                        })
+                    except Exception:
+                        pass  # 忽略无法处理的记录
+
+            return batch_diff_dict, batch_diff_full_rows
+
+        except Exception as e:
+            self.log_signal.emit(f"批处理比较出错: {str(e)}")
+            return {}, []
+
     def run(self):
         try:
             self.log_signal.emit("正在读取Excel文件（分块模式）...")
@@ -283,7 +460,6 @@ class CompareWorker(QThread):
                 is_file1=True,
                 chunk_size=self.chunk_size
             )
-            # df1 = None
             self.log_signal.emit(f"✅ 平台表读取完成，共 {len(df1)} 行数据")
 
             df2 = read_excel_fast(
@@ -388,7 +564,7 @@ class CompareWorker(QThread):
                 self.log_signal.emit("❌ 错误：规则文件中未定义主键字段，请检查规则文件！")
                 return
 
-                # 检查主键列在数据中是否存在
+            # 检查主键列在数据中是否存在
             for pk in self.primary_keys:
                 if pk not in df1.columns:
                     self.log_signal.emit(f"❌ 错误：平台表中不存在主键列 '{pk}'")
@@ -397,7 +573,7 @@ class CompareWorker(QThread):
                     self.log_signal.emit(f"❌ 错误：ERP表中不存在主键列 '{pk}'")
                     return
 
-                # 检查主键是否有重复值
+            # 检查主键是否有重复值
             df1_duplicates = df1[df1.duplicated(subset=self.primary_keys, keep=False)]
             if not df1_duplicates.empty:
                 duplicate_count = df1_duplicates.shape[0]
@@ -448,6 +624,7 @@ class CompareWorker(QThread):
             # 规范化索引格式
             df1.index = df1.index.map(lambda x: tuple(str(i) for i in x) if isinstance(x, tuple) else (str(x),))
             df2.index = df2.index.map(lambda x: tuple(str(i) for i in x) if isinstance(x, tuple) else (str(x),))
+
             # 检查索引中是否有空值
             df1_empty_index = df1.index.map(
                 lambda x: any(pd.isna(i) or str(i).strip() == '' for i in (x if isinstance(x, tuple) else (x,))))
@@ -501,137 +678,77 @@ class CompareWorker(QThread):
                 self.log_signal.emit("警告：两个文件中没有共同的主键！")
                 return
 
-            # 替换原有的数据比较部分为以下代码：
-            try:
-                self.log_signal.emit("开始进行向量化数据比较...")
-                df1_common = df1.loc[common_codes]
-                df2_common = df2.loc[common_codes]
-
-                # 格式化索引
-                df1_common.index = df1_common.index.map(lambda x: ' + '.join(x) if isinstance(x, tuple) else str(x))
-                df2_common.index = df2_common.index.map(lambda x: ' + '.join(x) if isinstance(x, tuple) else str(x))
-                # 使用向量化操作进行批量比较
-                diff_dict = {}
-
-                # 预处理索引以便后续使用
-                index_mapping = pd.Series(df1_common.index, index=df1_common.index)
-
-                for field1, rule in self.rules.items():
-                    # 只比对规则文件中定义的列
-                    if field1 not in df1_common.columns or field1 not in df2_common.columns:
-                        continue
-
-                    data_type = rule["data_type"]
-                    tail_diff = rule.get("tail_diff")
-
-                    # 向量化获取两列数据
-                    series1 = df1_common[field1]
-                    series2 = df2_common[field1]
-
-                    if data_type == "数值":
-                        # 数值型比较
-                        series1_num = pd.to_numeric(series1, errors='coerce')
-                        series2_num = pd.to_numeric(series2, errors='coerce')
-                        # 如果字段名包含"折旧"，取绝对值
-                        if "折旧" in field1:
-                            series1_num = series1_num.abs()
-                            series2_num = series2_num.abs()
-                        if tail_diff is None:
-                            diff_mask = (series1_num != series2_num) & \
-                                        ~(pd.isna(series1_num) & pd.isna(series2_num))
-                        else:
-                            diff_mask = (abs(series1_num - series2_num) > float(tail_diff)) & \
-                                        ~(pd.isna(series1_num) & pd.isna(series2_num))
-
-                    elif data_type == "日期":
-                        # 日期型比较
-                        # 日期型比较：先统一解析为标准日期格式
-                        def parse_date(date_str):
-                            """尝试多种格式解析日期，返回标准化字符串（YYYY-MM-DD）"""
-                            if pd.isna(date_str):
-                                return ""
-                            date_str = str(date_str).strip()
-                            if not date_str:
-                                return ""
-                            # 尝试多种常见日期格式
-                            formats = ['%Y-%m-%d', '%Y/%m/%d', '%Y年%m月%d日',
-                                       '%m-%d-%Y', '%m/%d/%Y', '%Y%m%d','%Y-%m-%d %H:%M:%S']
-                            for fmt in formats:
-                                try:
-                                    return pd.to_datetime(date_str, format=fmt).strftime('%Y-%m-%d')
-                                except (ValueError, TypeError):
-                                    continue
-                            # 如果所有格式都解析失败，返回原始字符串
-                            return date_str
-
-                        # 统一解析两列日期
-                        series1_parsed = series1.apply(parse_date)
-                        series2_parsed = series2.apply(parse_date)
-
-                        # 处理空值情况
-                        both_empty = (series1_parsed == "") & (series2_parsed == "")
-
-                        # 根据精度需求截取
-                        if tail_diff == "月":
-                            series1_cmp = series1_parsed.str[:7]  # YYYY-MM
-                            series2_cmp = series2_parsed.str[:7]
-                        elif tail_diff == "年":
-                            series1_cmp = series1_parsed.str[:4]  # YYYY
-                            series2_cmp = series2_parsed.str[:4]
-                        elif tail_diff == "日":
-                            series1_cmp = series1_parsed[:10]
-                            series2_cmp = series2_parsed[:10]  # 取年月日（YYYY-MM-DD）
-                        elif tail_diff == "时":
-                            series1_cmp = series1_parsed[:13]
-                            series2_cmp = series2_parsed[:13]  # 取年月日时（YYYY-MM-DD HH）
-                        elif tail_diff == "分":
-                            series1_cmp = series1_parsed[:16]
-                            series2_cmp = series2_parsed[:16]  # 取年月日时分（YYYY-MM-DD HH:MM）
-                        elif tail_diff == "秒":
-                            series1_cmp = series1_parsed[:19]
-                            series2_cmp = series2_parsed[:19]
-
-                        diff_mask = (series1_cmp != series2_cmp) & ~both_empty
-
-                    elif data_type == "文本":
-                        def mapped_equal(a, b, field):
-                            return self.values_equal_by_rule(a, b, "文本", None, field)
-
-                        diff_mask = ~pd.Series([
-                            mapped_equal(self.normalize_value(s1).strip(), self.normalize_value(s2).strip(), field1)
-                            for s1, s2 in zip(series1, series2)
-                        ], index=series1.index)
-
-                    # 找出有差异的行索引
-                    diff_indices = df1_common[diff_mask].index
-
-                    # 批量添加差异记录
-                    for idx in diff_indices:
-                        if idx not in diff_dict:
-                            diff_dict[idx] = []
-
-                        val1 = CompareWorker.normalize_value(series1.loc[idx])
-                        val2 = CompareWorker.normalize_value(series2.loc[idx])
-                        diff_dict[idx].append((field1, val1, val2))
-
-                self.log_signal.emit(f"向量化比较完成，共发现 {len(diff_dict)} 条差异记录")
-
-            except Exception as e:
-                self.log_signal.emit(f"向量化比较出错，使用传统方法: {str(e)}")
-                # 如果向量化方法出错，回退到原来的逐行比较方法
-
-            # 生成日志和汇总信息
-            # 生成日志和汇总信息
-            diff_log_messages = []
-            self.diff_full_rows = []
-
             # 创建主键到原始值的映射，用于恢复导出数据中的主键列
             pk_mapping = {}
             for code in common_codes:
                 code_str = ' + '.join(code) if isinstance(code, tuple) else str(code)
                 pk_mapping[code_str] = code
 
+            # 分批处理数据比较以节省内存
+            try:
+                self.log_signal.emit("开始进行分批向量化数据比较...")
+
+                # 将common_codes分批处理
+                BATCH_SIZE = 5000  # 每批处理5000条记录
+                common_codes_list = list(common_codes)
+                total_records = len(common_codes_list)
+                total_batches = (total_records + BATCH_SIZE - 1) // BATCH_SIZE
+
+                self.log_signal.emit(f"共 {total_records} 条共同记录，将分 {total_batches} 批处理")
+
+                # 用于存储所有差异
+                all_diff_dict = {}
+                all_diff_full_rows = []
+
+                for batch_idx in range(total_batches):
+                    start_idx = batch_idx * BATCH_SIZE
+                    end_idx = min((batch_idx + 1) * BATCH_SIZE, total_records)
+                    batch_codes = common_codes_list[start_idx:end_idx]
+
+                    # 获取当前批次的数据
+                    df1_batch = df1.loc[batch_codes].copy()
+                    df2_batch = df2.loc[batch_codes].copy()
+
+                    # 处理当前批次
+                    batch_diff_dict, batch_diff_full_rows = self._process_batch_comparison(
+                        df1_batch, df2_batch, batch_idx, total_batches, df1_original, df2_original, pk_mapping)
+
+                    # 合并到总差异字典
+                    all_diff_dict.update(batch_diff_dict)
+                    all_diff_full_rows.extend(batch_diff_full_rows)
+
+                    # 清理当前批次数据以释放内存
+                    del df1_batch, df2_batch, batch_diff_dict, batch_diff_full_rows
+                    gc.collect()
+
+                    # 每处理10批报告一次进度
+                    if (batch_idx + 1) % 10 == 0 or batch_idx == total_batches - 1:
+                        self.log_signal.emit(
+                            f"已完成 {batch_idx + 1}/{total_batches} 批处理，当前发现 {len(all_diff_dict)} 条差异记录")
+
+                diff_dict = all_diff_dict
+                self.diff_full_rows = all_diff_full_rows
+                self.log_signal.emit(f"分批向量化比较完成，共发现 {len(diff_dict)} 条差异记录")
+
+            except Exception as e:
+                self.log_signal.emit(f"分批向量化比较出错: {str(e)}")
+                raise e
+
+            # 生成日志和汇总信息
+            diff_log_messages = []
+
+            # 为了节省内存，我们只处理前10000条差异记录的详细信息
+            max_detail_records = 10000
+            processed_count = 0
+
             for code, diffs in diff_dict.items():
+                if processed_count >= max_detail_records:
+                    # 超过最大详细记录数，只统计不生成详细日志
+                    remaining_count = len(diff_dict) - processed_count
+                    if remaining_count > 0:
+                        diff_log_messages.append(f"\n...还有 {remaining_count} 条差异记录未显示...")
+                    break
+
                 code_str = ' + '.join(code) if isinstance(code, tuple) else str(code)
                 diff_details = []
 
@@ -646,75 +763,7 @@ class CompareWorker(QThread):
 
                 diff_log_messages.append(f"\n主键：{code}")
                 diff_log_messages.extend(diff_details)
-
-                # 使用原始数据帧查找完整行数据（包含主键列）
-                try:
-                    # 获取原始主键值
-                    original_pk_values = pk_mapping.get(code_str, code)
-
-                    # 构建筛选条件
-                    if isinstance(original_pk_values, tuple):
-                        # 多主键情况
-                        condition1 = True
-                        condition2 = True
-                        for i, pk in enumerate(self.primary_keys):
-                            condition1 = condition1 & (df1_original[pk].astype(str) == original_pk_values[i])
-                            condition2 = condition2 & (df2_original[pk].astype(str) == original_pk_values[i])
-                    else:
-                        # 单主键情况
-                        pk = self.primary_keys[0]
-                        condition1 = (df1_original[pk].astype(str) == original_pk_values)
-                        condition2 = (df2_original[pk].astype(str) == original_pk_values)
-
-                    # 获取完整行数据
-                    source_dict = df1_original[condition1].iloc[0].to_dict()
-                    target_dict = df2_original[condition2].iloc[0].to_dict()
-
-                    self.diff_full_rows.append({
-                        "source": source_dict,
-                        "target": target_dict
-                    })
-                except (IndexError, KeyError, Exception) as e:
-                    # 出现异常时使用原来的方法作为备选
-                    source_dict = df1_common.loc[code_str].to_dict()
-                    target_dict = df2_common.loc[code_str].to_dict()
-
-                    # 手动添加主键信息
-                    original_pk_values = pk_mapping.get(code_str, code)
-                    if isinstance(original_pk_values, tuple):
-                        for i, pk in enumerate(self.primary_keys):
-                            source_dict[pk] = original_pk_values[i]
-                            target_dict[pk] = original_pk_values[i]
-                    else:
-                        if self.primary_keys:
-                            source_dict[self.primary_keys[0]] = original_pk_values
-                            target_dict[self.primary_keys[0]] = original_pk_values
-
-                    self.diff_full_rows.append({
-                        "source": source_dict,
-                        "target": target_dict
-                    })
-
-                except (IndexError, KeyError, Exception) as e:
-                    # 出现异常时使用原来的方法作为备选
-                    source_dict = df1_common.loc[code_str].to_dict()
-                    target_dict = df2_common.loc[code_str].to_dict()
-
-                    # 手动添加主键信息
-                    original_pk_values = pk_mapping.get(code_str, code)
-                    if isinstance(original_pk_values, tuple):
-                        for i, pk in enumerate(self.primary_keys):
-                            source_dict[pk] = original_pk_values[i]
-                            target_dict[pk] = original_pk_values[i]
-                    else:
-                        if self.primary_keys:
-                            source_dict[self.primary_keys[0]] = original_pk_values
-                            target_dict[self.primary_keys[0]] = original_pk_values
-
-                    self.diff_full_rows.append({
-                        "source": source_dict,
-                        "target": target_dict
-                    })
+                processed_count += 1
 
             diff_count = len(diff_dict)
             equal_count = len(common_codes) - diff_count
@@ -732,14 +781,22 @@ class CompareWorker(QThread):
                 "diff_ratio": diff_count / len(common_codes) if len(common_codes) > 0 else 0.0,
             }
             self.asset_code_map = self.asset_code_to_original  # 仅多一行
+
             if diff_count == 0:
                 self.log_signal.emit("【共同主键的数据完全一致】，没有差异。")
             else:
                 self.log_signal.emit(f"【存在差异的列】（共 {diff_count} 行）：")
                 if diff_log_messages:
-                    self.log_signal.emit('\n'.join(diff_log_messages))
+                    # 限制日志输出长度以避免界面卡顿
+                    if len(diff_log_messages) > 5000:
+                        truncated_messages = diff_log_messages[:5000]
+                        truncated_messages.append(f"\n...（还有 {len(diff_log_messages) - 5000} 条消息未显示）")
+                        self.log_signal.emit('\n'.join(truncated_messages))
+                    else:
+                        self.log_signal.emit('\n'.join(diff_log_messages))
                 else:
                     self.log_signal.emit("⚠️ 未找到具体差异列，请检查数据是否一致。")
+
             time1 = time.time()
             self.log_signal.emit(f"对比完成，总耗时{time1 - time0:.1f}s")
 
