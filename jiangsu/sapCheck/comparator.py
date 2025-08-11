@@ -227,7 +227,7 @@ class CompareWorker(QThread):
         return val1 == val2
 
     def convert_asset_category(self, df1, df2, mapping_df):
-        """资产分类转换逻辑"""
+        """资产分类转换逻辑 - 使用merge优化"""
         asset_category_col1 = "资产分类"
         asset_category_col2 = "SAP资产类别描述"
 
@@ -237,46 +237,55 @@ class CompareWorker(QThread):
         code_col = "同源目录编码"
         erp_detail_col = "ERP资产明细类别"
 
-        # 转换平台表的资产分类
-        def convert_category(value):
-            matches = mapping_df[mapping_df[source_col] == value]
-            if len(matches) == 0:
-                converted_code = str(value)
-            elif len(matches) == 1:
-                converted_code = str(matches.iloc[0][code_col])
-            else:
+        # 为平台表创建映射
+        # 先处理一对一映射
+        unique_mapping = mapping_df.drop_duplicates(subset=[source_col], keep=False)
+        if not unique_mapping.empty:
+            unique_map = dict(zip(unique_mapping[source_col], unique_mapping[code_col]))
+            df1[asset_category_col1] = df1[asset_category_col1].map(
+                lambda x: unique_map.get(x, x) if pd.notna(x) else x
+            )
+            # 更新asset_code_to_original
+            for k, v in unique_map.items():
+                self.asset_code_to_original[str(v)] = k
+
+        # 处理一对多映射
+        duplicated_sources = mapping_df[mapping_df.duplicated(subset=[source_col], keep=False)][source_col].unique()
+        if len(duplicated_sources) > 0:
+            # 创建SAP值集合用于快速匹配
+            sap_values_set = set(df2[asset_category_col2].values)
+
+            for source_value in duplicated_sources:
+                matches = mapping_df[mapping_df[source_col] == source_value]
                 converted_code = None
+
+                # 尝试匹配存在的SAP值
                 for _, row in matches.iterrows():
                     mapped_value = f"{row[target_col]}-{row[detail_col]}"
-                    if mapped_value in df2[asset_category_col2].values:
+                    if mapped_value in sap_values_set:
                         converted_code = str(row[code_col])
                         break
+
+                # 默认使用第一条记录
                 if converted_code is None:
                     converted_code = str(matches.iloc[0][code_col])
 
-            if converted_code is not None:
-                self.asset_code_to_original[converted_code] = value
+                # 应用映射
+                mask = df1[asset_category_col1] == source_value
+                df1.loc[mask, asset_category_col1] = converted_code
+                self.asset_code_to_original[converted_code] = source_value
 
-            return converted_code
+        # 为ERP表创建映射
+        mapping_df['sap_combined'] = mapping_df[target_col] + '-' + mapping_df[detail_col]
+        erp_mapping = dict(zip(mapping_df['sap_combined'], mapping_df[erp_detail_col]))
 
-        # 转换ERP表的资产分类
-        def convert_category_table2(sap_value):
-            matches = mapping_df[
-                mapping_df.apply(lambda row: f"{row[target_col]}-{row[detail_col]}" == sap_value, axis=1)
-            ]
-            if len(matches) > 0:
-                converted_code = str(matches.iloc[0][erp_detail_col])
-            else:
-                converted_code = str(sap_value)
+        df2[asset_category_col2] = df2[asset_category_col2].map(
+            lambda x: str(erp_mapping.get(x, x)) if pd.notna(x) else x
+        )
 
-            if converted_code is not None:
-                self.asset_code_to_original[converted_code] = sap_value
-
-            return converted_code
-
-        # 应用转换函数
-        df1[asset_category_col1] = df1[asset_category_col1].apply(convert_category)
-        df2[asset_category_col2] = df2[asset_category_col2].apply(convert_category_table2)
+        # 更新asset_code_to_original
+        for k, v in erp_mapping.items():
+            self.asset_code_to_original[str(v)] = k
 
         return df1, df2
 
@@ -689,7 +698,7 @@ class CompareWorker(QThread):
                 self.log_signal.emit("开始进行分批向量化数据比较...")
 
                 # 将common_codes分批处理
-                BATCH_SIZE = 5000  # 每批处理5000条记录
+                BATCH_SIZE = 10000  # 每批处理5000条记录
                 common_codes_list = list(common_codes)
                 total_records = len(common_codes_list)
                 total_batches = (total_records + BATCH_SIZE - 1) // BATCH_SIZE
