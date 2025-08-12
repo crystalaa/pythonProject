@@ -11,7 +11,6 @@ from openpyxl import load_workbook
 import gc
 
 import xlwt
-from openpyxl.styles import numbers
 
 # 忽略pandas的警告
 warnings.filterwarnings('ignore')
@@ -555,31 +554,43 @@ class ExcelMergerSplitterApp:
                         if fmt is None:
                             current_row.append(str(value) if value is not None else "")
                         else:
-                            if isinstance(value, (float, int)):
-                                if '.' in fmt:
-                                    decimal_part = fmt.split('.')[-1]
-                                    decimal_places = len(
-                                        decimal_part.replace('%', '').replace('#', '').replace('0', ''))  # 精确获取位数
-                                    formatted_value = f"{value:.{decimal_places}f}"
+                            if fmt != 'General':
+
+                                if isinstance(value, (float, int)):
+                                    if '.' in fmt:
+                                        decimal_part = fmt.split('.')[-1]
+                                        decimal_places = decimal_part.count('0')
+                                        # decimal_places = len(
+                                        #     decimal_part.replace('%', '').replace('#', '').replace('0', ''))  # 精确获取位数
+                                        formatted_value = f"{value:.{decimal_places}f}"
+                                    else:
+                                        formatted_value = f"{value:.0f}"
+                                    current_row.append(formatted_value)
+                                elif hasattr(value, 'strftime'):  # 日期时间类型
+                                    if ';' in fmt:
+                                        date_fmt = fmt.split(';')[0]
+                                    else:
+                                        date_fmt = fmt
+                                    try:
+                                        # 转换Excel格式到strftime格式
+                                        fmt_converted = (date_fmt.replace('yyyy', '%Y')
+                                                         .replace('yy', '%y')
+                                                         .replace('mm', '%m')
+                                                         .replace('m', '%m')
+                                                         .replace('dd', '%d')
+                                                         .replace('d', '%d')
+                                                         .replace('hh', '%H')
+                                                         .replace('ss', '%S'))
+                                        formatted_value = value.strftime(fmt_converted)
+                                    except:
+                                        formatted_value = str(value)
+                                    current_row.append(formatted_value)
+                                elif '%' in fmt and isinstance(value, (int, float)):  # 百分比类型
+                                    decimal_places = fmt.count('0') - 1  # e.g. 0.00% -> 2
+                                    formatted_value = f"{value:.{decimal_places}%}"
+                                    current_row.append(formatted_value)
                                 else:
-                                    formatted_value = f"{value:.0f}"
-                                current_row.append(formatted_value)
-                            elif hasattr(value, 'strftime'):  # 日期时间类型
-                                try:
-                                    # 转换Excel格式到strftime格式
-                                    fmt_converted = (fmt.replace('yyyy', '%Y')
-                                                     .replace('mm', '%m')
-                                                     .replace('dd', '%d')
-                                                     .replace('hh', '%H')
-                                                     .replace('ss', '%S'))
-                                    formatted_value = value.strftime(fmt_converted)
-                                except:
-                                    formatted_value = str(value)
-                                current_row.append(formatted_value)
-                            elif '%' in fmt and isinstance(value, (int, float)):  # 百分比类型
-                                decimal_places = fmt.count('0') - 1  # e.g. 0.00% -> 2
-                                formatted_value = f"{value:.{decimal_places}%}"
-                                current_row.append(formatted_value)
+                                    current_row.append(str(value) if value is not None else "")
                             else:
                                 current_row.append(str(value) if value is not None else "")
                     data.append(current_row)
@@ -589,15 +600,33 @@ class ExcelMergerSplitterApp:
                 return df
 
             elif file_ext == '.xls':
-                # XLS文件处理（保持原逻辑）
-                df = pd.read_excel(
-                    file_path,
-                    header=None,
-                    engine='xlrd',
-                    dtype=str,
-                    keep_default_na=False
-                )
-                logger.debug(f"成功解析XLS文件，共 {len(df)} 行")
+                # XLS文件处理
+                try:
+                    # 尝试使用xlrd引擎（适用于真正的.xls文件）
+                    df = pd.read_excel(
+                        file_path,
+                        header=None,
+                        engine='xlrd',
+                        dtype=str,
+                        keep_default_na=False
+                    )
+                    logger.debug(f"成功使用xlrd引擎解析XLS文件，共 {len(df)} 行")
+                except Exception as xlrd_error:
+                    # 如果xlrd失败，可能是.xlsx文件被错误标记为.xls，尝试openpyxl
+                    try:
+                        df = pd.read_excel(
+                            file_path,
+                            header=None,
+                            engine='openpyxl',
+                            dtype=str,
+                            keep_default_na=False
+                        )
+                        logger.debug(f"成功使用openpyxl引擎解析文件，共 {len(df)} 行")
+                    except Exception as openpyxl_error:
+                        # 如果两种引擎都失败，抛出更详细的错误信息
+                        raise Exception(
+                            f"无法解析XLS文件: xlrd错误: {str(xlrd_error)}, openpyxl错误: {str(openpyxl_error)}")
+
                 return df
 
             else:
@@ -635,7 +664,6 @@ class ExcelMergerSplitterApp:
                 raise Exception(f"无法解析CSV文件，尝试了多种编码")
 
         elif file_ext in ['.xlsx', '.et']:
-            # 对于Excel文件，我们仍然需要一次性读取，但可以优化内存使用
             df = self.read_table_file(file_path)
             total_rows = len(df)
             for i in range(0, total_rows, chunksize):
@@ -983,14 +1011,13 @@ class ExcelMergerSplitterApp:
                         total_rows = ws.max_row
                         wb.close()
                     elif file_ext == '.xls':
-                        # 对于XLS文件，使用pandas计算行数
-                        total_rows = 0
-                        for chunk in pd.read_excel(
-                                split_file,
-                                engine='xlrd',
-                                chunksize=10000
-                        ):
-                            total_rows += len(chunk)
+                        df = pd.read_excel(
+                            split_file,
+                            engine='xlrd'
+                        )
+                        total_rows = len(df)
+                        del df  # 立即释放内存
+                        gc.collect()  # 强制垃圾回收
                 except Exception as e:
                     logger.warning(f"无法准确计算总行数: {e}")
                     total_rows = 100000  # 估计一个较大的值
@@ -1317,18 +1344,19 @@ class ExcelMergerSplitterApp:
                             cell.number_format = '@'  # 文本格式
             elif file_ext == '.xls':
                 import xlwt
-                with pd.ExcelWriter(output_path, engine='xlwt') as writer:
-                    chunk.to_excel(writer, index=False, sheet_name='Sheet1')
-                    worksheet = writer.sheets['Sheet1']
-                    # 设置所有单元格为文本格式
-                    for col_idx in range(worksheet.ncols):
-                        for row_idx in range(worksheet.nrows):
-                            worksheet.write(
-                                row_idx,
-                                col_idx,
-                                worksheet.row(row_idx)[col_idx].value,
-                                xlwt.easyxf('text: format_string="@"')
-                            )
+                workbook = xlwt.Workbook()
+                worksheet = workbook.add_sheet('Sheet1')
+
+                # 写入表头
+                for col_idx, header_val in enumerate(header):
+                    worksheet.write(0, col_idx, header_val)
+
+                # 写入数据
+                for row_idx, row in chunk.iterrows():
+                    for col_idx, value in enumerate(row):
+                        worksheet.write(row_idx + 1, col_idx, value)
+
+                workbook.save(output_path)
             logger.debug(f"保存分片文件成功: {output_path}")
         except Exception as e:
             raise Exception(f"保存分片失败: {str(e)}")
@@ -1366,14 +1394,24 @@ class ExcelMergerSplitterApp:
                 wb.close()
             elif file_ext == '.xls':
                 # 对于XLS文件，只读取前几行
-                df = pd.read_excel(
-                    file_path,
-                    header=None,
-                    engine='xlrd',
-                    nrows=1,  # 只读取第一行
-                    dtype=str,
-                    keep_default_na=False
-                )
+                try:
+                    df = pd.read_excel(
+                        file_path,
+                        header=None,
+                        engine='xlrd',
+                        nrows=1,  # 只读取第一行
+                        dtype=str,
+                        keep_default_na=False
+                    )
+                except Exception:
+                    df = pd.read_excel(
+                        file_path,
+                        header=None,
+                        engine='openpyxl',
+                        nrows=1,  # 只读取第一行
+                        dtype=str,
+                        keep_default_na=False
+                    )
                 headers = df.iloc[0].tolist() if not df.empty else []
             elif file_ext == '.csv':
                 # 对于CSV文件，只读取第一行
