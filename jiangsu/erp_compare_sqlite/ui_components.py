@@ -529,7 +529,7 @@ class ExcelComparer(QWidget):
                         # 在导出时，我们需要应用与比对时相同的资产分类转换逻辑
                         if "资产明细类别" in t:
                             actual_tgt_value = str(t.get("资产明细类别", ""))
-                            actual_tgt_show_value = str(t.get("fld", ""))
+                            actual_tgt_show_value = str(t.get(fld, ""))
 
                             # 标准化目标值
                             norm_actual_tgt = normalize_export_value(actual_tgt_value)
