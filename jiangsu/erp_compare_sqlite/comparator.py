@@ -42,6 +42,17 @@ class CompareWorker(QThread):
         self.diff_full_rows = []
         self.enum_map = read_enum_mapping(rule_file)
         self.erp_combo_map = read_erp_combo_map(rule_file)
+        self.voltage_level_map = {}  # 线站电压等级映射
+        # 检查是否有线站电压等级字段，如果有则加载映射
+        if "线站电压等级" in self.rules:
+            # 使用read_enum_mapping读取线站电压等级映射（编码->名称）
+            try:
+                voltage_map = read_enum_mapping(rule_file)
+                # 转换为编码->名称的映射（read_enum_mapping返回的是名称->编码）
+                self.voltage_level_map = {v: k for k, v in voltage_map.items()}
+            except Exception as e:
+                print(f"读取线站电压等级映射失败: {e}")
+                self.voltage_level_map = {}
         self.asset_code_to_original = {}
 
     # ---------- 工具 ----------
@@ -75,7 +86,7 @@ class CompareWorker(QThread):
 
         str_value = str(value).strip()
 
-        # 对于表二，将"直线法"转换为"年限平均法"
+        # 对于ERP表，将"直线法"转换为"年限平均法"
         if not is_file1 and str_value == '直线法':
             return '年限平均法'
 
@@ -147,11 +158,11 @@ class CompareWorker(QThread):
         calc_rule = rule.get("calc_rule")
 
         if is_file1:
-            # 表一：primary_keys 里的列直接拼
+            # 平台表：primary_keys 里的列直接拼
             cols = [f'"{c}"' for c in self.primary_keys]
             return " || ' + ' || ".join(cols) if len(cols) > 1 else cols[0] if cols else "''"
         else:
-            # 表二：有计算规则就转 SQL，否则用 table2_field
+            # ERP表：有计算规则就转 SQL，否则用 table2_field
             if calc_rule:
                 expr = re.sub(r'\+', "||", calc_rule)
                 return f"{expr}"
@@ -168,10 +179,10 @@ class CompareWorker(QThread):
         calc_rule = rule.get("calc_rule")
 
         if is_file1:
-            # 表一：直接使用字段名
+            # 平台表：直接使用字段名
             return f'"{field_name}"'
         else:
-            # 表二：如果有计算规则则转换为SQL表达式，否则使用table2_field或字段名
+            # ERP表：如果有计算规则则转换为SQL表达式，否则使用table2_field或字段名
             if calc_rule:
                 # 处理不同类型的计算规则
 
@@ -220,7 +231,7 @@ class CompareWorker(QThread):
         """为表添加计算字段（SQLite版本）"""
         for field_name, rule in self.rules.items():
             calc_rule = rule.get("calc_rule")
-            # 只处理有计算规则的字段，且只处理表二
+            # 只处理有计算规则的字段，且只处理ERP表
             if calc_rule and not is_file1 and rule.get("data_type") == "数值":
                 try:
                     expr = self._build_field_expr(field_name, is_file1=False)
@@ -305,10 +316,10 @@ class CompareWorker(QThread):
             data_type = rule.get("data_type", "文本")
             tail_diff = rule.get("tail_diff", 0)
 
-            # 表一字段名
+            # 平台表字段名
             src_field = f't1."{field_name}"'
 
-            # 表二字段：如果有计算规则则使用计算字段，否则使用映射字段
+            # ERP表字段：如果有计算规则则使用计算字段，否则使用映射字段
             if rule.get("calc_rule") and rule.get("data_type") in ["数值", "文本"]:
                 tgt_field = f't2."_calc_{field_name}"'
             else:
@@ -340,7 +351,7 @@ class CompareWorker(QThread):
                 # 特殊处理资产分类字段
                 if field_name == "资产分类":
                     # 对于资产分类，比较前两位编码（使用预先准备好的临时表）
-                    # 表二实际用于对比的字段是"资产明细类别"
+                    # ERP表实际用于对比的字段是"资产明细类别"
                     table2_field = "资产明细类别"
                     condition = f'''
                     NOT (IFNULL({src_field}, "") = "" AND IFNULL(t2."{table2_field}", "") = "") 
@@ -358,11 +369,39 @@ class CompareWorker(QThread):
                     )
                     '''
                     diff_conditions.append(condition)
-                # 对于折旧方法字段，需要特殊处理表二中的"直线法"视为"年限平均法"
+                # 对于折旧方法字段，需要特殊处理ERP表中的"直线法"视为"年限平均法"
                 elif "折旧方法" in field_name:
-                    # 在SQL中处理：如果表二字段是"直线法"，则替换为"年限平均法"进行比较
+                    # 在SQL中处理：如果ERP表字段是"直线法"，则替换为"年限平均法"进行比较
                     adjusted_tgt_field = f'CASE WHEN TRIM(IFNULL({tgt_field}, "")) = "直线法" THEN "年限平均法" ELSE TRIM(IFNULL({tgt_field}, "")) END'
                     condition = f'NOT (IFNULL({src_field}, "") = "" AND IFNULL({tgt_field}, "") = "") AND TRIM(IFNULL({src_field}, "")) != {adjusted_tgt_field}'
+                    diff_conditions.append(condition)
+                # 处理ERP组合映射字段
+                elif field_name in self.erp_combo_map:
+                    # 构建ERP组合映射的SQL条件
+                    condition_parts = []
+                    for platform_val, erp_values in self.erp_combo_map.items():
+                        erp_conditions = []
+                        for erp_val in erp_values:
+                            erp_conditions.append(f'TRIM(IFNULL({tgt_field}, "")) = "{erp_val}"')
+
+                        combined_erp_condition = " OR ".join(erp_conditions) if erp_conditions else "0=1"
+                        condition_parts.append(
+                            f'(TRIM(IFNULL({src_field}, "")) = "{platform_val}" AND ({combined_erp_condition}))')
+
+                    all_conditions = " OR ".join(condition_parts) if condition_parts else "0=1"
+                    condition = f'NOT (IFNULL({src_field}, "") = "" AND IFNULL({tgt_field}, "") = "") AND NOT ({all_conditions})'
+                    diff_conditions.append(condition)
+                # 处理线站电压等级字段
+                elif field_name == "线站电压等级":
+                    # 构建线站电压等级映射的SQL条件
+                    condition_parts = []
+                    for code, name in self.voltage_level_map.items():
+                        condition_parts.append(
+                            f'(TRIM(IFNULL({src_field}, "")) = "{name}" AND TRIM(IFNULL({tgt_field}, "")) = "{code}")')
+
+                    all_conditions = " OR ".join(condition_parts) if condition_parts else "0=1"
+                    condition = f'NOT (IFNULL({src_field}, "") = "" AND IFNULL({tgt_field}, "") = "") AND NOT ({all_conditions})'
+                    diff_conditions.append(condition)
                 else:
                     condition = f'NOT (IFNULL({src_field}, "") = "" AND IFNULL({tgt_field}, "") = "") AND TRIM(IFNULL({src_field}, "")) != TRIM(IFNULL({tgt_field}, ""))'
                 diff_conditions.append(condition)
@@ -493,7 +532,7 @@ class CompareWorker(QThread):
             self._add_concat_pk_column(TEMP_TABLE1, expr1)
             self._add_concat_pk_column(TEMP_TABLE2, expr2)
 
-            # 4. 为表二添加计算字段
+            # 4. 为ERP表添加计算字段
             self._add_calculated_fields(TEMP_TABLE2, is_file1=False)
 
             # 5. SQL 计算共同/缺失/多余
@@ -518,19 +557,17 @@ class CompareWorker(QThread):
 
             # 显示缺失和多余的主键信息
             if self.missing_rows:
-                self.log_signal.emit(f"❌ 表一中有 {len(self.missing_rows)} 条数据在表二中缺失:")
+                self.log_signal.emit(f"❌ 平台表中有 {len(self.missing_rows)} 条数据在ERP表中缺失:")
                 for i, row in enumerate(self.missing_rows[:5]):  # 只显示前5条
-                    pk_values = [str(row.get(pk, '')) for pk in self.primary_keys]
-                    pk_str = " + ".join(pk_values)
+                    pk_str = str(row.get("_pk_concat", ""))
                     self.log_signal.emit(f"  {i + 1}. {pk_str}")
                 if len(self.missing_rows) > 5:
                     self.log_signal.emit(f"  ... 还有 {len(self.missing_rows) - 5} 条缺失记录")
 
             if self.extra_in_file2:
-                self.log_signal.emit(f"⚠️ 表二中有 {len(self.extra_in_file2)} 条数据在表一中不存在:")
+                self.log_signal.emit(f"⚠️ ERP表中有 {len(self.extra_in_file2)} 条数据在平台表中不存在:")
                 for i, row in enumerate(self.extra_in_file2[:5]):  # 只显示前5条
-                    pk_values = [str(row.get(pk, '')) for pk in self.primary_keys]
-                    pk_str = " + ".join(pk_values)
+                    pk_str = str(row.get("_pk_concat", ""))
                     self.log_signal.emit(f"  {i + 1}. {pk_str}")
                 if len(self.extra_in_file2) > 5:
                     self.log_signal.emit(f"  ... 还有 {len(self.extra_in_file2) - 5} 条多余记录")
@@ -569,9 +606,7 @@ class CompareWorker(QThread):
                     src = diff_record["source"]
                     tgt = diff_record["target"]
 
-                    # 显示主键信息
-                    pk_values = [str(src.get(pk, '')) for pk in self.primary_keys]
-                    pk_str = " + ".join(pk_values)
+                    pk_str = str(src.get("_pk_concat", ""))
                     self.log_signal.emit(f"  {i + 1}. 主键: {pk_str}")
 
                     # 查找并显示具体差异的字段
@@ -617,16 +652,16 @@ class CompareWorker(QThread):
                                         src_display = f"{src_num:.{tail_diff}f}" if norm_src else ""
                                         tgt_display = f"{tgt_num:.{tail_diff}f}" if norm_tgt else ""
                                         self.log_signal.emit(
-                                            f"    - {field_name}: 表一='{src_display}' ≠ 表二='{tgt_display}'")
+                                            f"    - {field_name}: 平台表='{src_display}', ERP表='{tgt_display}'")
                                 else:
                                     # 没有设置尾差时，直接比较数值
                                     if src_num != tgt_num:
                                         self.log_signal.emit(
-                                            f"    - {field_name}: 表一='{src_value}' ≠ 表二='{tgt_value}'")
+                                            f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
                             except (ValueError, TypeError):
                                 # 如果不能转换为数值，按字符串比较
                                 if norm_src != norm_tgt:
-                                    self.log_signal.emit(f"    - {field_name}: 表一='{src_value}' ≠ 表二='{tgt_value}'")
+                                    self.log_signal.emit(f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
 
                         # 对于文本字段，需要特殊处理标准化
                         elif rule.get("data_type") == "文本":
@@ -640,11 +675,11 @@ class CompareWorker(QThread):
                                         category_mapping = dict(zip(mapping_df['同源目录完整名称'].astype(str),
                                                                     mapping_df['同源目录编码'].astype(str)))
 
-                                        # 获取表一的编码（通过映射）
+                                        # 获取平台表的编码（通过映射）
                                         src_code = category_mapping.get(str(src_value), str(src_value))
                                         src_code_prefix = src_code[:2] if len(src_code) >= 2 else src_code
 
-                                        # 获取表二的"资产明细类别"字段值（实际用于对比的字段）
+                                        # 获取ERP表的"资产明细类别"字段值（实际用于对比的字段）
                                         actual_tgt_value = tgt.get("资产明细类别", "")
                                         tgt_code_prefix = str(actual_tgt_value)[:2] if len(
                                             str(actual_tgt_value)) >= 2 else str(actual_tgt_value)
@@ -653,21 +688,21 @@ class CompareWorker(QThread):
                                         if src_code_prefix != tgt_code_prefix:
                                             # 显示原始中文信息而不是编码
                                             self.log_signal.emit(
-                                                f"    - {field_name}: 表一='{src_value}' ≠ 表二='{actual_tgt_value}' (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})")
+                                                f"    - {field_name}: 平台表='{src_value}', ERP表='{actual_tgt_value}' (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})")
                                     else:
                                         # 映射表不可用时的回退处理
                                         norm_src_text = self._normalize_text_value(src_value)
                                         norm_tgt_text = self._normalize_text_value(tgt_value)
                                         if norm_src_text != norm_tgt_text:
                                             self.log_signal.emit(
-                                                f"    - {field_name}: 表一='{src_value}' ≠ 表二='{tgt_value}'")
+                                                f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
                                 else:
                                     # 映射表未准备好的回退处理
                                     norm_src_text = self._normalize_text_value(src_value)
                                     norm_tgt_text = self._normalize_text_value(tgt_value)
                                     if norm_src_text != norm_tgt_text:
                                         self.log_signal.emit(
-                                            f"    - {field_name}: 表一='{src_value}' ≠ 表二='{tgt_value}'")
+                                            f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
                             # 特殊处理监管资产属性字段，只对比二级分类
                             elif field_name == "监管资产属性":
                                 # 提取二级分类进行比较
@@ -676,25 +711,50 @@ class CompareWorker(QThread):
 
                                 if src_second_level != tgt_second_level:
                                     self.log_signal.emit(
-                                        f"    - {field_name}: 表一='{src_value}' ≠ 表二='{tgt_value}' (二级分类不匹配: '{src_second_level}' vs '{tgt_second_level}')")
+                                        f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}' (二级分类不匹配: '{src_second_level}' vs '{tgt_second_level}')")
                             # 对折旧方法字段进行特殊处理
                             elif "折旧方法" in field_name:
                                 norm_src_text = self._normalize_depreciation_method(src_value, is_file1=True)
                                 norm_tgt_text = self._normalize_depreciation_method(tgt_value, is_file1=False)
                                 # 比较标准化后的值
                                 if norm_src_text != norm_tgt_text:
-                                    self.log_signal.emit(f"    - {field_name}: 表一='{src_value}' ≠ 表二='{tgt_value}'")
+                                    self.log_signal.emit(f"    - {field_name}: 平台表='{src_value}' , ERP表='{tgt_value}'")
+                            # 处理ERP组合映射字段
+                            elif field_name in self.erp_combo_map:
+                                # 检查是否符合ERP组合映射规则
+                                platform_val = str(src_value).strip()
+                                erp_val = str(tgt_value).strip()
+
+                                # 检查是否在允许的ERP值中
+                                is_match = False
+                                if platform_val in self.erp_combo_map:
+                                    allowed_erp_values = self.erp_combo_map[platform_val]
+                                    is_match = erp_val in allowed_erp_values
+
+                                if not is_match:
+                                    self.log_signal.emit(
+                                        f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}' (不符合ERP组合映射规则)")
+                            # 处理线站电压等级字段
+                            elif field_name == "线站电压等级":
+                                # 对ERP表的编码值进行映射转换为中文
+                                erp_chinese = self.voltage_level_map.get(str(tgt_value).strip(), str(tgt_value).strip())
+                                platform_chinese = str(src_value).strip()
+
+                                # 比较中文值
+                                if platform_chinese != erp_chinese:
+                                    self.log_signal.emit(
+                                        f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}' (映射后: 平台表='{platform_chinese}', ERP表='{erp_chinese}')")
                             else:
                                 # 对其他文本值进行标准化处理
                                 norm_src_text = self._normalize_text_value(src_value)
                                 norm_tgt_text = self._normalize_text_value(tgt_value)
                                 # 比较标准化后的值
                                 if norm_src_text != norm_tgt_text:
-                                    self.log_signal.emit(f"    - {field_name}: 表一='{src_value}' ≠ 表二='{tgt_value}'")
+                                    self.log_signal.emit(f"    - {field_name}: 平台表='{norm_src_text}', ERP表='{norm_tgt_text}'")
                         else:
                             # 其他类型按原逻辑比较
                             if norm_src != norm_tgt:
-                                self.log_signal.emit(f"    - {field_name}: 表一='{src_value}' ≠ 表二='{tgt_value}'")
+                                self.log_signal.emit(f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
                 if diff_count > 10:
                     self.log_signal.emit(f"  ... 还有 {diff_count - 10} 条差异记录未显示")
 

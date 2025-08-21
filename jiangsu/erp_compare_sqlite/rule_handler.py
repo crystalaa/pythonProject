@@ -47,9 +47,44 @@ def read_erp_combo_map(rule_file):
         value = 允许的组合字符串列表（如 ['A', 'A|B', 'A|B|C']）
     """
     df = pd.read_excel(rule_file, sheet_name='枚举值-关联实物管理系统代码及名称', dtype=str)
-    df = df[['平台实物管理系统代码', '江苏ERP系统PM卡片ABC标识']].dropna()
-    # 把组合列按 | 拆成列表，再转成 set，便于 in 判断
-    grouped = df.groupby('平台实物管理系统代码')['江苏ERP系统PM卡片ABC标识'] \
-        .apply(lambda x: set(v for s in x for v in s.split('|'))) \
-        .to_dict()
-    return grouped
+    # 获取第一列和第三列的数据
+    first_col = df.iloc[:, 0]  # 第一列（索引为0）
+    third_col = df.iloc[:, 2]  # 第三列（索引为2）
+
+    # 合并这两列成为一个DataFrame
+    data_df = pd.DataFrame({
+        'platform_code': first_col,
+        'erp_code': third_col
+    }).dropna()  # 删除空值行
+
+    # 跳过可能的标题行（如果有的话）
+    if len(data_df) > 0:
+        first_row = data_df.iloc[0]
+        # 简单判断是否为标题行（通过检查是否包含常见的标题关键词）
+        if any(keyword in str(first_row['platform_code']).lower() for keyword in ['平台', '代码', '标识']) or \
+                any(keyword in str(first_row['erp_code']).lower() for keyword in ['erp', '卡片', '标识']):
+            data_df = data_df.iloc[1:]  # 跳过标题行
+
+    # 创建映射字典
+    combo_map = {}
+    for _, row in data_df.iterrows():
+        platform_val = str(row['platform_code']).strip()
+        erp_val = str(row['erp_code']).strip()
+
+        # 跳过空值行
+        if not platform_val or not erp_val or platform_val.lower() == 'nan' or erp_val.lower() == 'nan':
+            continue
+
+        # 如果ERP值包含|，则拆分为多个值
+        if '|' in erp_val:
+            erp_values = set(erp_val.split('|'))
+        else:
+            erp_values = {erp_val}
+
+        # 添加到映射字典中
+        if platform_val in combo_map:
+            combo_map[platform_val].update(erp_values)
+        else:
+            combo_map[platform_val] = erp_values
+
+    return combo_map

@@ -17,9 +17,7 @@ from comparator import CompareWorker
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import pandas as pd
-import polars as pl           # 超大数据用
-import xlsxwriter             # 高速写
-
+import xlsxwriter  # 高速写
 
 
 class ExcelComparer(QWidget):
@@ -345,9 +343,10 @@ class ExcelComparer(QWidget):
         self.close_loading_dialog()
 
     # ---------- 最终导出实现 ----------
+    # ---------- 最终导出实现 ----------
+    # ---------- 最终导出实现 ----------
     def _export_final(self, src_file, sheet_name, is_first_file, out_dir):
         try:
-
             # 1. 复制原文件
             dst = Path(out_dir) / f"{Path(src_file).stem}_比对结果.xlsx"
             shutil.copy2(src_file, dst)
@@ -374,13 +373,10 @@ class ExcelComparer(QWidget):
             else:
                 df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
 
-            # 3. 动态主键字段
-            primary_keys = [f for f, r in self.rules.items() if r.get("is_primary")]
-
-            # 4. 计算行主键（与比对阶段一致）
+            # 3. 计算行主键（与比对阶段一致）
             if is_first_file:
                 # 平台表：直接取主键列
-                df["_key"] = df[primary_keys].astype(str).agg(" + ".join, axis=1)
+                df["_key"] = df[self.worker.primary_keys].astype(str).agg(" + ".join, axis=1)
             else:
                 # ERP表：根据规则里的计算表达式动态生成
                 pk_field = next(f for f, r in self.rules.items() if r.get("is_primary"))
@@ -390,22 +386,53 @@ class ExcelComparer(QWidget):
                 else:
                     df["_key"] = df[rule["table2_field"]].astype(str)
 
-            # 5. 建立差异映射
+            # 4. 建立差异映射 - 使用与比对阶段相同的逻辑
             diff_map, miss, extra = {}, set(), set()
+
+            # 构建主键到差异记录的映射（使用 _pk_concat）
             for it in getattr(self.worker, 'diff_full_rows', []):
-                key = " + ".join([str(it['source' if is_first_file else 'target'].get(pk, ""))
-                                  for pk in primary_keys])
+                # 直接使用 _pk_concat 作为键
+                key = str(it['source'].get('_pk_concat', ''))
                 diff_map[key] = it
+
+            # 构建缺失和多余的主键集合（使用 _pk_concat）
             for row in getattr(self.worker, 'missing_rows', []):
-                miss.add(" + ".join([str(row.get(pk, "")) for pk in primary_keys]))
+                key = str(row.get('_pk_concat', ''))
+                miss.add(key)
+
             for row in getattr(self.worker, 'extra_in_file2', []):
-                extra.add(" + ".join([str(row.get(pk, "")) for pk in primary_keys]))
+                key = str(row.get('_pk_concat', ''))
+                extra.add(key)
+
+            # 5. 创建主键映射：将原始主键映射到 _pk_concat
+            key_to_pk_concat = {}
+
+            # 为缺失行建立映射
+            for row in getattr(self.worker, 'missing_rows', []):
+                original_key = " + ".join([str(row.get(pk, "")) for pk in self.worker.primary_keys])
+                key_to_pk_concat[original_key] = str(row.get('_pk_concat', ''))
+
+            # 为多余行建立映射
+            for row in getattr(self.worker, 'extra_in_file2', []):
+                original_key = " + ".join([str(row.get(pk, "")) for pk in self.worker.primary_keys])
+                key_to_pk_concat[original_key] = str(row.get('_pk_concat', ''))
+
+            # 为差异行建立映射
+            for it in getattr(self.worker, 'diff_full_rows', []):
+                if is_first_file:
+                    original_key = " + ".join([str(it['source'].get(pk, "")) for pk in self.worker.primary_keys])
+                else:
+                    original_key = " + ".join([str(it['target'].get(pk, "")) for pk in self.worker.primary_keys])
+                key_to_pk_concat[original_key] = str(it['source'].get('_pk_concat', ''))
+
+            # 将原始主键映射到 _pk_concat
+            df["_pk_concat_key"] = df["_key"].map(key_to_pk_concat).fillna(df["_key"])
 
             # 6. 需要追加的列（顺序 = 规则顺序）
             comp_cols = [f for f in self.rules.keys() if not self.rules[f].get("is_primary")]
 
             # 7. 计算追加值
-            keys = df["_key"].tolist()
+            keys = df["_pk_concat_key"].tolist()
             comp_results = [
                 "此数据不存在于SAP" if k in miss else  # 平台表多余 → 提示不存在于SAP
                 "此数据不存在于平台" if k in extra else  # ERP表多余 → 提示不存在于平台
@@ -414,36 +441,177 @@ class ExcelComparer(QWidget):
                 for k in keys
             ]
 
+            def normalize_export_value(val):
+                """导出时的值标准化函数，处理空值和None"""
+                if pd.isna(val) or val is None or (
+                        isinstance(val, str) and val.strip().lower() in ['', 'none', 'null','None']):
+                    return ''
+                return str(val).strip()
+
             def detail(row_key, fld):
+                # 修复：正确处理差异详情
                 if row_key not in diff_map:
                     return ""
+
                 s, t = diff_map[row_key]['source'], diff_map[row_key]['target']
+                rule = self.rules.get(fld, {})
 
-                # 资产分类特殊处理：用中文提示
-                if fld == "资产分类":
-                    code1 = s.get(fld, "")
-                    code2 = t.get('原21版资产分类', "")
-                    v1 = self.worker.asset_code_map.get(code1, code1)
-                    v2 = t.get(fld)
+                # 获取字段值
+                src_val = str(s.get(fld, ""))
+                tgt_val = str(t.get(fld, ""))
 
-                    # 资产分类使用code1和code2进行比较
-                    if self.worker.values_equal_by_rule(code1, code2,
-                                                        self.rules[fld]["data_type"],
-                                                        self.rules[fld].get("tail_diff"),
-                                                        fld):
-                        return ""
-                    return f"不一致：平台表={v1 or ''}, ERP表={v2 or ''}"
+                # 特殊处理资产分类字段
+                if fld == "资产分类" and "资产明细类别" in t:
+                    tgt_val = str(t.get("资产明细类别", ""))
+
+                # 标准化值用于比较（使用导出专用的标准化函数）
+                norm_src = normalize_export_value(src_val)
+                norm_tgt = normalize_export_value(tgt_val)
+
+                # 如果两个值都为空，则认为一致
+                if norm_src == '' and norm_tgt == '':
+                    return ""
+
+                # 根据字段类型进行特殊处理
+                data_type = rule.get("data_type", "文本")
+
+                if data_type == "数值":
+                    tail_diff = float(rule.get("tail_diff", 0))
+                    try:
+                        # 尝试转换为数值并按精度比较
+                        src_num = float(norm_src) if norm_src else 0
+                        tgt_num = float(norm_tgt) if norm_tgt else 0
+
+                        # 如果设置了尾差，则按尾差精度比较
+                        if tail_diff > 0:
+                            src_rounded = round(src_num, int(tail_diff))
+                            tgt_rounded = round(tgt_num, int(tail_diff))
+
+                            # 只有在超出尾差范围时才显示为差异
+                            if abs(src_rounded - tgt_rounded) > (10 ** (-int(tail_diff))):
+                                # 格式化显示值，保持精度一致性
+                                src_display = f"{src_num:.{int(tail_diff)}f}" if norm_src else ""
+                                tgt_display = f"{tgt_num:.{int(tail_diff)}f}" if norm_tgt else ""
+                                return f"不一致：平台表={src_display}, ERP表={tgt_display}"
+                        else:
+                            # 没有设置尾差时，直接比较数值
+                            if src_num != tgt_num:
+                                return f"不一致：平台表={src_val}, ERP表={tgt_val}"
+                    except (ValueError, TypeError):
+                        # 如果不能转换为数值，按字符串比较
+                        if norm_src != norm_tgt:
+                            return f"不一致：平台表={src_val}, ERP表={tgt_val}"
+
+                elif data_type == "文本":
+                    # 特殊处理资产分类字段
+                    if fld == "资产分类":
+                        # 在导出时，我们需要应用与比对时相同的资产分类转换逻辑
+                        if "资产明细类别" in t:
+                            actual_tgt_value = str(t.get("资产明细类别", ""))
+                            # 标准化目标值
+                            norm_actual_tgt = normalize_export_value(actual_tgt_value)
+
+                            # 对于平台表（表一）的资产分类，需要转换为编码进行比较
+                            if is_first_file and norm_src:
+                                # 获取资产分类映射表
+                                try:
+                                    from db_handler import _load_asset_category_mapping
+                                    mapping_df = _load_asset_category_mapping(self.worker.rule_file)
+                                    if not mapping_df.empty and '同源目录完整名称' in mapping_df.columns and '同源目录编码' in mapping_df.columns:
+                                        # 创建映射字典
+                                        category_mapping = dict(zip(mapping_df['同源目录完整名称'].astype(str),
+                                                                    mapping_df['同源目录编码'].astype(str)))
+
+                                        # 获取表一的编码（通过映射）
+                                        src_code = category_mapping.get(norm_src, norm_src)
+                                        src_code_prefix = src_code[:2] if len(src_code) >= 2 else src_code
+
+                                        # 获取表二的"资产明细类别"字段值（实际用于对比的字段）
+                                        tgt_code_prefix = norm_actual_tgt[:2] if len(
+                                            norm_actual_tgt) >= 2 else norm_actual_tgt
+
+                                        # 比较前两位
+                                        if src_code_prefix != tgt_code_prefix:
+                                            # 显示原始中文信息而不是编码
+                                            return f"不一致：平台表={src_val}, ERP表={actual_tgt_value} (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})"
+                                        else:
+                                            return ""  # 一致，不显示任何内容
+                                    else:
+                                        # 映射表不可用时的回退处理
+                                        if norm_src != norm_actual_tgt:
+                                            return f"不一致：平台表={src_val}, ERP表={actual_tgt_value}"
+                                except Exception:
+                                    # 如果映射失败，回退到直接比较
+                                    if norm_src != norm_actual_tgt:
+                                        return f"不一致：平台表={src_val}, ERP表={actual_tgt_value}"
+                            else:
+                                # 对于ERP表或其他情况，直接比较
+                                if norm_src != norm_actual_tgt:
+                                    return f"不一致：平台表={src_val}, ERP表={actual_tgt_value}"
+
+                    # 特殊处理监管资产属性字段，只对比二级分类
+                    elif fld == "监管资产属性":
+                        # 提取二级分类进行比较
+                        src_second_level = self.worker._extract_second_level(norm_src)
+                        tgt_second_level = self.worker._extract_second_level(norm_tgt)
+
+                        if src_second_level != tgt_second_level:
+                            return f"不一致：平台表={src_val}, ERP表={tgt_val} (二级分类不匹配: '{src_second_level}' vs '{tgt_second_level}')"
+
+                    # 对折旧方法字段进行特殊处理
+                    elif "折旧方法" in fld:
+                        norm_src_text = self.worker._normalize_depreciation_method(norm_src, is_file1=True)
+                        norm_tgt_text = self.worker._normalize_depreciation_method(norm_tgt, is_file1=False)
+                        # 比较标准化后的值
+                        if norm_src_text != norm_tgt_text:
+                            return f"不一致：平台表={src_val}, ERP表={tgt_val}"
+
+                    # 处理ERP组合映射字段
+                    elif fld in self.worker.erp_combo_map:
+                        # 检查是否符合ERP组合映射规则
+                        platform_val = norm_src.strip()
+                        erp_val = norm_tgt.strip()
+
+                        # 检查是否在允许的ERP值中
+                        is_match = False
+                        if platform_val in self.worker.erp_combo_map:
+                            allowed_erp_values = self.worker.erp_combo_map[platform_val]
+                            is_match = erp_val in allowed_erp_values
+
+                        if not is_match:
+                            return f"不一致：平台表={src_val}, ERP表={tgt_val} (不符合ERP组合映射规则)"
+
+                    # 处理线站电压等级字段
+                    elif fld == "线站电压等级":
+                        # 对ERP表的编码值进行映射转换为中文
+                        erp_chinese = self.worker.voltage_level_map.get(norm_tgt.strip(), norm_tgt.strip())
+                        platform_chinese = norm_src.strip()
+
+                        # 比较中文值
+                        if platform_chinese != erp_chinese:
+                            return f"不一致：平台表={src_val}, ERP表={tgt_val} (映射后: 平台表='{platform_chinese}' ≠ ERP表='{erp_chinese}')"
+
+                    # 对其他文本值进行标准化处理
+                    else:
+                        norm_src_text = self.worker._normalize_text_value(norm_src)
+                        norm_tgt_text = self.worker._normalize_text_value(norm_tgt)
+                        # 比较标准化后的值
+                        if norm_src_text != norm_tgt_text:
+                            return f"不一致：平台表={norm_src_text}, ERP表={norm_tgt_text}"
+
+                elif data_type == "日期":
+                    # 处理日期格式标准化
+                    norm_src_date = self.worker._normalize_date_format(norm_src)
+                    norm_tgt_date = self.worker._normalize_date_format(norm_tgt)
+
+                    if norm_src_date != norm_tgt_date:
+                        return f"不一致：平台表={src_val}, ERP表={tgt_val}"
                 else:
-                    # 其他字段使用v1和v2进行比较
-                    v1 = self.normalize_value(s.get(fld, ""))
-                    v2 = self.normalize_value(t.get(fld, ""))
+                    # 其他类型按原逻辑比较
+                    if norm_src != norm_tgt:
+                        return f"不一致：平台表={src_val}, ERP表={tgt_val}"
 
-                    if self.worker.values_equal_by_rule(v1, v2,
-                                                        self.rules[fld]["data_type"],
-                                                        self.rules[fld].get("tail_diff"),
-                                                        fld):
-                        return ""
-                    return f"不一致：平台表={v1 or ''}, ERP表={v2 or ''}"
+                return ""
 
             comp_details = {
                 fld: [detail(k, fld) for k in keys]
@@ -456,18 +624,18 @@ class ExcelComparer(QWidget):
                 header_fmt = wb.add_format({'bold': True, 'bg_color': '#FFC7CE'})
                 red_fmt = wb.add_format({'bg_color': '#FF0000', 'font_color': '#FFFFFF'})
 
-                orig_cols = len(df.columns) - 1  # 去掉 _key
+                orig_cols = len(df.columns) - 2  # 去掉 _key 和 _pk_concat_key
                 orig_rows = len(df)
 
                 # 原标题
-                for c, col_name in enumerate(df.columns[:-1]):
+                for c, col_name in enumerate(df.columns[:-2]):
                     ws.write(0, c, col_name, header_fmt)
                 # 原数据
                 for r in range(orig_rows):
                     for c in range(orig_cols):
                         ws.write(r + 1, c, df.iloc[r, c])
 
-                # 追加“对比结果”
+                # 追加"对比结果"
                 next_col = orig_cols
                 ws.write(0, next_col, "对比结果", header_fmt)
                 for r in range(orig_rows):
@@ -495,7 +663,7 @@ class ExcelComparer(QWidget):
         把 ERP 的 Unnamed: X 列名，按规则顺序映射成 table2_field，
         使得 calculate_field 里的字段名都能匹配到真实列。
         """
-        # 建立“规则顺序 -> 实际列名”映射
+        # 建立"规则顺序 -> 实际列名"映射
         rename_map = {}
         for rule_field, rule in rules.items():
             tbl2 = rule["table2_field"]
@@ -503,27 +671,16 @@ class ExcelComparer(QWidget):
             if tbl2 in df.columns:
                 # 已经对齐，无需改名
                 continue
-            # 如果规则写的是“公司代码”，但列名是 Unnamed: 1，则手动映射
-            # 这里采用“位置映射”：规则顺序与实际列顺序一致
+            # 如果规则写的是"公司代码"，但列名是 Unnamed: 1，则手动映射
+            # 这里采用"位置映射"：规则顺序与实际列顺序一致
             # 例如：规则第 1 个 table2_field -> df 第 1 列
-            # 需要用户保证顺序一致；若不一致，可在规则里加“顺序号”字段
+            # 需要用户保证顺序一致；若不一致，可在规则里加"顺序号"字段
             idx = list(rules.keys()).index(rule_field)
             if idx < len(df.columns):
                 rename_map[df.columns[idx]] = tbl2
         return df.rename(columns=rename_map)
+
     # ---------- 单文件导出 ----------
-    def _export_one_file(self, src_file, sheet_name, is_first_file, out_dir):
-        try:
-            # 自动选引擎：行数>5万→polars；否则pandas+xlsxwriter
-            quick_count = self._quick_row_count(src_file, sheet_name)
-            use_polars = quick_count > 50_000
-            dst = Path(out_dir) / f"{Path(src_file).stem}_比对结果.xlsx"
-            if use_polars:
-                self._write_with_polars(src_file, sheet_name, is_first_file, dst)
-            else:
-                self._write_with_xlsxwriter(src_file, sheet_name, is_first_file, dst)
-        except Exception as e:
-            self.log(f"❌ 导出失败 {Path(src_file).name}: {e}")
 
     # ---------- 快速估算行数 ----------
     def _quick_row_count(self, file_path, sheet_name):
@@ -580,16 +737,6 @@ class ExcelComparer(QWidget):
 
         self.log(f"✅ xlsxwriter 导出完成 {Path(dst_file).name}")
 
-    # ---------- 方案B：polars 零拷贝 ----------
-    def _write_with_polars(self, src_file, sheet_name, is_first_file, dst_file):
-        # 1) 读为 polars DataFrame
-        df = pl.read_excel(src_file, sheet_name=sheet_name)
-        # 2) 计算对比列（复用逻辑，转回 pandas 计算后转回 polars，极快）
-        pdf = self._add_comparison_columns(df.to_pandas(), is_first_file)
-        # 3) 写
-        pl.from_pandas(pdf).write_excel(dst_file, worksheet=sheet_name)
-        self.log(f"✅ polars 导出完成 {dst_file.name}")
-
     # ---------- 计算对比列（复用原逻辑，稍作适配） ----------
     def _add_comparison_columns(self, df: pd.DataFrame, is_first_file: bool):
         primary_keys = [f for f, r in self.rules.items() if r["is_primary"]]
@@ -599,15 +746,27 @@ class ExcelComparer(QWidget):
         # 主键列
         df["_key"] = df[primary_keys].astype(str).agg(" + ".join, axis=1)
 
-        # 差异映射
+        # 差异映射 - 修复版本
         diff_map, miss, extra = {}, set(), set()
+
+        # 构建主键到差异记录的映射
         for it in getattr(self.worker, 'diff_full_rows', []):
-            key = " + ".join([str(it['source' if is_first_file else 'target'].get(pk, '')) for pk in primary_keys])
+            # 使用用户定义的主键而不是内部的_pk_concat
+            if is_first_file:
+                key_parts = [str(it['source'].get(pk, "")) for pk in primary_keys]
+            else:
+                key_parts = [str(it['target'].get(pk, "")) for pk in primary_keys]
+            key = " + ".join(key_parts)
             diff_map[key] = it
+
+        # 构建缺失和多余的主键集合
         for row in getattr(self.worker, 'missing_rows', []):
-            miss.add(" + ".join([str(row.get(pk, '')) for pk in primary_keys]))
+            key = " + ".join([str(row.get(pk, "")) for pk in primary_keys])
+            miss.add(key)
+
         for row in getattr(self.worker, 'extra_in_file2', []):
-            extra.add(" + ".join([str(row.get(pk, '')) for pk in primary_keys]))
+            key = " + ".join([str(row.get(pk, "")) for pk in primary_keys])
+            extra.add(key)
 
         # 对比结果
         def comp(row):
@@ -630,19 +789,24 @@ class ExcelComparer(QWidget):
                 if k not in diff_map:
                     return ""
                 s, t = diff_map[k]['source'], diff_map[k]['target']
-                v1, v2 = s.get(col, ""), t.get(col, "")
-                rule = self.rules.get(col, {})
-                if not self.worker.values_equal_by_rule(v1, v2, rule.get("data_type"), rule.get("tail_diff"), col):
+                v1, v2 = str(s.get(col, "")), str(t.get(col, ""))
+
+                # 特殊处理资产分类字段
+                if col == "资产分类" and "资产明细类别" in t:
+                    v2 = str(t.get("资产明细类别", ""))
+
+                # 直接比较值，如果不同则显示差异
+                if v1.strip() != v2.strip():
                     return f"不一致：平台表={v1}, ERP表={v2}"
                 return ""
 
             df[col] = df.apply(detail, axis=1)
 
         return df.drop(columns=["_key"])
+
     def log(self, message):
         """日志输出"""
         self.log_area.appendPlainText(message)
-
 
     @staticmethod
     def normalize_value(val):
