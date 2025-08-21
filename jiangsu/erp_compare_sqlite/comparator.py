@@ -1,5 +1,4 @@
 # comparator.py
-import sys
 import time
 import traceback
 import logging
@@ -558,15 +557,33 @@ class CompareWorker(QThread):
             # 显示缺失和多余的主键信息
             if self.missing_rows:
                 self.log_signal.emit(f"❌ 平台表中有 {len(self.missing_rows)} 条数据在ERP表中缺失:")
-                for i, row in enumerate(self.missing_rows):
-                    pk_str = str(row.get("_pk_concat", ""))
-                    self.log_signal.emit(f"  {i + 1}. {pk_str}")
+                # 分批输出缺失记录，避免内存占用过高
+                batch_size = 1000
+                for i in range(0, len(self.missing_rows), batch_size):
+                    batch = self.missing_rows[i:i + batch_size]
+                    batch_lines = [f"批次 {i // batch_size + 1}:"]
+                    for j, row in enumerate(batch):
+                        pk_str = str(row.get("_pk_concat", ""))
+                        batch_lines.append(f"  {i + j + 1}. {pk_str}")
+                    self.log_signal.emit("\n".join(batch_lines))
+                    # 强制垃圾回收
+                    if i % (batch_size * 5) == 0:
+                        gc.collect()
 
             if self.extra_in_file2:
                 self.log_signal.emit(f"⚠️ ERP表中有 {len(self.extra_in_file2)} 条数据在平台表中不存在:")
-                for i, row in enumerate(self.extra_in_file2):
-                    pk_str = str(row.get("_pk_concat", ""))
-                    self.log_signal.emit(f"  {i + 1}. {pk_str}")
+                # 分批输出多余记录，避免内存占用过高
+                batch_size = 1000
+                for i in range(0, len(self.extra_in_file2), batch_size):
+                    batch = self.extra_in_file2[i:i + batch_size]
+                    batch_lines = [f"批次 {i // batch_size + 1}:"]
+                    for j, row in enumerate(batch):
+                        pk_str = str(row.get("_pk_concat", ""))
+                        batch_lines.append(f"  {i + j + 1}. {pk_str}")
+                    self.log_signal.emit("\n".join(batch_lines))
+                    # 强制垃圾回收
+                    if i % (batch_size * 5) == 0:
+                        gc.collect()
 
             if not common_codes:
                 self.log_signal.emit("警告：两个文件中没有共同的主键！")
@@ -597,162 +614,184 @@ class CompareWorker(QThread):
                 self.log_signal.emit("✅【共同主键的数据完全一致】，没有差异。")
             else:
                 self.log_signal.emit(f"❌【存在差异的记录】（共 {diff_count} 行）")
-                # 显示具体的差异信息
-                for i, diff_record in enumerate(diff_full_rows[:10]):  # 只显示前10条差异
-                    src = diff_record["source"]
-                    tgt = diff_record["target"]
 
-                    pk_str = str(src.get("_pk_concat", ""))
-                    self.log_signal.emit(f"  {i + 1}. 主键: {pk_str}")
+                # 流式处理差异记录，避免内存占用过高
+                batch_size = 1000  # 每批处理1000条记录
+                processed_count = 0
 
-                    # 查找并显示具体差异的字段
-                    for field_name, rule in self.rules.items():
-                        if rule.get("is_primary"):
-                            continue  # 跳过主键字段
+                for i in range(0, len(diff_full_rows), batch_size):
+                    batch = diff_full_rows[i:i + batch_size]
+                    batch_lines = [f"--- 差异记录批次 {i // batch_size + 1} ---"]
 
-                        src_value = src.get(field_name, "")
-                        tgt_value = tgt.get(field_name, "")
+                    for j, diff_record in enumerate(batch):
+                        record_index = i + j + 1
+                        src = diff_record["source"]
+                        tgt = diff_record["target"]
 
-                        # 获取目标表中的正确字段名
-                        if rule.get("calc_rule") and rule.get("data_type") in ["数值", "文本"]:
+                        pk_str = str(src.get("_pk_concat", ""))
+                        batch_lines.append(f"  {record_index}. 主键: {pk_str}")
+
+                        # 查找并显示具体差异的字段
+                        for field_name, rule in self.rules.items():
+                            if rule.get("is_primary"):
+                                continue  # 跳过主键字段
+
+                            src_value = src.get(field_name, "")
                             tgt_value = tgt.get(field_name, "")
-                        else:
-                            table2_field = rule.get("table2_field", field_name)
-                            tgt_value = tgt.get(table2_field, "") or tgt.get(field_name, "")
 
-                        # 标准化值用于比较
-                        norm_src = self.normalize_value(src_value)
-                        norm_tgt = self.normalize_value(tgt_value)
+                            # 获取目标表中的正确字段名
+                            if rule.get("calc_rule") and rule.get("data_type") in ["数值", "文本"]:
+                                tgt_value = tgt.get(field_name, "")
+                            else:
+                                table2_field = rule.get("table2_field", field_name)
+                                tgt_value = tgt.get(table2_field, "") or tgt.get(field_name, "")
 
-                        # 对于日期字段，需要特殊处理格式
-                        if rule.get("data_type") == "日期":
-                            norm_src = self._normalize_date_format(norm_src)
-                            norm_tgt = self._normalize_date_format(norm_tgt)
+                            # 标准化值用于比较
+                            norm_src = self.normalize_value(src_value)
+                            norm_tgt = self.normalize_value(tgt_value)
 
-                        # 对于数值字段，考虑精度处理
-                        elif rule.get("data_type") == "数值":
-                            tail_diff = int(rule.get("tail_diff", 0))
-                            try:
-                                # 尝试转换为数值并按精度比较
-                                src_num = float(norm_src) if norm_src else 0
-                                tgt_num = float(norm_tgt) if norm_tgt else 0
+                            # 对于日期字段，需要特殊处理格式
+                            if rule.get("data_type") == "日期":
+                                norm_src = self._normalize_date_format(norm_src)
+                                norm_tgt = self._normalize_date_format(norm_tgt)
 
-                                # 如果设置了尾差，则按尾差精度比较
-                                if tail_diff > 0:
-                                    src_rounded = round(src_num, tail_diff)
-                                    tgt_rounded = round(tgt_num, tail_diff)
+                            # 对于数值字段，考虑精度处理
+                            elif rule.get("data_type") == "数值":
+                                tail_diff = int(rule.get("tail_diff", 0))
+                                try:
+                                    # 尝试转换为数值并按精度比较
+                                    src_num = float(norm_src) if norm_src else 0
+                                    tgt_num = float(norm_tgt) if norm_tgt else 0
 
-                                    # 只有在超出尾差范围时才显示为差异
-                                    if abs(src_rounded - tgt_rounded) > (10 ** (-tail_diff)):
-                                        # 格式化显示值，保持精度一致性
-                                        src_display = f"{src_num:.{tail_diff}f}" if norm_src else ""
-                                        tgt_display = f"{tgt_num:.{tail_diff}f}" if norm_tgt else ""
-                                        self.log_signal.emit(
-                                            f"    - {field_name}: 平台表='{src_display}', ERP表='{tgt_display}'")
-                                else:
-                                    # 没有设置尾差时，直接比较数值
-                                    if src_num != tgt_num:
-                                        self.log_signal.emit(
-                                            f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
-                            except (ValueError, TypeError):
-                                # 如果不能转换为数值，按字符串比较
-                                if norm_src != norm_tgt:
-                                    self.log_signal.emit(f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
+                                    # 如果设置了尾差，则按尾差精度比较
+                                    if tail_diff > 0:
+                                        src_rounded = round(src_num, tail_diff)
+                                        tgt_rounded = round(tgt_num, tail_diff)
 
-                        # 对于文本字段，需要特殊处理标准化
-                        elif rule.get("data_type") == "文本":
-                            # 特殊处理资产分类字段
-                            if field_name == "资产分类":
-                                if mapping_prepared:
-                                    # 获取映射表
-                                    mapping_df = _load_asset_category_mapping(self.rule_file)
-                                    if not mapping_df.empty and '同源目录完整名称' in mapping_df.columns and '同源目录编码' in mapping_df.columns:
-                                        # 创建映射字典
-                                        category_mapping = dict(zip(mapping_df['同源目录完整名称'].astype(str),
-                                                                    mapping_df['同源目录编码'].astype(str)))
-
-                                        # 获取平台表的编码（通过映射）
-                                        src_code = category_mapping.get(str(src_value), str(src_value))
-                                        src_code_prefix = src_code[:2] if len(src_code) >= 2 else src_code
-
-                                        # 获取ERP表的"资产明细类别"字段值（实际用于对比的字段）
-                                        actual_tgt_value = tgt.get("资产明细类别", "")
-                                        tgt_code_prefix = str(actual_tgt_value)[:2] if len(
-                                            str(actual_tgt_value)) >= 2 else str(actual_tgt_value)
-
-                                        # 比较前两位
-                                        if src_code_prefix != tgt_code_prefix:
-                                            # 显示原始中文信息而不是编码
-                                            self.log_signal.emit(
-                                                f"    - {field_name}: 平台表='{src_value}', ERP表='{actual_tgt_value}' (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})")
+                                        # 只有在超出尾差范围时才显示为差异
+                                        if abs(src_rounded - tgt_rounded) > (10 ** (-tail_diff)):
+                                            # 格式化显示值，保持精度一致性
+                                            src_display = f"{src_num:.{tail_diff}f}" if norm_src else ""
+                                            tgt_display = f"{tgt_num:.{tail_diff}f}" if norm_tgt else ""
+                                            batch_lines.append(
+                                                f"    - {field_name}: 平台表='{src_display}', ERP表='{tgt_display}'")
                                     else:
-                                        # 映射表不可用时的回退处理
+                                        # 没有设置尾差时，直接比较数值
+                                        if src_num != tgt_num:
+                                            batch_lines.append(
+                                                f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
+                                except (ValueError, TypeError):
+                                    # 如果不能转换为数值，按字符串比较
+                                    if norm_src != norm_tgt:
+                                        batch_lines.append(
+                                            f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
+
+                            # 对于文本字段，需要特殊处理标准化
+                            elif rule.get("data_type") == "文本":
+                                # 特殊处理资产分类字段
+                                if field_name == "资产分类":
+                                    if mapping_prepared:
+                                        # 获取映射表
+                                        mapping_df = _load_asset_category_mapping(self.rule_file)
+                                        if not mapping_df.empty and '同源目录完整名称' in mapping_df.columns and '同源目录编码' in mapping_df.columns:
+                                            # 创建映射字典
+                                            category_mapping = dict(zip(mapping_df['同源目录完整名称'].astype(str),
+                                                                        mapping_df['同源目录编码'].astype(str)))
+
+                                            # 获取平台表的编码（通过映射）
+                                            src_code = category_mapping.get(str(src_value), str(src_value))
+                                            src_code_prefix = src_code[:2] if len(src_code) >= 2 else src_code
+
+                                            # 获取ERP表的"资产明细类别"字段值（实际用于对比的字段）
+                                            actual_tgt_value = tgt.get("资产明细类别", "")
+                                            actual_tgt_show_value = tgt.get(field_name)
+                                            tgt_code_prefix = str(actual_tgt_value)[:2] if len(
+                                                str(actual_tgt_value)) >= 2 else str(actual_tgt_value)
+
+                                            # 比较前两位
+                                            if src_code_prefix != tgt_code_prefix:
+                                                # 显示原始中文信息而不是编码
+                                                batch_lines.append(
+                                                    f"    - {field_name}: 平台表='{norm_src}', ERP表='{actual_tgt_show_value}' (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})")
+                                        else:
+                                            # 映射表不可用时的回退处理
+                                            norm_src_text = self._normalize_text_value(src_value)
+                                            norm_tgt_text = self._normalize_text_value(tgt_value)
+                                            if norm_src_text != norm_tgt_text:
+                                                batch_lines.append(
+                                                    f"    - {field_name}: 平台表='{norm_src}', ERP表='{tgt_value}'")
+                                    else:
+                                        # 映射表未准备好的回退处理
                                         norm_src_text = self._normalize_text_value(src_value)
                                         norm_tgt_text = self._normalize_text_value(tgt_value)
                                         if norm_src_text != norm_tgt_text:
-                                            self.log_signal.emit(
-                                                f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
+                                            batch_lines.append(
+                                                f"    - {field_name}: 平台表='{norm_src}', ERP表='{tgt_value}'")
+                                # 特殊处理监管资产属性字段，只对比二级分类
+                                elif field_name == "监管资产属性":
+                                    # 提取二级分类进行比较
+                                    src_second_level = self._normalize_text_value(self._extract_second_level(str(src_value)))
+                                    tgt_second_level = self._normalize_text_value(self._extract_second_level(str(tgt_value)))
+
+                                    if src_second_level != tgt_second_level:
+                                        batch_lines.append(
+                                            f"    - {field_name}: 平台表='{norm_src}', ERP表='{norm_tgt}' (二级分类不匹配: '{src_second_level}' vs '{tgt_second_level}')")
+                                # 对折旧方法字段进行特殊处理
+                                elif "折旧方法" in field_name:
+                                    norm_src_text = self._normalize_depreciation_method(src_value, is_file1=True)
+                                    norm_tgt_text = self._normalize_depreciation_method(tgt_value, is_file1=False)
+                                    # 比较标准化后的值
+                                    if norm_src_text != norm_tgt_text:
+                                        batch_lines.append(
+                                            f"    - {field_name}: 平台表='{src_value}' , ERP表='{tgt_value}'")
+                                # 处理ERP组合映射字段
+                                elif field_name in self.erp_combo_map:
+                                    # 检查是否符合ERP组合映射规则
+                                    platform_val = str(src_value).strip()
+                                    erp_val = str(tgt_value).strip()
+
+                                    # 检查是否在允许的ERP值中
+                                    is_match = False
+                                    if platform_val in self.erp_combo_map:
+                                        allowed_erp_values = self.erp_combo_map[platform_val]
+                                        is_match = erp_val in allowed_erp_values
+
+                                    if not is_match:
+                                        batch_lines.append(
+                                            f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}' (不符合ERP组合映射规则)")
+                                # 处理线站电压等级字段
+                                elif field_name == "线站电压等级":
+                                    # 对ERP表的编码值进行映射转换为中文
+                                    erp_chinese = self.voltage_level_map.get(str(tgt_value).strip(),
+                                                                             str(tgt_value).strip())
+                                    platform_chinese = str(src_value).strip()
+
+                                    # 比较中文值
+                                    if platform_chinese != erp_chinese:
+                                        batch_lines.append(
+                                            f"    - {field_name}: 平台表='{src_value}', ERP表='{norm_tgt}' (映射后: 平台表='{platform_chinese}', ERP表='{self._normalize_text_value(erp_chinese)}')")
                                 else:
-                                    # 映射表未准备好的回退处理
+                                    # 对其他文本值进行标准化处理
                                     norm_src_text = self._normalize_text_value(src_value)
                                     norm_tgt_text = self._normalize_text_value(tgt_value)
+                                    # 比较标准化后的值
                                     if norm_src_text != norm_tgt_text:
-                                        self.log_signal.emit(
-                                            f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
-                            # 特殊处理监管资产属性字段，只对比二级分类
-                            elif field_name == "监管资产属性":
-                                # 提取二级分类进行比较
-                                src_second_level = self._extract_second_level(str(src_value))
-                                tgt_second_level = self._extract_second_level(str(tgt_value))
-
-                                if src_second_level != tgt_second_level:
-                                    self.log_signal.emit(
-                                        f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}' (二级分类不匹配: '{src_second_level}' vs '{tgt_second_level}')")
-                            # 对折旧方法字段进行特殊处理
-                            elif "折旧方法" in field_name:
-                                norm_src_text = self._normalize_depreciation_method(src_value, is_file1=True)
-                                norm_tgt_text = self._normalize_depreciation_method(tgt_value, is_file1=False)
-                                # 比较标准化后的值
-                                if norm_src_text != norm_tgt_text:
-                                    self.log_signal.emit(f"    - {field_name}: 平台表='{src_value}' , ERP表='{tgt_value}'")
-                            # 处理ERP组合映射字段
-                            elif field_name in self.erp_combo_map:
-                                # 检查是否符合ERP组合映射规则
-                                platform_val = str(src_value).strip()
-                                erp_val = str(tgt_value).strip()
-
-                                # 检查是否在允许的ERP值中
-                                is_match = False
-                                if platform_val in self.erp_combo_map:
-                                    allowed_erp_values = self.erp_combo_map[platform_val]
-                                    is_match = erp_val in allowed_erp_values
-
-                                if not is_match:
-                                    self.log_signal.emit(
-                                        f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}' (不符合ERP组合映射规则)")
-                            # 处理线站电压等级字段
-                            elif field_name == "线站电压等级":
-                                # 对ERP表的编码值进行映射转换为中文
-                                erp_chinese = self.voltage_level_map.get(str(tgt_value).strip(), str(tgt_value).strip())
-                                platform_chinese = str(src_value).strip()
-
-                                # 比较中文值
-                                if platform_chinese != erp_chinese:
-                                    self.log_signal.emit(
-                                        f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}' (映射后: 平台表='{platform_chinese}', ERP表='{erp_chinese}')")
+                                        batch_lines.append(
+                                            f"    - {field_name}: 平台表='{norm_src_text}', ERP表='{norm_tgt_text}'")
                             else:
-                                # 对其他文本值进行标准化处理
-                                norm_src_text = self._normalize_text_value(src_value)
-                                norm_tgt_text = self._normalize_text_value(tgt_value)
-                                # 比较标准化后的值
-                                if norm_src_text != norm_tgt_text:
-                                    self.log_signal.emit(f"    - {field_name}: 平台表='{norm_src_text}', ERP表='{norm_tgt_text}'")
-                        else:
-                            # 其他类型按原逻辑比较
-                            if norm_src != norm_tgt:
-                                self.log_signal.emit(f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
-                if diff_count > 10:
-                    self.log_signal.emit(f"  ... 还有 {diff_count - 10} 条差异记录未显示")
+                                # 其他类型按原逻辑比较
+                                if norm_src != norm_tgt:
+                                    batch_lines.append(f"    - {field_name}: 平台表='{src_value}', ERP表='{tgt_value}'")
+
+                    # 输出这一批记录
+                    self.log_signal.emit("\n".join(batch_lines))
+                    processed_count += len(batch)
+
+                    # 每处理5批强制垃圾回收一次
+                    if (i // batch_size + 1) % 5 == 0:
+                        gc.collect()
+
+                self.log_signal.emit(f"✅ 差异记录显示完成，共显示 {processed_count} 条差异记录")
 
             time1 = time.time()
             self.log_signal.emit(f"✅ 对比完成，总耗时{time1 - time0:.1f}s")

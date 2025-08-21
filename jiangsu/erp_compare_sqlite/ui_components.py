@@ -529,6 +529,8 @@ class ExcelComparer(QWidget):
                         # 在导出时，我们需要应用与比对时相同的资产分类转换逻辑
                         if "资产明细类别" in t:
                             actual_tgt_value = str(t.get("资产明细类别", ""))
+                            actual_tgt_show_value = str(t.get("fld", ""))
+
                             # 标准化目标值
                             norm_actual_tgt = normalize_export_value(actual_tgt_value)
 
@@ -546,7 +548,7 @@ class ExcelComparer(QWidget):
                                     # 比较前两位
                                     if src_code_prefix != tgt_code_prefix:
                                         # 显示原始中文信息而不是编码
-                                        return f"不一致：平台表={src_val}, ERP表={actual_tgt_value} (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})"
+                                        return f"不一致：平台表={src_val}, ERP表={actual_tgt_show_value} (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})"
                                     else:
                                         return ""  # 一致，不显示任何内容
                                 except Exception:
