@@ -558,19 +558,15 @@ class CompareWorker(QThread):
             # 显示缺失和多余的主键信息
             if self.missing_rows:
                 self.log_signal.emit(f"❌ 平台表中有 {len(self.missing_rows)} 条数据在ERP表中缺失:")
-                for i, row in enumerate(self.missing_rows[:5]):  # 只显示前5条
+                for i, row in enumerate(self.missing_rows):
                     pk_str = str(row.get("_pk_concat", ""))
                     self.log_signal.emit(f"  {i + 1}. {pk_str}")
-                if len(self.missing_rows) > 5:
-                    self.log_signal.emit(f"  ... 还有 {len(self.missing_rows) - 5} 条缺失记录")
 
             if self.extra_in_file2:
                 self.log_signal.emit(f"⚠️ ERP表中有 {len(self.extra_in_file2)} 条数据在平台表中不存在:")
-                for i, row in enumerate(self.extra_in_file2[:5]):  # 只显示前5条
+                for i, row in enumerate(self.extra_in_file2):
                     pk_str = str(row.get("_pk_concat", ""))
                     self.log_signal.emit(f"  {i + 1}. {pk_str}")
-                if len(self.extra_in_file2) > 5:
-                    self.log_signal.emit(f"  ... 还有 {len(self.extra_in_file2) - 5} 条多余记录")
 
             if not common_codes:
                 self.log_signal.emit("警告：两个文件中没有共同的主键！")

@@ -345,6 +345,7 @@ class ExcelComparer(QWidget):
     # ---------- 最终导出实现 ----------
     # ---------- 最终导出实现 ----------
     # ---------- 最终导出实现 ----------
+    # ---------- 最终导出实现 ----------
     def _export_final(self, src_file, sheet_name, is_first_file, out_dir):
         try:
             # 1. 复制原文件
@@ -355,21 +356,19 @@ class ExcelComparer(QWidget):
                 os.chmod(dst, 0o666)  # Linux / macOS
             except Exception:
                 pass  # Windows 会抛异常，忽略即可
+
+            # 2. 读原表（全部字符串，防类型问题）
+            has_merged_cell = False
             wb = load_workbook(filename=dst, read_only=False)
             ws = wb[sheet_name]
-            has_merged_cell = False
             for row in ws.iter_rows(max_row=2):
                 for cell in row:
                     if cell.coordinate in ws.merged_cells:
                         has_merged_cell = True
                         break
-            if not is_first_file:
-                # 遍历合并单元格范围
-                if has_merged_cell:
-                    df = pd.read_excel(dst, sheet_name=sheet_name, skiprows=1, dtype=str).fillna("")
-                else:
-                    # 2. 读原表（全部字符串，防类型问题）
-                    df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
+
+            if not is_first_file and has_merged_cell:
+                df = pd.read_excel(dst, sheet_name=sheet_name, skiprows=1, dtype=str).fillna("")
             else:
                 df = pd.read_excel(dst, sheet_name=sheet_name, dtype=str).fillna("")
 
@@ -387,20 +386,25 @@ class ExcelComparer(QWidget):
                     df["_key"] = df[rule["table2_field"]].astype(str)
 
             # 4. 建立差异映射 - 使用与比对阶段相同的逻辑
-            diff_map, miss, extra = {}, set(), set()
+            diff_map = {}
+            miss = set()
+            extra = set()
 
             # 构建主键到差异记录的映射（使用 _pk_concat）
-            for it in getattr(self.worker, 'diff_full_rows', []):
+            diff_full_rows = getattr(self.worker, 'diff_full_rows', [])
+            for it in diff_full_rows:
                 # 直接使用 _pk_concat 作为键
                 key = str(it['source'].get('_pk_concat', ''))
                 diff_map[key] = it
 
             # 构建缺失和多余的主键集合（使用 _pk_concat）
-            for row in getattr(self.worker, 'missing_rows', []):
+            missing_rows = getattr(self.worker, 'missing_rows', [])
+            for row in missing_rows:
                 key = str(row.get('_pk_concat', ''))
                 miss.add(key)
 
-            for row in getattr(self.worker, 'extra_in_file2', []):
+            extra_in_file2 = getattr(self.worker, 'extra_in_file2', [])
+            for row in extra_in_file2:
                 key = str(row.get('_pk_concat', ''))
                 extra.add(key)
 
@@ -408,17 +412,17 @@ class ExcelComparer(QWidget):
             key_to_pk_concat = {}
 
             # 为缺失行建立映射
-            for row in getattr(self.worker, 'missing_rows', []):
+            for row in missing_rows:
                 original_key = " + ".join([str(row.get(pk, "")) for pk in self.worker.primary_keys])
                 key_to_pk_concat[original_key] = str(row.get('_pk_concat', ''))
 
             # 为多余行建立映射
-            for row in getattr(self.worker, 'extra_in_file2', []):
+            for row in extra_in_file2:
                 original_key = " + ".join([str(row.get(pk, "")) for pk in self.worker.primary_keys])
                 key_to_pk_concat[original_key] = str(row.get('_pk_concat', ''))
 
             # 为差异行建立映射
-            for it in getattr(self.worker, 'diff_full_rows', []):
+            for it in diff_full_rows:
                 if is_first_file:
                     original_key = " + ".join([str(it['source'].get(pk, "")) for pk in self.worker.primary_keys])
                 else:
@@ -433,20 +437,37 @@ class ExcelComparer(QWidget):
 
             # 7. 计算追加值
             keys = df["_pk_concat_key"].tolist()
-            comp_results = [
-                "此数据不存在于SAP" if k in miss else  # 平台表多余 → 提示不存在于SAP
-                "此数据不存在于平台" if k in extra else  # ERP表多余 → 提示不存在于平台
-                "不一致" if k in diff_map else
-                "一致"
-                for k in keys
-            ]
+            total_keys = len(keys)
+
+            comp_results = []
+            for k in keys:
+                if k in miss:
+                    comp_results.append("此数据不存在于SAP")  # 平台表多余 → 提示不存在于SAP
+                elif k in extra:
+                    comp_results.append("此数据不存在于平台")  # ERP表多余 → 提示不存在于平台
+                elif k in diff_map:
+                    comp_results.append("不一致")
+                else:
+                    comp_results.append("一致")
 
             def normalize_export_value(val):
                 """导出时的值标准化函数，处理空值和None"""
                 if pd.isna(val) or val is None or (
-                        isinstance(val, str) and val.strip().lower() in ['', 'none', 'null','None']):
+                        isinstance(val, str) and val.strip().lower() in ['', 'none', 'null']):
                     return ''
                 return str(val).strip()
+
+            # 预加载资产分类映射表（如果需要）
+            asset_category_mapping = None
+            if "资产分类" in comp_cols:
+                try:
+                    from db_handler import _load_asset_category_mapping
+                    mapping_df = _load_asset_category_mapping(self.worker.rule_file)
+                    if not mapping_df.empty and '同源目录完整名称' in mapping_df.columns and '同源目录编码' in mapping_df.columns:
+                        asset_category_mapping = dict(zip(mapping_df['同源目录完整名称'].astype(str),
+                                                          mapping_df['同源目录编码'].astype(str)))
+                except Exception:
+                    pass
 
             def detail(row_key, fld):
                 # 修复：正确处理差异详情
@@ -512,34 +533,22 @@ class ExcelComparer(QWidget):
                             norm_actual_tgt = normalize_export_value(actual_tgt_value)
 
                             # 对于平台表（表一）的资产分类，需要转换为编码进行比较
-                            if is_first_file and norm_src:
-                                # 获取资产分类映射表
+                            if is_first_file and norm_src and asset_category_mapping:
                                 try:
-                                    from db_handler import _load_asset_category_mapping
-                                    mapping_df = _load_asset_category_mapping(self.worker.rule_file)
-                                    if not mapping_df.empty and '同源目录完整名称' in mapping_df.columns and '同源目录编码' in mapping_df.columns:
-                                        # 创建映射字典
-                                        category_mapping = dict(zip(mapping_df['同源目录完整名称'].astype(str),
-                                                                    mapping_df['同源目录编码'].astype(str)))
+                                    # 获取表一的编码（通过映射）
+                                    src_code = asset_category_mapping.get(norm_src, norm_src)
+                                    src_code_prefix = src_code[:2] if len(src_code) >= 2 else src_code
 
-                                        # 获取表一的编码（通过映射）
-                                        src_code = category_mapping.get(norm_src, norm_src)
-                                        src_code_prefix = src_code[:2] if len(src_code) >= 2 else src_code
+                                    # 获取表二的"资产明细类别"字段值（实际用于对比的字段）
+                                    tgt_code_prefix = norm_actual_tgt[:2] if len(
+                                        norm_actual_tgt) >= 2 else norm_actual_tgt
 
-                                        # 获取表二的"资产明细类别"字段值（实际用于对比的字段）
-                                        tgt_code_prefix = norm_actual_tgt[:2] if len(
-                                            norm_actual_tgt) >= 2 else norm_actual_tgt
-
-                                        # 比较前两位
-                                        if src_code_prefix != tgt_code_prefix:
-                                            # 显示原始中文信息而不是编码
-                                            return f"不一致：平台表={src_val}, ERP表={actual_tgt_value} (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})"
-                                        else:
-                                            return ""  # 一致，不显示任何内容
+                                    # 比较前两位
+                                    if src_code_prefix != tgt_code_prefix:
+                                        # 显示原始中文信息而不是编码
+                                        return f"不一致：平台表={src_val}, ERP表={actual_tgt_value} (编码前两位不匹配: {src_code_prefix} vs {tgt_code_prefix})"
                                     else:
-                                        # 映射表不可用时的回退处理
-                                        if norm_src != norm_actual_tgt:
-                                            return f"不一致：平台表={src_val}, ERP表={actual_tgt_value}"
+                                        return ""  # 一致，不显示任何内容
                                 except Exception:
                                     # 如果映射失败，回退到直接比较
                                     if norm_src != norm_actual_tgt:
@@ -597,7 +606,11 @@ class ExcelComparer(QWidget):
                         norm_tgt_text = self.worker._normalize_text_value(norm_tgt)
                         # 比较标准化后的值
                         if norm_src_text != norm_tgt_text:
-                            return f"不一致：平台表={norm_src_text}, ERP表={norm_tgt_text}"
+                            # 确保空值正确显示
+                            src_display = src_val if src_val and src_val.lower() not in ['none', 'null'] else ''
+                            tgt_display = tgt_val if tgt_val and tgt_val.lower() not in ['none', 'null'] else ''
+                            if src_display != tgt_display:
+                                return f"不一致：平台表={src_display}, ERP表={tgt_display}"
 
                 elif data_type == "日期":
                     # 处理日期格式标准化
@@ -613,10 +626,14 @@ class ExcelComparer(QWidget):
 
                 return ""
 
-            comp_details = {
-                fld: [detail(k, fld) for k in keys]
-                for fld in comp_cols
-            }
+            # 批量处理差异详情，避免重复计算
+            comp_details = {}
+            for fld in comp_cols:
+                comp_details[fld] = []
+                for i, k in enumerate(keys):
+                    if i % 1000 == 0:  # 每处理1000行输出一次进度（可选）
+                        pass
+                    comp_details[fld].append(detail(k, fld))
 
             # 8. 用 xlsxwriter 重写副本：不改动原列，仅追加
             with xlsxwriter.Workbook(dst, {'nan_inf_to_errors': True}) as wb:
