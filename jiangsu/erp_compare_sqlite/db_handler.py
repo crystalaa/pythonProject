@@ -239,14 +239,36 @@ def add_concat_pk_column(table: str, expr: str):
     execute_query(f"UPDATE `{table}` SET `_pk_concat` = {expr}")
 
 
+# def fetch_rows_by_pk(table: str, pk_cols: list, wanted_keys: set):
+#     """根据 _pk_concat 拉取行"""
+#     if not wanted_keys:
+#         return pd.DataFrame()
+#     keys = list(wanted_keys)
+#     placeholders = ",".join(["?"] * len(keys))
+#     sql = f"SELECT * FROM `{table}` WHERE _pk_concat IN ({placeholders})"
+#     return execute_query(sql, params=keys)
 def fetch_rows_by_pk(table: str, pk_cols: list, wanted_keys: set):
     """根据 _pk_concat 拉取行"""
     if not wanted_keys:
         return pd.DataFrame()
+
     keys = list(wanted_keys)
-    placeholders = ",".join(["?"] * len(keys))
-    sql = f"SELECT * FROM `{table}` WHERE _pk_concat IN ({placeholders})"
-    return execute_query(sql, params=keys)
+    # SQLite默认限制SQL变量数量，需要分批处理
+    max_variables = 999  # SQLite默认限制
+    result_dfs = []
+
+    for i in range(0, len(keys), max_variables):
+        batch_keys = keys[i:i + max_variables]
+        placeholders = ",".join(["?"] * len(batch_keys))
+        sql = f"SELECT * FROM `{table}` WHERE _pk_concat IN ({placeholders})"
+        batch_result = execute_query(sql, params=batch_keys)
+        result_dfs.append(batch_result)
+
+    # 合并所有批次的结果
+    if result_dfs:
+        return pd.concat(result_dfs, ignore_index=True)
+    else:
+        return pd.DataFrame()
 
 
 # =========================================================

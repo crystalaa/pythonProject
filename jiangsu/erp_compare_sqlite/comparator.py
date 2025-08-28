@@ -613,14 +613,18 @@ class CompareWorker(QThread):
             if diff_count == 0:
                 self.log_signal.emit("✅【共同主键的数据完全一致】，没有差异。")
             else:
-                self.log_signal.emit(f"❌【存在差异的记录】（共 {diff_count} 行）")
-
+                MAX_DISPLAY_COUNT = 50
+                self.log_signal.emit(f"❌【存在差异的记录】（共 {diff_count} 行，仅显示前{min(diff_count, MAX_DISPLAY_COUNT)}条）")
+                # 限制只处理前 MAX_DIFF_RECORDS_OUTPUT 条差异记录
+                display_count = min(diff_count, MAX_DISPLAY_COUNT)
+                limited_diff_records = diff_full_rows[:MAX_DISPLAY_COUNT]
+                remaining_count = max(0, diff_count - MAX_DISPLAY_COUNT)
                 # 流式处理差异记录，避免内存占用过高
                 batch_size = 1000  # 每批处理1000条记录
                 processed_count = 0
 
-                for i in range(0, len(diff_full_rows), batch_size):
-                    batch = diff_full_rows[i:i + batch_size]
+                for i in range(0, len(limited_diff_records), batch_size):
+                    batch = limited_diff_records[i:i + batch_size]
                     batch_lines = [f"--- 差异记录批次 {i // batch_size + 1} ---"]
 
                     for j, diff_record in enumerate(batch):
@@ -790,8 +794,11 @@ class CompareWorker(QThread):
                     # 每处理5批强制垃圾回收一次
                     if (i // batch_size + 1) % 5 == 0:
                         gc.collect()
-
-                self.log_signal.emit(f"✅ 差异记录显示完成，共显示 {processed_count} 条差异记录")
+                if remaining_count > 0:
+                    self.log_signal.emit(
+                        f"✅ 差异记录显示完成，共显示 {processed_count} 条差异记录，还有 {remaining_count} 条未显示")
+                else:
+                    self.log_signal.emit(f"✅ 差异记录显示完成，共显示 {processed_count} 条差异记录")
 
             time1 = time.time()
             self.log_signal.emit(f"✅ 对比完成，总耗时{time1 - time0:.1f}s")
