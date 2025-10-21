@@ -170,19 +170,6 @@ class FinancialDataReconciliationApp:
             # 布局
             self.result_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
             scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
-            # # 添加结果详情区域
-            # self.result_detail_text = tk.Text(result_display_frame, height=10, wrap=tk.WORD)
-            # self.result_detail_text.pack(fill=tk.X, pady=5)
-            #
-            # # 绑定结果行点击事件
-            # self.result_tree.bind(" # # 添加结果详情区域
-            # self.result_detail_text = tk.Text(result_display_frame, height=10, wrap=tk.WORD)
-            # self.result_detail_text.pack(fill=tk.X, pady=5)
-            #
-            # # 绑定结果行点击事件
-            # self.result_tree.bind("<<TreeviewSelect>>", self.show_result_detail)
-
             logger.debug("结果展示区域创建完成")
         except Exception as e:
             logger.error(f"创建结果展示区域时发生错误: {str(e)}", exc_info=True)
@@ -575,7 +562,6 @@ class FinancialDataReconciliationApp:
             # 清空之前的结果
             self.reconciliation_results.clear()
             self.result_tree.delete(*self.result_tree.get_children())
-            # self.result_detail_text.delete(1.0, tk.END)
             self.matching_results = []  # 清空匹配结果
 
             logger.info("开始执行规则1")
@@ -583,7 +569,7 @@ class FinancialDataReconciliationApp:
 
             # 执行规则1
             self.rule1()
-
+            # self.rule5()
             # 记录结束时间
             end_time = datetime.datetime.now()
             elapsed_time = (end_time - start_time).total_seconds()
@@ -604,115 +590,6 @@ class FinancialDataReconciliationApp:
             self.add_log_to_display(f"执行核对时发生错误: {str(e)}", "ERROR")
             messagebox.showerror("核对失败", f"执行核对时发生错误: {str(e)}")
 
-    def show_result_detail(self, event):
-        """显示结果详情"""
-        try:
-            selected_items = self.result_tree.selection()
-            if not selected_items:
-                return
-
-            index = int(self.result_tree.item(selected_items[0])["text"]) - 1
-            if 0 <= index < len(self.reconciliation_results):
-                result = self.reconciliation_results[index]
-                logger.info(f"显示结果详情: {result['问题编号']}")
-                self.add_log_to_display(f"显示结果详情: {result['问题编号']}", "INFO")
-
-                self.result_detail_text.delete(1.0, tk.END)
-                self.result_detail_text.insert(tk.END, f"问题编号: {result['问题编号']}\n")
-                self.result_detail_text.insert(tk.END, f"问题描述: {result['问题描述']}\n")
-                self.result_detail_text.insert(tk.END, f"涉及科目: {result['涉及科目']}\n")
-                self.result_detail_text.insert(tk.END, f"涉及往来单位: {result['涉及往来单位']}\n")
-                self.result_detail_text.insert(tk.END, f"差额: {result['差额']}\n")
-                self.result_detail_text.insert(tk.END, f"状态: {result['状态']}\n\n")
-                self.result_detail_text.insert(tk.END, "详细信息:\n")
-                self.result_detail_text.insert(tk.END, result.get("详细信息", "无详细信息"))
-        except Exception as e:
-            logger.error(f"显示结果详情时发生错误: {str(e)}", exc_info=True)
-            self.add_log_to_display(f"显示结果详情时发生错误: {str(e)}", "ERROR")
-            messagebox.showerror("错误", f"显示结果详情时发生错误: {str(e)}")
-
-    # def export_results(self):
-    #     """导出结果 - 包含三个原始文件数据的格式，并添加核对场景和核对结果列"""
-    #     try:
-    #         if not self.reconciliation_results:
-    #             logger.warning("没有可导出的结果")
-    #             self.add_log_to_display("没有可导出的结果", "WARNING")
-    #             messagebox.showwarning("警告", "没有可导出的结果")
-    #             return
-    #
-    #         logger.info("开始导出结果")
-    #         self.add_log_to_display("开始导出结果...", "INFO")
-    #
-    #         # 记录开始时间
-    #         start_time = datetime.datetime.now()
-    #
-    #         file_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
-    #         if not file_path:
-    #             logger.info("用户取消导出")
-    #             self.add_log_to_display("用户取消导出", "INFO")
-    #             return
-    #
-    #         # 创建结果DataFrame
-    #         results_df = pd.DataFrame(self.reconciliation_results)
-    #
-    #         # 获取原始数据框的副本
-    #         main_df = self.dataframes["期初往来数据与账务数据核对文件"].copy()
-    #         ledger_df = self.dataframes["往来台账查询文件"].copy()
-    #         voucher_df = self.dataframes["多维凭证明细文件"].copy()
-    #
-    #         # 为主要数据框添加核对场景和核对结果列
-    #         main_df["核对场景"] = ""
-    #         main_df["核对结果"] = ""
-    #
-    #         if self.matching_results:
-    #             logger.debug(f"为主要数据框添加核对场景和核对结果列，匹配结果数量: {len(self.matching_results)}")
-    #
-    #             # 遍历匹配结果并更新主数据框
-    #             for result in self.matching_results:
-    #                 idx = result.get("索引")
-    #                 if pd.notna(idx) and 0 <= idx < len(main_df):
-    #                     main_df.at[idx, "核对场景"] = result.get("核对场景", "")
-    #                     main_df.at[idx, "核对结果"] = result.get("核对结果", "")
-    #
-    #         # 保存到Excel文件，包含三个原始文件数据的页签
-    #         with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
-    #             # 保存主要数据（包含核对结果列）
-    #             main_df.to_excel(writer, sheet_name="期初往来数据与账务数据核对文件", index=False)
-    #             logger.debug("保存期初往来数据与账务数据核对文件完成")
-    #
-    #             # 保存往来台账查询文件
-    #             ledger_df.to_excel(writer, sheet_name="往来台账查询文件", index=False)
-    #             logger.debug("保存往来台账查询文件完成")
-    #
-    #             # 保存多维凭证明细文件
-    #             voucher_df.to_excel(writer, sheet_name="多维凭证明细文件", index=False)
-    #             logger.debug("保存多维凭证明细文件完成")
-    #
-    #             # 保存问题汇总结果
-    #             results_df.to_excel(writer, sheet_name="问题汇总结果", index=False)
-    #             logger.debug("保存问题汇总结果完成")
-    #
-    #             # 如果有详细数据，也保存到不同的工作表
-    #             for i, result in enumerate(self.reconciliation_results):
-    #                 if "详细数据" in result:
-    #                     detail_df = result["详细数据"]
-    #                     detail_df.to_excel(writer, sheet_name=f"问题详情_{i + 1}", index=False)
-    #                     logger.debug(f"保存问题详情_{i + 1}完成")
-    #
-    #         # 记录结束时间
-    #         end_time = datetime.datetime.now()
-    #         elapsed_time = (end_time - start_time).total_seconds()
-    #
-    #         logger.info(f"结果已导出到: {file_path}，耗时 {elapsed_time:.2f} 秒")
-    #         messagebox.showinfo("导出成功", f"结果已导出到: {file_path}\n耗时: {elapsed_time:.2f} 秒")
-    #
-    #         # 添加到日志显示
-    #         self.add_log_to_display(f"结果已导出到: {os.path.basename(file_path)}", "INFO")
-    #         self.add_log_to_display(f"耗时: {elapsed_time:.2f} 秒", "INFO")
-    #     except Exception as e:
-    #         logger.error(f"导出结果时发生错误: {str(e)}", exc_info=True)
-    #         self.add_log_to_display(f"导出结果时发生错误: {str(e)}", "ERROR")
-    #         messagebox.showerror("导出失败", str(e))
     def export_results(self):
         """导出结果 - 针对账务余额缺失场景处理往来台账页签数据"""
         try:
@@ -734,8 +611,6 @@ class FinancialDataReconciliationApp:
                 self.add_log_to_display("用户取消导出", "INFO")
                 return
 
-            # 创建结果DataFrame
-            results_df = pd.DataFrame(self.reconciliation_results)
 
             # 获取原始数据框的副本
             main_df = self.dataframes["期初往来数据与账务数据核对文件"].copy()
@@ -747,6 +622,7 @@ class FinancialDataReconciliationApp:
             main_df["核对结果"] = ""
             #存储需要处理的主数据的索引（核对结果为去往来业务信息补录的记录）
             target_indices = []
+            target_dw_indexs = []
             if self.matching_results:
                 logger.debug(f"为主要数据框添加核对场景和核对结果列，匹配结果数量: {len(self.matching_results)}")
 
@@ -757,12 +633,17 @@ class FinancialDataReconciliationApp:
                     if pd.notna(idx) and 0 <= idx < len(main_df):
                         main_df.at[idx, "核对场景"] = result.get("核对场景", "")
                         main_df.at[idx, "核对结果"] = check_result
+                        main_df.at[idx, "问题编号"] = result.get("问题编号", "")
                         if check_result.startswith("去往来业务信息补录"):
                             target_indices.append(idx)
+                        if check_result.startswith("多维明细凭证缺失维度"):
+                            target_dw_indexs.append(idx)
 
+            ledger_df["备注"] = ""
+            ledger_df["问题编号"] = ""
             if target_indices:
-                key_cols = ["科目", "往来单位", "往来款项性质","项目", "采购订单", "产品服务", "职工","往来台账余额"]
-                ledger_key_cols = ["科目", "往来单位", "往来款项性质","项目名称", "采购订单", "产品服务", "职工","金额"]
+                key_cols = ["科目", "往来单位", "往来款项性质","项目", "采购订单", "产品服务", "职工"]
+                ledger_key_cols = ["科目", "往来单位", "往来款项性质","项目名称", "采购订单", "产品服务", "职工"]
 
                 matched_ledger_rows = []
                 for main_idx in target_indices:
@@ -778,44 +659,66 @@ class FinancialDataReconciliationApp:
                     # 准备处理后的往来台账数据
                     for _, ledger_row in matched_ledgers.iterrows():
                         # 复制行数据并添加备注（主数据行号=索引+2，因为表头占1行）
-                        new_row = ledger_row.copy()
-                        new_row["备注"] = f"序号1场景1，对应核对文件行号：{main_idx + 2}"
-                        matched_ledger_rows.append(new_row)
+                        # new_row = ledger_row.copy()
+                        # new_row["备注"] = f"序号1场景1，需要去往来业务补录信息补录，对应核对文件行号：{main_idx + 2}"
+                        current_index = ledger_row.name
+                        ledger_df.at[current_index, "备注"] = f"序号1场景1，需要去往来业务补录信息补录，对应核对文件行号：{main_idx + 2}"
+                        ledger_df.at[current_index, "问题编号"] = main_row["问题编号"]
 
-                # 更新往来台账数据为匹配到的记录
-                if matched_ledger_rows:
-                    ledger_df = pd.DataFrame(matched_ledger_rows)
+            #处理多维凭证明细，只输出匹配的数据
+            if target_dw_indexs:
+                key_cols = ["科目", "往来单位", "往来款项性质","项目", "采购订单", "产品服务", "职工"]
+                dw_cols = ["科目名称", "往来单位", "往来款项性质", "项目库", "采购订单", "产品服务", "职工"]
+                matched_dw_rows = []
+                for main_idx in target_dw_indexs:
+                    main_row = main_df.iloc[main_idx]
+                    match_conditions = True
+                    for col in key_cols:
+                        # 处理空值情况：如果主数据该字段为空，不参与匹配条件
+                        if pd.notna(main_row[col]):
+                            dw_temp_col = dw_cols[key_cols.index(col)]
+                            if col in ["科目", "往来单位", "往来款项性质", "项目库"]:
+                                match_conditions &= (voucher_df[dw_temp_col].split(" ")[1] == (main_row[col]))
+                            else :
+                                match_conditions &= (voucher_df[dw_temp_col] == main_row[col])
+
+                    matched_vouchers = voucher_df[match_conditions]
+                    # 准备处理后的往来台账数据
+                    for _, dw_row in matched_vouchers.iterrows():
+                        # 复制行数据并添加备注（主数据行号=索引+2，因为表头占1行）
+                        new_row = dw_row.copy()
+                        new_row["备注"] = f"序号1场景1，多维明细凭证缺失维度，对应核对文件行号：{main_idx + 2}"
+                        new_row["问题编号"] = main_row["问题编号"]
+                        new_row["缺失维度"] = main_row["缺失维度"]
+                        matched_dw_rows.append(new_row)
+
+                    # 更新往来台账数据为匹配到的记录
+                    if matched_dw_rows:
+                        voucher_df = pd.DataFrame(matched_dw_rows)
+                    else:
+                        # 如果没有匹配到记录，保留空DataFrame
+                        voucher_df = pd.DataFrame(columns=ledger_df.columns.tolist() + ["备注", "问题编号", "缺失维度"])
                 else:
-                    # 如果没有匹配到记录，保留空DataFrame
-                    ledger_df = pd.DataFrame(columns=ledger_df.columns.tolist() + ["备注"])
-            else:
-                # 如果没有符合条件的主数据，保留空DataFrame并添加备注列
-                ledger_df = pd.DataFrame(columns=ledger_df.columns.tolist() + ["备注"])
+                    # 如果没有符合条件的主数据，保留空DataFrame并添加备注列
+                    voucher_df = pd.DataFrame(columns=ledger_df.columns.tolist() + ["备注", "问题编号", "缺失维度"])
 
             # 保存到Excel文件，包含三个原始文件数据的页签
             with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
                 # 保存主要数据（包含核对结果列）
-                main_df.to_excel(writer, sheet_name="期初往来数据与账务数据核对文件", index=False)
-                logger.debug("保存期初往来数据与账务数据核对文件完成")
+                main_df.to_excel(writer, sheet_name="期初往来数据与账务数据核对", index=False)
+                logger.debug("保存期初往来数据与账务数据核对完成")
 
                 # 保存处理后的往来台账查询文件
-                ledger_df.to_excel(writer, sheet_name="往来台账查询文件", index=False)
-                logger.debug("保存往来台账查询文件完成")
+                ledger_df.to_excel(writer, sheet_name="往来台账查询", index=False)
+                logger.debug("保存往来台账查询完成")
 
                 # 保存多维凭证明细文件
-                voucher_df.to_excel(writer, sheet_name="多维凭证明细文件", index=False)
-                logger.debug("保存多维凭证明细文件完成")
+                voucher_df.to_excel(writer, sheet_name="多维凭证明细", index=False)
+                logger.debug("保存多维凭证明细完成")
 
-                # 保存问题汇总结果
-                results_df.to_excel(writer, sheet_name="问题汇总结果", index=False)
-                logger.debug("保存问题汇总结果完成")
 
-                # 保存详细数据
-                for i, result in enumerate(self.reconciliation_results):
-                    if "详细数据" in result:
-                        detail_df = result["详细数据"]
-                        detail_df.to_excel(writer, sheet_name=f"问题详情_{i + 1}", index=False)
-                        logger.debug(f"保存问题详情_{i + 1}完成")
+
+
 
             # 记录结束时间
             end_time = datetime.datetime.now()
@@ -848,7 +751,6 @@ class FinancialDataReconciliationApp:
             self.reconciliation_results.clear()
             self.matching_results.clear()
             self.result_tree.delete(*self.result_tree.get_children())
-            self.result_detail_text.delete(1.0, tk.END)
 
             # 禁用导出按钮
             self.export_button.config(state=tk.DISABLED)
@@ -865,9 +767,9 @@ class FinancialDataReconciliationApp:
         """
         序号1: 账务余额缺失匹配往来余额缺失
         1. 筛选问题类型为"账务余额缺失"的数据
-        2. 对每条数据，按科目+往来单位+往来款项性质筛选问题类型为"往来余额缺失"的数据
+        2. 对每条数据，按科目+往来单位筛选问题类型为"往来余额缺失"的数据
         3. 查找差额相同的记录（一对一匹配）
-        4. 核对四个维度（项目、采购订单、产品服务、职工）
+        4. 核对四个维度（项目、采购订单、产品服务、职工、往来款项性质）
            - 若双方都有同一维度但值不一致，则不匹配
            - 其他情况视为维度匹配
         5. 匹配成功，则两条数据都标记为"序号1场景1"
@@ -943,7 +845,7 @@ class FinancialDataReconciliationApp:
                 mask = (
                         (ledger_missing["科目"] == 科目) &
                         (ledger_missing["往来单位"] == 往来单位) &
-                        (ledger_missing["往来款项性质"] == 往来款项性质) &
+                        # (ledger_missing["往来款项性质"] == 往来款项性质) &
                         (np.isclose(ledger_missing["调整后差额"] + 差额, 0, atol=1e-6)) &
                         (~ledger_missing.index.isin(matched_ledger_indices))
                 )
@@ -958,7 +860,7 @@ class FinancialDataReconciliationApp:
                     matched_ledger_indices.add(ledger_idx)
 
                     # 核对维度
-                    dimensions = ["项目", "采购订单", "产品服务", "职工"]
+                    dimensions = ["项目", "采购订单", "产品服务", "职工", "往来款项性质"]
                     dimension_match = True
                     # 记录双方缺失的维度
                     account_missing_dims = []
@@ -990,37 +892,6 @@ class FinancialDataReconciliationApp:
                             ledger_result = f"多维明细凭证缺失维度: {', '.join(ledger_missing_dims)}"
                         else:
                             ledger_result = ""
-                    # dimensions = ["项目", "采购订单", "产品服务", "职工"]
-                    # dimension_match = True
-                    #
-                    # for dim in dimensions:
-                    #     account_val = account_row[dim]
-                    #     ledger_val = ledger_row[dim]
-                    #
-                    #     # 双方都有值但不相等，则维度不匹配
-                    #     if pd.notna(account_val) and pd.notna(ledger_val) and account_val != ledger_val:
-                    #         dimension_match = False
-                    #         logger.debug(f"维度不匹配: {dim} (账务: {account_val}, 往来: {ledger_val})")
-                    #         break
-                    #
-                    # if dimension_match:
-                    #     # 计算双方缺失的维度数量
-                    #     account_missing_dims = sum(1 for dim in dimensions if pd.isna(account_row[dim]))
-                    #     ledger_missing_dims = sum(1 for dim in dimensions if pd.isna(ledger_row[dim]))
-                    #
-                    #     # 确定核对结果
-                    #     if account_missing_dims > ledger_missing_dims:
-                    #         # 账务缺失数据维度更少
-                    #         account_result = "去往来业务信息补录"
-                    #         ledger_result = "去往来业务信息补录"
-                    #     elif ledger_missing_dims > account_missing_dims:
-                    #         # 往来缺失数据维度更少
-                    #         account_result = "多维明细凭证缺失维度"
-                    #         ledger_result = "多维明细凭证缺失维度"
-                    #     else:
-                    #         # 双方缺失维度相同
-                    #         account_result = "去往来业务信息补录"
-                    #         ledger_result = "去往来业务信息补录"
 
                         # 维度匹配，标记为序号1场景1
                         issue_id = f"R1-{len(self.reconciliation_results) + 1}"
@@ -1056,14 +927,19 @@ class FinancialDataReconciliationApp:
 
                         # 记录匹配结果
                         self.matching_results.append({
+                            "问题编号": issue_id,
                             "索引": idx,
                             "核对场景": "序号1场景1",
-                            "核对结果": account_result
+                            "核对结果": account_result,
+                            "缺失维度": ', '.join(account_missing_dims)
                         })
                         self.matching_results.append({
+                            "问题编号": issue_id,
                             "索引": ledger_idx,
                             "核对场景": "序号1场景1",
-                            "核对结果": ledger_result
+                            "核对结果": ledger_result,
+                            "缺失维度": ', '.join(ledger_missing_dims)
+
                         })
 
                         logger.info(f"找到匹配记录: 账务索引={idx}, 往来索引={ledger_idx}")
@@ -1088,6 +964,43 @@ class FinancialDataReconciliationApp:
             logger.error(f"执行规则1时发生错误: {str(e)}", exc_info=True)
             self.add_log_to_display(f"执行规则1时发生错误: {str(e)}", "ERROR")
             raise
+
+    def rule5(self):
+        """规则5:同一科目下同一往来单位名称但ID不一致"""
+        try:
+            logger.info("开始检查规则5：同一科目下同一往来单位名称但ID不一致")
+            df = self.dataframes["期初往来数据与账务数据核对文件"].copy()
+            # df = df[df["核对场景"] == "暂不处理"].copy()
+            # 按科目和往来单位进行分组,检查每组的往来单位ID是否唯一
+            grouped = df.groupby(["科目", "往来单位"])['往来单位ID'].nunique()
+            #筛选ID不唯一的组
+            problematic_groups = grouped[grouped > 1].reset_index()
+            for _,row in problematic_groups.iterrows():
+                subject = row['科目']
+                unit_name = row['往来单位']
+
+                condition = (df['科目'] == subject) & (df['往来单位'] == unit_name)
+                problematic_rows = df[condition]
+                ids = problematic_rows['往来单位ID'].unique()
+                # 获取该科目下该往来单位的所有记录
+                # ids = df[(df['科目'] == subject) & (df['往来单位'] == unit_name)]['往来单位ID'].unique()
+
+                self.reconciliation_results.append({
+                    "问题编号": f"R5-{len(self.reconciliation_results) + 1}",
+                    "问题描述": "同一科目下同一往来单位名称但ID不一致",
+                    "涉及科目": subject,
+                    "涉及往来单位": unit_name,
+                    "差额": "",
+                    "状态": "匹配成功",
+                    "详细信息": f"该科目下该往来单位存在不同ID：: {', '.join(ids)}"
+                })
+            logger.info(f"规则5执行完成，找到 {len(problematic_groups)} 个问题")
+            self.add_log_to_display(f"规则5执行完成，找到 {len(problematic_groups)} 个问题", "INFO")
+        except Exception as e:
+            logger.error(f"执行规则5时发生错误: {str(e)}", exc_info=True)
+            self.add_log_to_display(f"执行规则5时发生错误: {str(e)}", "ERROR")
+
+
 
 if __name__ == "__main__":
     root = TkinterDnD.Tk()
