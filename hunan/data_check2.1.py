@@ -714,7 +714,7 @@ class FinancialDataReconciliationApp:
                         new_row["备注"] = main_row["核对场景"] + main_row["核对结果"]
                                            # f"序号1场景1，多维明细凭证缺失维度，对应核对文件行号：{main_idx + 2}")
                         new_row["问题编号"] = main_row["问题编号"]
-                        new_row["缺失维度"] = main_row.get("缺失维度", "")
+                        new_row["缺失维度"] = main_row["缺失维度"]
                         matched_dw_rows.append(new_row)
 
                 # 更新往来台账数据为匹配到的记录
@@ -947,8 +947,11 @@ class FinancialDataReconciliationApp:
                         # 更新主数据框的核对场景和结果
                         main_df.at[idx, "核对场景"] = "序号1场景1"
                         main_df.at[idx, "核对结果"] = account_result
+                        main_df.at[idx, "缺失维度"] = ', '.join(account_missing_dims)
+
                         main_df.at[ledger_idx, "核对场景"] = "序号1场景1"
                         main_df.at[ledger_idx, "核对结果"] = ledger_result
+                        main_df.at[ledger_idx, "缺失维度"] = ', '.join(ledger_missing_dims)
 
                         # 记录匹配结果
                         self.matching_results.append({
@@ -1135,15 +1138,22 @@ class FinancialDataReconciliationApp:
                         "差额": f"{current_diff:.2f}",
                         "状态": "待处理"
                     })
+                    # 回写到原始数据 - 修改部分
+                    result1, missing_dims_1 = self._check_dimension_completeness(current_row, matched["数据"])
+                    result2, missing_dims_2 = self._check_dimension_completeness(matched["数据"], current_row)
+
                     # 回写到原始数据 - 这部分是新增的
                     main_df.at[current_idx, "核对场景"] = "序号2场景1"
-                    main_df.at[current_idx, "核对结果"] = self._check_dimension_completeness(current_row,
-                                                                                             matched["数据"])
+                    main_df.at[current_idx, "核对结果"] = result1
                     main_df.at[current_idx, "问题编号"] = problem_id
+                    if missing_dims_1:
+                        main_df.at[current_idx, "缺失维度"] = ", ".join(missing_dims_1)
+
                     main_df.at[matched["索引"], "核对场景"] = "序号2场景1"
-                    main_df.at[matched["索引"], "核对结果"] = self._check_dimension_completeness(matched["数据"],
-                                                                                                 current_row)
+                    main_df.at[matched["索引"], "核对结果"] = result2
                     main_df.at[matched["索引"], "问题编号"] = problem_id
+                    if missing_dims_2:
+                        main_df.at[matched["索引"], "缺失维度"] = ", ".join(missing_dims_2)
 
                     # 在界面上显示结果
                     self.result_tree.insert("", tk.END, values=(
@@ -1279,8 +1289,11 @@ class FinancialDataReconciliationApp:
                     # 更新主数据框的核对场景和结果
                     main_df.at[idx1, "核对场景"] = "序号3场景1"
                     main_df.at[idx1, "核对结果"] = result1
+                    main_df.at[idx1, "缺失维度"] = ", ".join(missing_dims_1)
+
                     main_df.at[idx2, "核对场景"] = "序号3场景1"
                     main_df.at[idx2, "核对结果"] = result2
+                    main_df.at[idx2, "缺失维度"] = ", ".join(missing_dims_2)
 
                     # 记录匹配结果
                     self.matching_results.append({
@@ -1462,7 +1475,7 @@ class FinancialDataReconciliationApp:
 
         if missing_in_row1:
             return f"需要修复多维数据，缺失维度: {', '.join(missing_in_row1)}"
-        return ""
+        return "", missing_in_row1
 
 if __name__ == "__main__":
     root = TkinterDnD.Tk()
